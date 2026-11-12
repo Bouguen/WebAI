@@ -4,7 +4,7 @@ import RagLab from '../../components/RagLab.astro';
 import AtlasSection from '../../components/AtlasSection.astro';
 import {copy, nav, references} from '../../data/site.js';
 const atlasRoutes=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire'];
-export function getStaticPaths() { return ['fr','en'].flatMap(lang => [...nav.map(({id}) => id),...atlasRoutes].map(section => ({params:{lang, section}}))); }
+export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; return ['fr','en'].flatMap(lang => [...nav.map(({id}) => id),...routeIds].map(section => ({params:{lang, section}}))); }
 const {lang, section} = Astro.params;
 const t = copy[lang];
 const atlasPage = atlasRoutes.includes(section);
