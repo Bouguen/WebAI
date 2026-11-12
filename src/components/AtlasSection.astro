@@ -1,0 +1,138 @@
+---
+import { atlas, localized as L } from '../data/atlas.js';
+import StudioTools from './StudioTools.astro';
+const {lang = 'fr', type} = Astro.props;
+const fr=lang==='fr';
+const config={
+  outils:{ icon:'◈', fr:['Annuaire des outils','Des logiciels, plateformes et bibliothèques pour créer, rechercher, expérimenter et évaluer.'],en:['Tool directory','Software, platforms and libraries to build, search, experiment and evaluate.'] },
+  ressources:{ icon:'▤', fr:['Bibliothèque de référence','Textes officiels, normes, publications scientifiques et documentation de première main.'],en:['Reference library','Official texts, standards, research papers and first-party documentation.'] },
+  glossaire:{ icon:'Aa', fr:['Glossaire du Web de l’IA','Une terminologie bilingue pour comprendre les mots qui façonnent le Web.'],en:['AI Web glossary','Bilingual terminology for the concepts shaping the Web.'] },
+  encyclopedie:{ icon:'◇', fr:['Encyclopédie WebAI','Les concepts qui relient les technologies, les sources et les usages.'],en:['WebAI encyclopedia','The concepts connecting technologies, primary sources and real applications.'] },
+  parcours:{ icon:'▦', fr:['Parcours d’apprentissage','Un chemin pour chaque profil, du premier contact à l’expérimentation.'],en:['Learning pathways','A guided path for every audience, from first steps to experimentation.'] },
+  secteurs:{ icon:'▣', fr:['Applications & secteurs','Comment les transformations du Web se traduisent dans des activités concrètes.'],en:['Applications & industries','How changes in the Web translate into practical use cases.'] },
+  publications:{ icon:'⌁', fr:['Recherche scientifique','Travaux fondateurs et protocoles d’évaluation, avec renvoi vers les documents originaux.'],en:['Scientific research','Foundational work and evaluation methods with links to original papers.'] },
+  observatoire:{ icon:'◎', fr:['Observatoire des évolutions','Suivre les standards, publications et versions sans confondre veille et actualités validées.'],en:['Technology observatory','Follow standards, papers and releases without treating a monitoring queue as verified news.'] },
+  laboratoire:{ icon:'✳', fr:['WebAI Studio & Lab','Des outils interactifs réellement exécutés dans votre navigateur, sans API ni compte.'],en:['WebAI Studio & Lab','Interactive tools that run entirely in your browser, without an API or account.'] }
+};
+const page=config[type];const content=page[lang]??page.fr;
+const kindLabel={ 'open-source':fr?'Open source':'Open source','plateforme':fr?'Plateforme':'Platform','service':'Service','logiciel':fr?'Logiciel':'Software','ressource':fr?'Ressource':'Resource','source-disponible':fr?'Code accessible':'Source-available','bibliothèque':fr?'Bibliothèque':'Library'};
+const catLabels={creation:fr?'Création Web':'Web creation',recherche:fr?'Recherche & RAG':'Search & RAG',local:fr?'IA locale':'On-device AI',modeles:fr?'Modèles':'Models',multimedia:fr?'Multimédia & 3D':'Multimedia & 3D',agents:fr?'Agents':'Agents',automatisation:fr?'Automatisation':'Automation',evaluation:fr?'Évaluation':'Evaluation',confiance:fr?'Confiance':'Trust',standards:fr?'Standards':'Standards',reglementation:fr?'Réglementation':'Regulation',decouverte:fr?'Découverte':'Discovery',immersif:fr?'Immersif':'Immersive',fondations:fr?'Fondements':'Foundations',usages:fr?'Usages':'Applications'};
+const research=atlas.sources.filter(x=>x.category==='recherche');
+const resourceCats=[...new Set(atlas.sources.map(x=>x.category))];
+const toolCats=[...new Set(atlas.catalog.map(x=>x.category))];
+const glossCats=[...new Set(atlas.glossary.map(x=>x.category))];
+const cards=type==='outils'?atlas.catalog:type==='ressources'?atlas.sources:type==='glossaire'?atlas.glossary:type==='encyclopedie'?atlas.topics:type==='publications'?research:[];
+const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.sources.length:type==='glossaire'?atlas.glossary.length:type==='encyclopedie'?atlas.topics.length:type==='parcours'?atlas.lessons.length:type==='secteurs'?atlas.cases.length:type==='publications'?research.length:type==='laboratoire'?5:4;
+---
+<section class="atlas-hero">
+  <div class="wrap">
+    <div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><span>{content[0]}</span></div>
+    <div class="atlas-heading">
+      <div><span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI KNOWLEDGE ATLAS · {fr?'ÉDITION PRÉPARATOIRE':'EDITORIAL PREVIEW'}</span>
+        <h1>{content[0]}<span class="atlas-h-spark">{page.icon}</span></h1><p>{content[1]}</p>
+        <div class="atlas-hero-actions"><a href={'/'+lang+'/recherche/'} class="atlas-pill-cta">{fr?'Recherche globale':'Global discovery'} <span>↗</span></a>
+          <a href={'/'+lang+'/verifier/'} class="atlas-link-subtle">{fr?'Notre méthode':'Our method'} →</a></div>
+      </div>
+      <div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">{page.icon}</div><div class="atlas-fig-note"><strong>{cardCount.toString().padStart(2,'0')}</strong><span>{fr?'ENTRÉES':'ENTRIES'}</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="atlas-content section"><div class="wrap">
+{(type==='outils'||type==='ressources'||type==='glossaire'||type==='encyclopedie'||type==='publications') &&
+  <div class="atlas-controls">
+    <div class="atlas-controls-top"><div><span class="eyebrow">{fr?'EXPLORER LA COLLECTION':'EXPLORE THE COLLECTION'}</span><h2>{fr?'Trouver la bonne ressource':'Find the right resource'}</h2></div>
+    <span class="atlas-count"><b data-match-count>{cards.length}</b> {fr?'résultats':'results'}</span></div>
+    <div class="atlas-filter-line">
+      <label class="atlas-search-label"><span class="sr-only">{fr?'Chercher':'Search'}</span><span aria-hidden="true">⌕</span><input type="search" data-atlas-search autocomplete="off" placeholder={fr?'Rechercher par nom, concept ou description…':'Search by name, concept or description…'}/></label>
+      {(type==='outils'||type==='ressources'||type==='glossaire') && <label class="atlas-select-label">
+        <span class="sr-only">{fr?'Catégorie':'Category'}</span>
+        <select data-atlas-category>
+          <option value="all">{fr?'Tous les domaines':'All domains'}</option>
+          {(type==='outils'?toolCats:type==='ressources'?resourceCats:glossCats).map(cat=><option value={cat}>{catLabels[cat]??cat}</option>)}
+        </select></label>}
+      {type==='outils' && <label class="atlas-select-label"><span class="sr-only">{fr?'Public':'Audience'}</span><select data-atlas-audience>
+        <option value="all">{fr?'Tous les profils':'All audiences'}</option><option value="dev">{fr?'Développeurs':'Developers'}</option><option value="creator">{fr?'Créateurs':'Creators'}</option><option value="research">{fr?'Chercheurs':'Researchers'}</option><option value="pro">{fr?'Professionnels':'Professionals'}</option>
+      </select></label>}
+    </div>
+  </div>}
+{type==='outils' && <>
+  <p class="atlas-disclaimer">{fr?'Annuaire informatif fondé sur les documentations des éditeurs. Les prix, licences et fonctionnalités évoluent : vérifiez-les sur les sites officiels. Les outils n’ont pas tous été testés par WebAI.':'Informational directory based on vendor documentation. Pricing, licensing and features change: check official websites. Not every tool has been tested by WebAI.'}</p>
+  <div class="atlas-grid atlas-grid-tools" data-atlas-list>{atlas.catalog.map((tool,i)=><article class="atlas-item atlas-tool" data-atlas-card data-category={tool.category} data-audience={tool.audience} data-search={(tool.name+' '+L(tool.desc,lang)+' '+tool.category).toLowerCase()}>
+    <div class="atlas-item-top"><span class="atlas-item-monogram">{tool.name.slice(0,2).toUpperCase()}</span><span class="atlas-item-kind">{catLabels[tool.category]??tool.category}</span></div>
+    <h3>{tool.name}</h3><p>{L(tool.desc,lang)}</p><div class="atlas-item-bottom"><span class="atlas-kind">{kindLabel[tool.kind]??tool.kind}</span><a href={tool.url} target="_blank" rel="noopener noreferrer" aria-label={(fr?'Site officiel de ':'Official website for ')+tool.name}>{fr?'Site officiel':'Official site'} ↗</a></div>
+  </article>)}</div>
+</>}
+{type==='ressources' && <>
+  <p class="atlas-disclaimer">{fr?'Sélection de liens vers des sources primaires. La présence d’un document ne signifie pas qu’il a été approuvé comme norme ni évalué par les pairs.':'Curated links to primary sources. Inclusion does not imply standard status or peer review.'}</p>
+  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{atlas.sources.map((s,i)=><article class="atlas-item atlas-source" data-atlas-card data-category={s.category} data-search={(s.name+' '+L(s.desc,lang)+' '+s.category).toLowerCase()}>
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{catLabels[s.category]??s.category}</span></div>
+    <h3>{s.name}</h3><p>{L(s.desc,lang)}</p><a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Lire le document':'Open reference'} ↗</a>
+  </article>)}</div>
+</>}
+{type==='glossaire' && <>
+  <p class="atlas-disclaimer">{fr?'Première sélection de définitions pédagogiques bilingues. Les termes peuvent avoir plusieurs sens selon le domaine ; ces définitions ne remplacent pas les spécifications.':'Initial bilingual teaching definitions. Terms can have domain-specific meanings; these are not replacements for specifications.'}</p>
+  <div class="atlas-glossary" data-atlas-list>{atlas.glossary.map(g=><article class="atlas-term" data-atlas-card data-category={g.category} data-search={(g.fr+' '+g.en+' '+L(g.definition,lang)).toLowerCase()}>
+    <div><h3>{lang==='fr'?g.fr:g.en}</h3><span>{lang==='fr'?g.en:g.fr}</span></div><p>{L(g.definition,lang)}</p>
+  </article>)}</div>
+</>}
+{type==='encyclopedie' && <>
+  <p class="atlas-disclaimer">{fr?'Articles de découverte et synthèses éditoriales : consultez les sources primaires attachées à chaque sujet. Le corpus scientifique approfondi de la Phase III reste en révision.':'Introductory explainers and editorial summaries: consult the primary sources for each topic. The longer Phase III scientific corpus is still under review.'}</p>
+  <div class="atlas-grid atlas-grid-topics" data-atlas-list>{atlas.topics.map((topic,i)=><article class="atlas-item atlas-topic" data-atlas-card data-category={topic.category} data-search={(L(topic.title,lang)+' '+L(topic.summary,lang)+' '+topic.category).toLowerCase()}>
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{topic.category}</span></div>
+    <h3>{L(topic.title,lang)}</h3><p>{L(topic.summary,lang)}</p>
+    <a href={'/'+lang+'/encyclopedie/'+topic.slug+'/'} class="atlas-source-link">{fr?'Lire la synthèse':'Read the explainer'} ↗</a>
+  </article>)}</div>
+</>}
+{type==='parcours' && <div class="atlas-grid atlas-paths">
+  {atlas.lessons.map((lesson,i)=><article class="atlas-path-card"><div class="atlas-path-meta"><span class="atlas-item-number">0{i+1}</span><span>⏱ {lesson.duration}</span></div>
+    <h2>{L(lesson.title,lang)}</h2><p>{L(lesson.desc,lang)}</p>
+    <div class="atlas-path-audience">{fr?'Pour':'For'} : {L(lesson.audience,lang)}</div>
+    <ol class="atlas-steps">{lesson.topics.map(slug=>{const t=atlas.topics.find(z=>z.slug===slug);return t?<li><a href={'/'+lang+'/encyclopedie/'+slug+'/'}>{L(t.title,lang)} <span>↗</span></a></li>:null})}</ol>
+  </article>)}
+</div>}
+{type==='secteurs' && <>
+  <p class="atlas-disclaimer">{fr?'Ces exemples sont des scénarios de conception, pas des études de déploiements vérifiés.':'These are design scenarios, not verified deployments or measured case studies.'}</p>
+  <div class="atlas-grid atlas-grid-tools">{atlas.cases.map((c,i)=><article class="atlas-item atlas-tool">
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{L(c.sector,lang)}</span></div><h3>{L(c.title,lang)}</h3><p>{L(c.desc,lang)}</p><a href={'/'+lang+'/verifier/'} class="atlas-source-link">{fr?'Méthode de vérification':'Verification method'} ↗</a>
+  </article>)}</div>
+</>}
+{type==='publications' && <>
+  <p class="atlas-disclaimer">{fr?'Bibliographie initiale. Les liens vers arXiv désignent des prépublications ou versions déposées : vérifiez séparément l’évaluation par les pairs.':'Initial bibliography. arXiv links point to posted manuscripts or versions: independently verify peer-review status.'}</p>
+  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{research.map((s,i)=><article class="atlas-item atlas-source" data-atlas-card data-category="recherche" data-search={(s.name+' '+L(s.desc,lang)).toLowerCase()}>
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{fr?'Document de recherche':'Research document'}</span></div><h3>{s.name}</h3><p>{L(s.desc,lang)}</p><a href={s.url} target="_blank" rel="noopener noreferrer" class="atlas-source-link">{fr?'Consulter l’original':'Open original'} ↗</a>
+  </article>)}</div>
+</>}
+{type==='laboratoire' && <StudioTools lang={lang}/>}
+{type==='observatoire' && <div class="atlas-watch-layout">
+  <div class="atlas-watch-copy"><span class="eyebrow">{fr?'COMMENT NOUS TRAVAILLONS':'HOW WE WORK'}</span>
+    <h2>{fr?'Une veille qui ne publie pas seule':'Monitoring that never publishes itself'}</h2><p>{fr?'WebAI organise le suivi des protocoles, normes, recherches et logiciels. Une évolution détectée entre d’abord dans une file de qualification : source primaire, date, importance, contradiction éventuelle, contrôle éditorial.':'WebAI tracks protocols, standards, research and software. Every detected change first enters a review queue: original source, date, significance, potential contradictions, editorial approval.'}</p>
+    <div class="atlas-process">{(fr?['Collecte','Déduplication','Qualification','Vérification humaine','Publication']:['Collect','Deduplicate','Qualify','Human review','Publish']).map((s,i)=><div><span>0{i+1}</span><strong>{s}</strong></div>)}</div></div>
+  <aside class="atlas-watch-rail"><h3>{fr?'Sources à surveiller':'Sources to monitor'}</h3>{atlas.sources.filter(s=>['standards','agents','confiance','reglementation'].includes(s.category)).slice(0,9).map(s=><a href={s.url} target="_blank" rel="noopener noreferrer">{s.name}<span>↗</span></a>)}<p>{fr?'Aucun fil d’actualités en direct n’est encore connecté.':'No live news feed is connected yet.'}</p></aside>
+</div>}
+<div class="atlas-empty" data-atlas-empty hidden>{fr?'Aucun élément ne correspond à cette recherche. Essayez un autre terme ou réinitialisez les filtres.':'Nothing matched. Try another term or reset filters.'}</div>
+</div></section>
+<script is:inline>
+  const scope=document.querySelector('.atlas-content');
+  if(scope){
+    const input=scope.querySelector('[data-atlas-search]');
+    const category=scope.querySelector('[data-atlas-category]');
+    const audience=scope.querySelector('[data-atlas-audience]');
+    const cards=[...scope.querySelectorAll('[data-atlas-card]')];
+    const counter=scope.querySelector('[data-match-count]');
+    const empty=scope.querySelector('[data-atlas-empty]');
+    const normalize=value=>(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+    const apply=()=>{
+      const q=normalize(input?.value.trim());
+      let count=0;
+      cards.forEach(card=>{
+        const ok=normalize(card.dataset.search).includes(q)&&(!category||category.value==='all'||card.dataset.category===category.value)&&(!audience||audience.value==='all'||card.dataset.audience===audience.value);
+        card.hidden=!ok;
+        if(ok)count++;
+      });
+      if(counter)counter.textContent=String(count);
+      if(empty)empty.hidden=count!==0;
+    };
+    [input,category,audience].forEach(el=>el?.addEventListener(el===input?'input':'change',apply));
+  }
+</script>

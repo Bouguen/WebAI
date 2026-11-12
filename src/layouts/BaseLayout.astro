@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/atlas.css';
 import { copy, nav } from '../data/site.js';
 const { lang = 'fr', title, description, active = '' } = Astro.props;
 const t = copy[lang] ?? copy.fr;
@@ -41,6 +42,20 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
         </div>
       </div>
     </header>
+    <div class="atlas-quickbar"><div class="wrap atlas-quickbar-inner" aria-label={lang==='fr'?'Accès rapide WebAI':'WebAI quick links'}>
+       {[
+         ['encyclopedie','◇',lang==='fr'?'Encyclopédie':'Encyclopedia'],
+         ['outils','◈',lang==='fr'?'Outils & plateformes':'Tools & platforms'],
+         ['ressources','▤',lang==='fr'?'Sources & normes':'Sources & standards'],
+         ['glossaire','Aa',lang==='fr'?'Glossaire':'Glossary'],
+         ['parcours','▦',lang==='fr'?'Parcours':'Learning'],
+         ['publications','⌁',lang==='fr'?'Recherche':'Research'],
+         ['secteurs','▣',lang==='fr'?'Applications':'Applications'],
+         ['laboratoire','✳','WebAI Lab'],
+         ['observatoire','◎',lang==='fr'?'Observatoire':'Observatory']
+       ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
+       <span class="atlas-quickbar-hint">EXPLORE · LEARN · BUILD</span>
+    </div></div>
     <main id="main"><slot /></main>
     <footer class="site-footer">
       <div class="wrap footer-top">

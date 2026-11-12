@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {atlas,localized as L} from '../../../data/atlas.js';
+export function getStaticPaths(){return ['fr','en'].flatMap(lang=>atlas.topics.map(topic=>({params:{lang,slug:topic.slug}})));}
+const {lang,slug}=Astro.params;const fr=lang==='fr';const topic=atlas.topics.find(x=>x.slug===slug);
+const related=atlas.topics.filter(x=>x.slug!==slug && x.category===topic.category).slice(0,3);
+const question=fr?'Pourquoi ce sujet compte-t-il ?':'Why does this matter?';
+---
+<BaseLayout lang={lang} title={L(topic.title,lang)} description={L(topic.summary,lang)}>
+  <article class="atlas-article">
+    <header class="atlas-article-hero"><div class="wrap">
+      <div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/encyclopedie/'}>{fr?'Encyclopédie':'Encyclopedia'}</a><span>/</span><span>{L(topic.title,lang)}</span></div>
+      <span class="atlas-eyebrow"><span class="atlas-beacon"></span>{fr?'SYNTHÈSE DE DÉCOUVERTE':'INTRODUCTORY EXPLAINER'} · {topic.category}</span>
+      <h1>{L(topic.title,lang)}</h1><p class="atlas-article-lede">{L(topic.summary,lang)}</p>
+      <div class="atlas-article-meta"><span>{fr?'Édition':'Edition'} 12.11.2026</span><span>{fr?'Lecture courte':'Short read'}</span><span>{fr?'Source primaire liée':'Primary source linked'}</span></div>
+    </div></header>
+    <div class="wrap atlas-article-layout"><div class="atlas-article-body">
+      <div class="atlas-article-note"><span aria-hidden="true">ⓘ</span><p>{fr?'Texte d’introduction éditoriale : il ne remplace pas une revue scientifique exhaustive. Les travaux longs de la Phase III restent à valider avant leur publication.':'Introductory editorial text, not a comprehensive scientific review. Longer Phase III records await editorial validation.'}</p></div>
+      <h2>{fr?'L’essentiel à comprendre':'The essential idea'}</h2><p>{L(topic.body,lang)}</p>
+      <h2>{question}</h2><p>{fr?'Ce sujet relie plusieurs dimensions du Web de l’IA : technologies, usages et responsabilités. Pour aller plus loin, examinez la source de référence et distinguez les possibilités déjà documentées des démonstrations ou propositions expérimentales.':'This topic links several dimensions of the AI-driven Web: technology, use cases and responsibilities. To go further, examine the primary reference and distinguish documented capabilities from demonstrations and experimental proposals.'}</p>
+      <h2>{fr?'Points de vigilance':'Questions to check'}</h2><ul><li>{fr?'Quelle affirmation exacte la source soutient-elle ?':'Which exact claim does the source support?'}</li><li>{fr?'La documentation décrit-elle une norme, un brouillon ou une implémentation ?':'Does the documentation describe a standard, draft or implementation?'}</li><li>{fr?'Quelles limites de qualité, de sécurité ou d’accessibilité doivent être précisées ?':'Which quality, security or accessibility limitations need attention?'}</li></ul>
+      <div class="atlas-primary-source"><span class="eyebrow">{fr?'DOCUMENT DE RÉFÉRENCE':'PRIMARY REFERENCE'}</span><p>{fr?'Pour vérifier le sujet, consulter le texte original.':'Check the original document for evidence and updates.'}</p><a href={topic.source} target="_blank" rel="noopener noreferrer">{fr?'Ouvrir la source officielle':'Open primary source'} ↗</a></div>
+      <a class="atlas-back" href={'/'+lang+'/encyclopedie/'}>← {fr?'Toutes les notions':'All topics'}</a>
+    </div><aside class="atlas-article-aside"><div class="atlas-aside-box"><span class="eyebrow">{fr?'POUR ALLER PLUS LOIN':'KEEP EXPLORING'}</span><h3>{fr?'Parcours reliés':'Connected paths'}</h3>
+      <a href={'/'+lang+'/ressources/'}>{fr?'Bibliothèque de sources':'Reference library'} ↗</a><a href={'/'+lang+'/glossaire/'}>{fr?'Glossaire bilingue':'Bilingual glossary'} ↗</a><a href={'/'+lang+'/laboratoire/'}>WebAI Lab ↗</a>
+      {related.map(x=><a href={'/'+lang+'/encyclopedie/'+x.slug+'/'}>{L(x.title,lang)} ↗</a>)}</div></aside>
+    </div>
+  </article>
+</BaseLayout>

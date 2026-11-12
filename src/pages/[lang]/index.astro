@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AtlasSpotlight from '../../components/AtlasSpotlight.astro';
 import { copy, nav, references } from '../../data/site.js';
 export function getStaticPaths() { return ['fr','en'].map(lang => ({params:{lang}})); }
 const { lang } = Astro.params;
@@ -31,6 +32,7 @@ const t = copy[lang];
       </div>
     </div>
   </section>
+  <AtlasSpotlight lang={lang} />
   <section class="section section-domains" id="domains">
     <div class="wrap">
       <div class="section-heading"><div><span class="eyebrow">{t.discoverKicker}</span><h2>{t.discoverTitle}</h2><p>{t.discoverIntro}</p></div><a class="text-link" href={'/' + lang + '/recherche/'}>{t.search} <span aria-hidden="true">↗</span></a></div>

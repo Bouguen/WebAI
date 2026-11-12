@@ -1,44 +1,38 @@
-# WebAI — Explore the AI-Generated & Agentic Web
+# WebAI — Explore the AI-generated & Agentic Web
 
-WebAI is an independent, bilingual knowledge portal about the AI-generated, intelligent and agentic Web. Its editorial purpose is to **explain, explore, experiment, monitor and verify** without treating AI-generated drafts as established facts.
+Bilingual French/English knowledge portal with an encyclopedia, curated directories, research references, learning pathways and five **working, local-only** laboratory utilities. Built with Astro and static routes.
 
-## Project status
+## Phase V — portal reference prototype
 
-**Foundation preview, not published.** This repository currently contains a bilingual Astro interface (FR/EN), responsive navigation, accessible theme toggle, topic hubs, a simple client-side discovery filter and a deterministic **RAG simulation**. It does not connect to a model, collect live news or claim the unreviewed Phase III corpus has been published.
+- 7 intent-led navigation hubs + 9 specialized Atlas sections.
+- 37 tool and platform entries (official links, price/availability intentionally not asserted).
+- 32 primary reference links, including standards and research.
+- 52 bilingual glossary entries and 16 introductory encyclopedia topics (individual localized pages).
+- 6 audience-specific learning paths and 10 explicitly **illustrative** use-case scenarios.
+- Five client-side studio tools: prompt composer, JSON validator/minifier, word/rough-token estimator, WCAG contrast checker, mock agent-approval flow.
+- Cross-portal search filtering current pages/resources/tools/glossary entries.
+- Light/dark modes, responsive layout, external links labeled, no API keys.
 
-All preview pages carry a \`noindex,nofollow\` robots directive. Content publication requires human review. Deployment and merge to \`main\` are separate decisions.
+**Important:** This is a curated *first edition* and a prototype, not a claim of exhaustive scientific validation. Phase III's scientific manuscript records and the automated publishing pipeline remain excluded until human editorial review. Introductory explanations link to primary sources. No live AI assistant or RSS feed is claimed.
 
-## Development
+### Run
 
-Node.js 22+ is recommended:
-
-\`\`\`bash
+```bash
 npm install
 npm run dev
 npm run build
 npm run preview
-\`\`\`
+```
 
-Static site output: \`dist/\`. Vercel can import the GitHub repository with framework preset **Astro**; no secrets or API keys are required for the starter. **Do not enable a public production deployment before editorial and accessibility review.**
+Node 22+. Astro output is static in `dist/`. For preview use branch `feat/webai-portal-foundation`; leave `main` unchanged until reviewed. All preview routes have `noindex,nofollow`.
 
-## Main routes
+### Editorial model
 
-- \`/fr/\`, \`/en/\`: localized home.
-- \`/fr/decouvrir/\`, \`/fr/comprendre/\`, \`/fr/explorer/\`, \`/fr/experimenter/\`, \`/fr/apprendre/\`, \`/fr/suivre/\`, \`/fr/verifier/\` and their EN equivalents.
-- \`/fr/recherche/\`, \`/en/recherche/\`: preview-only client-side discovery of existing sections.
+- Source URLs are primarily original specifications, providers, or papers.
+- Pricing and maturity are not asserted without a dated review.
+- Sources and educational drafts are separate data types.
+- No Phase III `a_verifier` content is published as validated.
+- No external scripts, analytics, model APIs, secrets or payments are required.
+- WebAI is independent of the W3C Web & AI Interest Group.
 
-## Next integrations
-
-1. Import original Phase I–IV reference artifacts in version-controlled, appropriately licensed form.
-2. Audit Phase III article and glossary records (currently **à vérifier**); only publish records with editorial approval.
-3. Add true content collections, Pagefind indexing of **validated** pages, reciprocal hreflang and sitemap.
-4. Test keyboard/screen-reader navigation, responsive layouts, contrast and the RAG simulation.
-5. Connect a Vercel preview only after the repository is reviewed.
-
-## Editorial independence
-
-This portal is independent of the W3C's Web & AI initiatives and of the providers discussed. See \`docs/EDITORIAL_POLICY.md\`.
-
-## Licensing
-
-No general license has been assigned yet; reuse requires permission from the copyright holder. Third-party sources and future contributions may have distinct licenses.
+See `docs/EDITORIAL_POLICY.md` and `docs/ROADMAP.md` for the review pipeline.

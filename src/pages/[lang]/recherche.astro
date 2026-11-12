@@ -1,36 +1,38 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import {copy, nav} from '../../data/site.js';
-export function getStaticPaths() { return ['fr','en'].map(lang => ({params:{lang}})); }
-const {lang} = Astro.params;
-const t = copy[lang];
+import {copy,nav} from '../../data/site.js';
+import {atlas,localized as L} from '../../data/atlas.js';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';const t=copy[lang];
+const entries=[
+ ...nav.map(x=>({title:t.topics[x.id].title,desc:t.topics[x.id].subtitle,href:'/'+lang+'/'+x.id+'/',type:'section'})),
+ ...atlas.topics.map(x=>({title:L(x.title,lang),desc:L(x.summary,lang),href:'/'+lang+'/encyclopedie/'+x.slug+'/',type:'article'})),
+ ...atlas.catalog.map(x=>({title:x.name,desc:L(x.desc,lang),href:x.url,type:'outil',external:true})),
+ ...atlas.sources.map(x=>({title:x.name,desc:L(x.desc,lang),href:x.url,type:'source',external:true})),
+ ...atlas.glossary.map(x=>({title:lang==='fr'?x.fr:x.en,desc:L(x.definition,lang),href:'/'+lang+'/glossaire/',type:'terme'}))
+];
 ---
-<BaseLayout lang={lang} title={t.searchTitle}>
-  <section class="inner-hero"><div class="wrap"><div class="breadcrumbs"><a href={'/'+lang+'/'}>WebAI</a><span aria-hidden="true">/</span>{t.search}</div><span class="eyebrow">{t.editorial}</span><h1>{t.searchTitle}</h1><p class="inner-lede">{t.searchHelp}</p></div></section>
-  <section class="section"><div class="wrap search-page">
-    <label for="section-query" class="search-label">{t.search}</label>
-    <div class="search-field"><span aria-hidden="true">⌕</span><input id="section-query" type="search" autocomplete="off" placeholder={t.searchPlaceholder} /></div>
-    <p class="result-count" aria-live="polite"><span id="section-count">{nav.length}</span> {t.searchCount}</p>
-    <div class="search-results">{nav.map(item => <article class="search-result" data-filter-text={(t.topics[item.id].title+' '+t.topics[item.id].subtitle+' '+t.topics[item.id].detail+' '+t.topics[item.id].tags.join(' ')).toLowerCase()}>
-      <div class="search-result-icon" aria-hidden="true">{item.glyph}</div><div><h2>{t.topics[item.id].title}</h2><p>{t.topics[item.id].subtitle}</p><a href={'/'+lang+'/'+item.id+'/'}>{t.readMore} ↗</a></div>
-    </article>)}</div>
-    <p id="search-none" class="info-note" hidden>{t.searchNone}</p>
-  </div></section>
-  <script is:inline>
-    const input = document.getElementById('section-query');
-    const cards = [...document.querySelectorAll('.search-result')];
-    const count = document.getElementById('section-count');
-    const empty = document.getElementById('search-none');
-    input?.addEventListener('input', () => {
-      const query = input.value.trim().toLocaleLowerCase();
-      let visible = 0;
-      cards.forEach(card => {
-        const match = card.dataset.filterText.includes(query);
-        card.hidden = !match;
-        if (match) visible++;
-      });
-      count.textContent = String(visible);
-      empty.hidden = visible !== 0;
-    });
-  </script>
+<BaseLayout lang={lang} title={fr?'Recherche transversale':'Cross-portal discovery'}>
+<section class="atlas-hero"><div class="wrap">
+ <div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span>{fr?'Recherche':'Search'}</div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI ATLAS · {fr?'RECHERCHE LOCALE':'LOCAL DISCOVERY'}</span>
+ <div class="atlas-heading"><div><h1>{fr?'Tout WebAI, en un endroit.':'All of WebAI, one search.'}</h1><p>{fr?'Rechercher parmi les rubriques, notions, outils, sources et termes disponibles dans cette préversion.':'Search the sections, explainers, tools, sources and terms included in this preview.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">⌕</div></div></div>
+</div></section>
+<section class="section"><div class="wrap search-page atlas-global-search">
+ <div class="atlas-controls"><div class="atlas-controls-top"><h2>{fr?'Rechercher les ressources':'Search resources'}</h2><span class="atlas-count"><b id="search-count">{entries.length}</b> {fr?'résultats':'results'}</span></div>
+ <div class="atlas-filter-line"><label class="atlas-search-label"><span aria-hidden="true">⌕</span><input id="global-query" type="search" autocomplete="off" placeholder={fr?'Mot-clé, protocole, ressource, outil…':'Keyword, protocol, resource, tool…'}/></label>
+ <label class="atlas-select-label"><span class="sr-only">{fr?'Type':'Type'}</span><select id="global-type"><option value="all">{fr?'Tous les types':'All types'}</option>
+ {['section','article','outil','source','terme'].map(x=><option value={x}>{({section:fr?'Rubriques':'Sections',article:fr?'Articles':'Articles',outil:fr?'Outils':'Tools',source:fr?'Sources':'Sources',terme:fr?'Glossaire':'Glossary'})[x]}</option>)}</select></label></div></div>
+ <div class="search-results">{entries.map(e=><article class="search-result" data-search-item data-type={e.type} data-match={(e.title+' '+e.desc+' '+e.type).toLowerCase()}><div class="search-result-icon" aria-hidden="true">{e.type==='outil'?'◈':e.type==='article'?'◇':e.type==='source'?'▤':e.type==='terme'?'Aa':'✧'}</div><div><span class="atlas-item-kind">{e.type}</span><h2>{e.title}</h2><p>{e.desc}</p><a href={e.href} target={e.external?'_blank':undefined} rel={e.external?'noopener noreferrer':undefined}>{fr?'Consulter':'Open'} ↗</a></div></article>)}</div>
+ <p class="atlas-empty" id="global-no-results" hidden>{fr?'Aucun résultat. Essayez un autre terme.':'No results. Try another term.'}</p>
+ <p class="atlas-disclaimer">{fr?'Filtrage local de la collection actuelle. Le moteur sémantique et les contenus scientifiques approfondis sont prévus après validation éditoriale.':'Local filtering of the current collection. Semantic search and the full scientific corpus are planned after editorial review.'}</p>
+</div></section>
+<script is:inline>
+const input=document.getElementById('global-query'),select=document.getElementById('global-type'),count=document.getElementById('search-count'),empty=document.getElementById('global-no-results');
+const cards=[...document.querySelectorAll('[data-search-item]')];
+const norm=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const run=()=>{let n=0;cards.forEach(card=>{const ok=norm(card.dataset.match).includes(norm(input.value.trim()))&&(select.value==='all'||card.dataset.type===select.value);card.hidden=!ok;if(ok)n++;});count.textContent=String(n);empty.hidden=n!==0;};
+input.addEventListener('input',run);select.addEventListener('change',run);
+const initial=new URLSearchParams(window.location.search).get('q');if(initial){input.value=initial;run();}
+</script>
 </BaseLayout>
