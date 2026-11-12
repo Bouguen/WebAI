@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {copy, nav} from '../../data/site.js';
+export function getStaticPaths() { return ['fr','en'].map(lang => ({params:{lang}})); }
+const {lang} = Astro.params;
+const t = copy[lang];
+---
+<BaseLayout lang={lang} title={t.searchTitle}>
+  <section class="inner-hero"><div class="wrap"><div class="breadcrumbs"><a href={'/'+lang+'/'}>WebAI</a><span aria-hidden="true">/</span>{t.search}</div><span class="eyebrow">{t.editorial}</span><h1>{t.searchTitle}</h1><p class="inner-lede">{t.searchHelp}</p></div></section>
+  <section class="section"><div class="wrap search-page">
+    <label for="section-query" class="search-label">{t.search}</label>
+    <div class="search-field"><span aria-hidden="true">⌕</span><input id="section-query" type="search" autocomplete="off" placeholder={t.searchPlaceholder} /></div>
+    <p class="result-count" aria-live="polite"><span id="section-count">{nav.length}</span> {t.searchCount}</p>
+    <div class="search-results">{nav.map(item => <article class="search-result" data-filter-text={(t.topics[item.id].title+' '+t.topics[item.id].subtitle+' '+t.topics[item.id].detail+' '+t.topics[item.id].tags.join(' ')).toLowerCase()}>
+      <div class="search-result-icon" aria-hidden="true">{item.glyph}</div><div><h2>{t.topics[item.id].title}</h2><p>{t.topics[item.id].subtitle}</p><a href={'/'+lang+'/'+item.id+'/'}>{t.readMore} ↗</a></div>
+    </article>)}</div>
+    <p id="search-none" class="info-note" hidden>{t.searchNone}</p>
+  </div></section>
+  <script is:inline>
+    const input = document.getElementById('section-query');
+    const cards = [...document.querySelectorAll('.search-result')];
+    const count = document.getElementById('section-count');
+    const empty = document.getElementById('search-none');
+    input?.addEventListener('input', () => {
+      const query = input.value.trim().toLocaleLowerCase();
+      let visible = 0;
+      cards.forEach(card => {
+        const match = card.dataset.filterText.includes(query);
+        card.hidden = !match;
+        if (match) visible++;
+      });
+      count.textContent = String(visible);
+      empty.hidden = visible !== 0;
+    });
+  </script>
+</BaseLayout>

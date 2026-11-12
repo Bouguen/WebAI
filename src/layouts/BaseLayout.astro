@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import { copy, nav } from '../data/site.js';
+const { lang = 'fr', title, description, active = '' } = Astro.props;
+const t = copy[lang] ?? copy.fr;
+const current = Astro.url.pathname;
+const other = lang === 'fr' ? 'en' : 'fr';
+const otherPath = current.replace(/^\/(fr|en)\//, '/' + other + '/');
+const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, url: '/' + lang + '/' + item.id + '/'}));
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description ?? t.metaDescription} />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#101a30" />
+    <title>{title ? title + ' · WebAI' : t.metaTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script is:inline>
+      try { const theme = localStorage.getItem('webai-theme'); if(theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skip}</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href={'/' + lang + '/'} aria-label="WebAI — accueil">
+          <span class="brand-symbol" aria-hidden="true">✳</span>
+          <span>Web<span class="brand-ai">AI</span></span>
+        </a>
+        <nav id="primary-nav" class="primary-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+          {navigation.map((item) => <a class:list={['nav-link', {active: active === item.id}]} href={item.url}><span class="nav-icon" aria-hidden="true">{item.glyph}</span>{item.title}</a>)}
+        </nav>
+        <div class="header-actions">
+          <a class="icon-button search-link" href={'/' + lang + '/recherche/'} title={t.search} aria-label={t.search}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></a>
+          <a class="lang-switch" href={otherPath} aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}>{other.toUpperCase()}</a>
+          <button class="icon-button theme-toggle" type="button" aria-label={t.theme} title={t.theme} aria-pressed="false"><span aria-hidden="true">◐</span></button>
+          <button class="icon-button menu-toggle" type="button" aria-label={t.menu} aria-controls="primary-nav" aria-expanded="false"><span aria-hidden="true">☰</span></button>
+        </div>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap footer-top">
+        <div>
+          <div class="footer-brand">Web<span>AI</span><span class="footer-star">✳</span></div>
+          <p>{t.footerText}</p>
+        </div>
+        <div class="footer-links">
+          <a href={'/' + lang + '/decouvrir/'}>{t.topics.decouvrir.title}</a>
+          <a href={'/' + lang + '/verifier/'}>{t.topics.verifier.title}</a>
+          <a href={'/' + lang + '/recherche/'}>{t.search}</a>
+        </div>
+      </div>
+      <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span></div>
+    </footer>
+    <script is:inline>
+      const header = document.querySelector('.site-header');
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.primary-nav');
+      const themeBtn = document.querySelector('.theme-toggle');
+      const closeMenu = () => { nav?.classList.remove('is-open'); toggle?.setAttribute('aria-expanded','false'); };
+      toggle?.addEventListener('click', () => { const open = !nav.classList.contains('is-open'); nav.classList.toggle('is-open', open); toggle.setAttribute('aria-expanded', String(open)); });
+      document.addEventListener('click', (event) => { if (!header?.contains(event.target)) closeMenu(); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closeMenu(); toggle?.focus(); } });
+      nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      themeBtn?.addEventListener('click', () => {
+        const dark = document.documentElement.dataset.theme !== 'dark' && (document.documentElement.dataset.theme === 'light' ? false : !window.matchMedia('(prefers-color-scheme: dark)').matches);
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : document.documentElement.dataset.theme === 'light' ? 'dark' : (dark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = next;
+        themeBtn.setAttribute('aria-pressed', String(next === 'dark'));
+        try { localStorage.setItem('webai-theme', next); } catch(e) {}
+      });
+    </script>
+  </body>
+</html>

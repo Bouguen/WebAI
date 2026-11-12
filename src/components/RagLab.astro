@@ -1,0 +1,58 @@
+---
+const { lang = 'fr' } = Astro.props;
+const fr = lang === 'fr';
+---
+<section class="lab-module" aria-labelledby="lab-heading">
+  <div class="lab-heading-row">
+    <div>
+      <span class="eyebrow">{fr ? 'SIMULATION · SANS IA CONNECTÉE' : 'SIMULATION · NO CONNECTED AI'}</span>
+      <h2 id="lab-heading">{fr ? 'Comment un système RAG mobilise ses documents' : 'How a RAG system uses its documents'}</h2>
+    </div>
+    <span class="lab-label">{fr ? 'Exemple déterministe' : 'Deterministic example'}</span>
+  </div>
+  <p class="lab-lede">{fr ? 'Choisissez une question. Le module affiche des extraits préprogrammés, puis une réponse construite à partir de ces extraits. Il ne réalise ni recherche vectorielle ni génération réelle.' : 'Choose a question. This module shows preselected snippets and a prewritten answer derived from them. No real vector retrieval or model generation takes place.'}</p>
+  <div class="lab-grid">
+    <div class="lab-input">
+      <h3>{fr ? '1. Poser une question' : '1. Choose a question'}</h3>
+      <div class="question-options" role="group" aria-label={fr ? 'Questions de simulation' : 'Simulation questions'}>
+        <button type="button" data-rag-question="0">{fr ? 'Qu’est-ce que le RAG ?' : 'What is RAG?'}</button>
+        <button type="button" data-rag-question="1">{fr ? 'Une citation prouve-t-elle une réponse ?' : 'Does a citation prove an answer?'}</button>
+        <button type="button" data-rag-question="2">{fr ? 'Quel est le rôle de l’humain ?' : 'What is the human role?'}</button>
+      </div>
+    </div>
+    <div class="lab-output" aria-live="polite" aria-atomic="true">
+      <h3>{fr ? '2. Extraits sélectionnés' : '2. Selected snippets'}</h3>
+      <div id="rag-documents" class="rag-documents">{fr ? 'Sélectionnez une question pour afficher un exemple.' : 'Choose a question to display an example.'}</div>
+      <h3>{fr ? '3. Réponse d’exemple' : '3. Example answer'}</h3>
+      <p id="rag-answer" class="rag-answer">—</p>
+    </div>
+  </div>
+  <p class="lab-footnote">{fr ? 'Limite pédagogique : dans un vrai RAG, la qualité de récupération, la fidélité de la synthèse et la pertinence des sources doivent être évaluées séparément.' : 'Teaching limitation: in a real RAG system, retrieval quality, synthesis fidelity and source relevance need to be evaluated separately.'}</p>
+</section>
+<script is:inline define:vars={{ lang }}>
+  const fr = lang === 'fr';
+  const data = fr ? [
+    { docs: ['RAG : récupération de passages documentaires avant production d’une réponse.', 'Un modèle peut ensuite composer une synthèse à partir de passages sélectionnés.'], answer: 'Le RAG associe recherche de documents et génération. La sélection de passages ne garantit pas à elle seule une réponse exacte.' },
+    { docs: ['Une référence peut pointer vers un document non pertinent.', 'Une citation doit soutenir précisément la proposition à laquelle elle est attachée.'], answer: 'Non. La présence d’un lien est insuffisante : il faut vérifier que le passage cité confirme réellement la réponse.' },
+    { docs: ['Les systèmes automatiques peuvent produire des erreurs factuelles.', 'Les contenus sensibles nécessitent des vérifications adaptées et une responsabilité éditoriale.'], answer: 'L’humain définit les règles, vérifie les preuves et décide de publier ou non les informations importantes.' }
+  ] : [
+    { docs: ['RAG: retrieve documentary passages before producing an answer.', 'A model can then synthesize a response from the selected passages.'], answer: 'RAG combines document retrieval with generation. Selecting passages does not by itself guarantee factual accuracy.' },
+    { docs: ['A reference may point to an irrelevant document.', 'A citation must support the specific claim to which it is attached.'], answer: 'No. A link alone is insufficient: the cited passage must actually support the answer.' },
+    { docs: ['Automated systems can generate factual errors.', 'Sensitive content requires appropriate review and editorial accountability.'], answer: 'Humans set the rules, check the evidence and decide whether important information can be published.' }
+  ];
+  const panel = document.getElementById('rag-documents');
+  const answer = document.getElementById('rag-answer');
+  document.querySelectorAll('[data-rag-question]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const index = Number(button.dataset.ragQuestion);
+      document.querySelectorAll('[data-rag-question]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+      panel.replaceChildren(...data[index].docs.map((line, i) => {
+        const p = document.createElement('p');
+        p.className = 'rag-snippet';
+        p.textContent = (fr ? 'Document ' : 'Document ') + (i + 1) + ' · ' + line;
+        return p;
+      }));
+      answer.textContent = data[index].answer;
+    });
+  });
+</script>
