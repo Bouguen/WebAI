@@ -1,0 +1,66 @@
+---
+const {lang='fr'} = Astro.props;
+const fr=lang==='fr';
+---
+<div class="hero-visual hero-spatial" role="img" aria-label={fr?'Carte spatiale WebAI : l’IA générative, les agents, la recherche RAG, MCP, WebGPU et la confiance reliés autour du Web.':'WebAI spatial map connecting generative AI, agents, RAG search, MCP, WebGPU and trust around the Web.'}>
+  <div class="spatial-panel">
+    <div class="spatial-panel-header" aria-hidden="true">
+      <span class="spatial-panel-signal"><span></span><span></span><span></span></span>
+      <span>WEB<span class="spatial-accent">AI</span> · {fr?'CARTE DES CONNEXIONS':'CONNECTION MAP'}</span>
+      <span class="spatial-panel-chip">SPATIAL WEB</span>
+    </div>
+    <svg class="spatial-orbits-svg" viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="orbitA" x1="64" y1="60" x2="622" y2="366" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#7cc5ff"/><stop offset=".5" stop-color="#61ebf0"/><stop offset="1" stop-color="#9f88ff"/>
+        </linearGradient>
+        <linearGradient id="orbitB" x1="100" y1="330" x2="600" y2="80" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffcc65"/><stop offset=".55" stop-color="#fbd571"/><stop offset="1" stop-color="#ed7097"/>
+        </linearGradient>
+        <radialGradient id="coreGlow">
+          <stop stop-color="#5dbeef" stop-opacity=".62"/><stop offset="1" stop-color="#3154af" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="coreDiamond" x1="300" y1="160" x2="394" y2="257" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#d9f8ff"/><stop offset=".5" stop-color="#7ee9ff"/><stop offset="1" stop-color="#b4a8ff"/>
+        </linearGradient>
+        <filter id="softOrbitGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6"/>
+        </filter>
+      </defs>
+      <g class="spatial-depth-lights">
+        <circle cx="340" cy="219" r="162" fill="url(#coreGlow)" opacity=".55"/>
+        <ellipse cx="340" cy="218" rx="287" ry="146" transform="rotate(-23 340 218)" stroke="#58aaff" stroke-width="8" opacity=".08" filter="url(#softOrbitGlow)"/>
+      </g>
+      <g class="spatial-orbit-set">
+        <ellipse cx="340" cy="218" rx="288" ry="139" transform="rotate(22 340 218)" stroke="url(#orbitA)" stroke-width="2.3" opacity=".69"/>
+        <ellipse cx="340" cy="218" rx="280" ry="126" transform="rotate(-25 340 218)" stroke="url(#orbitB)" stroke-width="2.7" opacity=".9"/>
+        <ellipse cx="340" cy="218" rx="225" ry="84" transform="rotate(63 340 218)" stroke="#77dcf0" stroke-width="1.3" stroke-dasharray="6 8" opacity=".48"/>
+        <ellipse cx="340" cy="218" rx="319" ry="178" transform="rotate(8 340 218)" stroke="#70b5fc" stroke-width="1" stroke-dasharray="4 11" opacity=".25"/>
+        <ellipse class="spatial-moving-orbit" cx="340" cy="218" rx="280" ry="126" transform="rotate(-25 340 218)" stroke="#ffffff" stroke-width="3.8" stroke-dasharray="10 1550" stroke-linecap="round" opacity=".91"/>
+      </g>
+      <g class="spatial-stars" fill="#a9eafa">
+        <circle cx="123" cy="112" r="2.5"/><circle cx="552" cy="132" r="2.3"/><circle cx="123" cy="320" r="3.3"/><circle cx="566" cy="327" r="2.3"/><circle cx="332" cy="31" r="2"/><circle cx="350" cy="394" r="3"/>
+        <circle cx="83" cy="244" r="2" opacity=".45"/><circle cx="599" cy="220" r="2" opacity=".57"/>
+      </g>
+      <g class="spatial-map-labels" font-family="Inter,ui-sans-serif,system-ui,Arial,sans-serif" font-size="18" font-weight="790" letter-spacing="1.5">
+        <text x="96" y="92" fill="#b3a3ff" transform="rotate(-12 96 92)">GENERATIVE</text>
+        <text x="473" y="100" fill="#ffcf81" transform="rotate(12 473 100)">AGENTS</text>
+        <text x="45" y="253" fill="#66f2c6" transform="rotate(-58 45 253)">RAG</text>
+        <text x="584" y="266" fill="#a9dfff" transform="rotate(56 584 266)">MCP</text>
+        <text x="100" y="369" fill="#e5bcff" transform="rotate(11 100 369)">TRUST</text>
+        <text x="466" y="375" fill="#fbd67d" transform="rotate(-9 466 375)">WEBGPU</text>
+        <text x="282" y="52" fill="#72def0" font-size="14">OPEN WEB</text>
+      </g>
+      <g class="spatial-central-symbol">
+        <circle cx="340" cy="218" r="85" fill="url(#coreGlow)" opacity=".72"/>
+        <path d="M340 144L412 216L340 288L268 216L340 144Z" fill="#153b79" fill-opacity=".73" stroke="url(#coreDiamond)" stroke-width="6"/>
+        <path d="M340 177L380 216L340 256L300 216L340 177Z" stroke="#f3fbff" stroke-width="8" stroke-linejoin="round"/>
+        <path d="M340 197L359 216L340 236L321 216L340 197Z" fill="#70dbf2" opacity=".9"/>
+        <circle cx="340" cy="216" r="5" fill="#ffffff"/>
+      </g>
+    </svg>
+    <div class="spatial-panel-foot" aria-hidden="true"><span class="spatial-live-dot"></span>{fr?'INTELLIGENCE EN RÉSEAU':'NETWORKED INTELLIGENCE'} <span>01 / ∞</span></div>
+  </div>
+  <div class="spatial-float-tag spatial-float-one" aria-hidden="true"><span>◇</span> AI + WEB</div>
+  <div class="spatial-float-tag spatial-float-two" aria-hidden="true"><span>✓</span> HUMAN FIRST</div>
+</div>

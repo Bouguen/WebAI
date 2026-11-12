@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RagLab from '../../components/RagLab.astro';
+import AtlasSection from '../../components/AtlasSection.astro';
+import {copy, nav, references} from '../../data/site.js';
+const atlasRoutes=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire'];
+export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; return ['fr','en'].flatMap(lang => [...nav.map(({id}) => id),...routeIds].map(section => ({params:{lang, section}}))); }
+const {lang, section} = Astro.params;
+const t = copy[lang];
+const atlasPage = atlasRoutes.includes(section);
+const page = t.topics[section] ?? {title:section,subtitle:'',tags:[],points:[],detail:''};
+const related = nav.filter(n => n.id !== section).slice(0,3);
+---
+<BaseLayout lang={lang} title={page.title} description={page.subtitle} active={section}>
+  {atlasPage ? <AtlasSection lang={lang} type={section} /> : <><section class="inner-hero"><div class="wrap">
+    <div class="breadcrumbs"><a href={'/'+lang+'/'}>WebAI</a><span aria-hidden="true">/</span><span>{page.title}</span></div>
+    <span class="eyebrow"><span class="eyebrow-dot"></span>{t.editorial}</span>
+    <h1>{page.title}<span class="heading-spark" aria-hidden="true">✳</span></h1>
+    <p class="inner-lede">{page.subtitle}</p>
+    <div class="tag-row">{page.tags.map(tag => <span class="tag">{tag}</span>)}</div>
+  </div></section>
+  <section class="section inner-content-section"><div class="wrap detail-grid">
+    <article class="detail-main">
+      <span class="eyebrow">{lang==='fr'?'COMPRENDRE LE DOMAINE':'UNDERSTAND THE TOPIC'}</span>
+      <p class="intro-paragraph">{page.detail}</p>
+      <h2>{lang==='fr'?'Ce que vous allez découvrir':'What you will discover'}</h2>
+      <ul class="checklist">{page.points.map(point => <li><span aria-hidden="true">✓</span>{point}</li>)}</ul>
+      {section === 'experimenter' && <RagLab lang={lang} />}
+      {section === 'verifier' && <p class="verify-direct-link"><a href={'/'+lang+'/fiche-verification/'} class="atlas-pill-cta">{lang==='fr'?'Ouvrir la fiche de vérification':'Open evidence worksheet'} ↗</a></p>}
+      {section === 'verifier' && <div class="reference-section"><h2>{t.sourcesTitle}</h2><p>{t.aboutSources}</p><div class="references-stack">{references.map(ref => <a href={ref.url} target="_blank" rel="noopener noreferrer">{ref.name}<span aria-hidden="true">↗</span></a>)}</div></div>}
+      <div class="info-note"><span aria-hidden="true">ⓘ</span><p>{t.notLive}</p></div>
+    </article>
+    <aside class="detail-aside" aria-label={lang==='fr'?'Autres domaines':'Related topics'}>
+      <div class="aside-panel"><span class="eyebrow">{lang==='fr'?'POURSUIVRE':'EXPLORE MORE'}</span><h3>{lang==='fr'?'D’autres chemins':'More paths'}</h3>
+      {related.map(item => <a href={'/'+lang+'/'+item.id+'/'}><span aria-hidden="true">{item.glyph}</span>{t.topics[item.id].title}<span class="aside-arrow" aria-hidden="true">↗</span></a>)}
+      <a class="aside-all" href={'/'+lang+'/'}>{t.allSections}</a></div>
+    </aside>
+  </div></section></>}
+</BaseLayout>

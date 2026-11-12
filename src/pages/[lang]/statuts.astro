@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const records=[
+ {id:'wcag',name:'WCAG 2.2',type:'w3c-recommendation',status:{fr:'W3C Recommendation',en:'W3C Recommendation'},date:'2024-12-12',source:'https://www.w3.org/TR/WCAG22/',topic:'accessibility',description:{fr:'Recommandation d’accessibilité du contenu Web.',en:'Recommendation for Web content accessibility.'}},
+ {id:'webgpu',name:'WebGPU',type:'w3c-candidate',status:{fr:'Candidate Recommendation Draft',en:'Candidate Recommendation Draft'},date:'2026-09-15',source:'https://www.w3.org/TR/webgpu/',topic:'webgpu',description:{fr:'API d’opérations de rendu et de calcul sur GPU.',en:'Web API for GPU rendering and computation.'}},
+ {id:'webnn',name:'Web Neural Network API (WebNN)',type:'w3c-candidate',status:{fr:'Candidate Recommendation Draft',en:'Candidate Recommendation Draft'},date:'2026-10-21',source:'https://www.w3.org/TR/webnn/',topic:'webgpu',description:{fr:'API d’accélération de l’inférence des réseaux neuronaux.',en:'API for accelerating neural network inference.'}},
+ {id:'webmcp',name:'WebMCP',type:'community',status:{fr:'Community Group Draft (non-norme)',en:'Community Group Draft (not a standard)'},date:'2026-11-12',source:'https://webmachinelearning.github.io/webmcp/',topic:'webmcp',description:{fr:'Projet d’API d’exposition de fonctions Web aux agents.',en:'Draft API for exposing Web functionality to agents.'}},
+ {id:'mcp',name:'Model Context Protocol',type:'project',status:{fr:'Spécification de protocole publiée',en:'Published protocol specification'},date:'2026-07-28',source:'https://modelcontextprotocol.io/specification/',topic:'mcp',description:{fr:'Échanges structurés entre applications IA et serveurs de capacités.',en:'Structured exchanges between AI hosts and capability servers.'}},
+ {id:'a2a',name:'Agent2Agent Protocol',type:'project',status:{fr:'Version publiée 1.0.0',en:'Published release 1.0.0'},date:null,source:'https://a2a-protocol.org/v1.0.0/specification/',topic:'a2a',description:{fr:'Communication et coopération entre agents indépendants.',en:'Communication and cooperation between independent agents.'}},
+ {id:'c2pa',name:'C2PA Specifications',type:'project',status:{fr:'Ensemble de spécifications et recommandations',en:'Specifications and guidance collection'},date:null,source:'https://spec.c2pa.org/specifications/',topic:'c2pa',description:{fr:'Provenance et historique déclaratif des médias numériques.',en:'Digital media provenance and declared history.'}},
+ {id:'rag',name:'Retrieval-Augmented Generation (RAG)',type:'research',status:{fr:'Publication de recherche / prépublication',en:'Research article / preprint'},date:'2020-05-22',source:'https://arxiv.org/abs/2005.11401',topic:'rag',description:{fr:'Article scientifique décrivant des modèles de génération et récupération.',en:'Research paper on models combining retrieval and generation.'}}
+];
+const categories=[
+ {id:'all',name:fr?'Tous les statuts':'All statuses'},
+ {id:'w3c-recommendation',name:fr?'Recommandation W3C':'W3C Recommendation'},
+ {id:'w3c-candidate',name:fr?'Travaux W3C en cours':'W3C Candidate Drafts'},
+ {id:'community',name:fr?'Brouillon communautaire':'Community drafts'},
+ {id:'project',name:fr?'Protocoles et projets':'Protocols and projects'},
+ {id:'research',name:fr?'Recherche':'Research'}
+];
+---
+<BaseLayout lang={lang} title={fr?'Statuts des technologies':'Technology status'}>
+<section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span>{fr?'Statuts des technologies':'Technology status'}</div>
+<span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI · STANDARDS WATCH · {fr?'INSTANTANÉ DATÉ':'DATED SNAPSHOT'}</span>
+<div class="atlas-heading"><div><h1>{fr?'Une technologie publiée n’est pas toujours une norme.':'Published technology is not always a standard.'}</h1><p>{fr?'Comparer les statuts documentaires au 12 novembre 2026 : recommandation W3C, brouillon, spécification de projet ou recherche. Les versions évoluent : la source officielle fait autorité.':'Compare document statuses as of 12 November 2026: W3C Recommendation, draft, project specification or research. Versions change; consult the official source.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">▤</div></div></div>
+</div></section>
+<section class="section"><div class="wrap status-content">
+<div class="status-explainer"><strong>{fr?'Pourquoi cette distinction ?':'Why make the distinction?'}</strong><p>{fr?'Une Candidate Recommendation Draft appartient au processus de normalisation du W3C, mais n’est pas une Recommendation finale. Un rapport de groupe communautaire W3C n’est pas une norme W3C. Une spécification de projet peut être ouverte et utile sans être une norme W3C.':'A Candidate Recommendation Draft is part of the W3C standards process but is not a final Recommendation. A W3C Community Group report is not a W3C Standard. A project specification can be open and useful without being a W3C Standard.'}</p></div>
+<div class="status-filter" role="group" aria-label={fr?'Filtrer les statuts':'Filter statuses'}>
+ {categories.map((category,i)=><button type="button" data-status-filter={category.id} aria-pressed={i===0?'true':'false'}>{category.name}</button>)}
+</div>
+<div class="status-count"><span id="status-count">{records.length}</span> {fr?'documents classés':'documents classified'} · {fr?'Révision ponctuelle : 12 novembre 2026':'Snapshot: 12 November 2026'}</div>
+<div class="status-grid">{records.map(r=><article class="status-card" data-status-card data-type={r.type}>
+ <div class="status-card-head"><span class="status-card-marker">▤</span><span class="status-kind">{r.type==='community'?'Community Group':r.type.startsWith('w3c')?'W3C':r.type==='project'?'Project':'Research'}</span></div>
+ <h2>{r.name}</h2><p>{r.description[lang]}</p><div class="status-status">{r.status[lang]}</div>
+ <p class="status-date">{r.date?(fr?'Document ou version : ':'Document or release: ')+r.date:(fr?'Date : consulter la source':'Date: check original source')}</p>
+ <div class="status-actions"><a href={'/'+lang+'/encyclopedie/'+r.topic+'/'}>{fr?'Comprendre':'Learn'} ↗</a><a href={r.source} target="_blank" rel="noopener noreferrer">{fr?'Original':'Original'} ↗</a></div>
+ </article>)}</div>
+<div class="status-note"><strong>{fr?'Méthode':'Method'}</strong><p>{fr?'Cette liste est une sélection éditoriale et non un registre officiel exhaustif. Les dates sont celles des documents indiqués, pas la date à laquelle nous aurions approuvé leur contenu. Vérifiez statut, disponibilité, version et droits avant toute réutilisation.':'This is an editorial selection, not a complete official registry. Dates refer to the indicated documents, not to any editorial approval. Check status, availability, version and rights before reuse.'}</p><a href={'/'+lang+'/methodologie/'}>{fr?'Politique de vérification de WebAI':'WebAI verification policy'} ↗</a></div>
+</div></section>
+<script is:inline>
+ const filters=[...document.querySelectorAll('[data-status-filter]')],cards=[...document.querySelectorAll('[data-status-card]')];
+ const count=document.getElementById('status-count');
+ filters.forEach(btn=>btn.addEventListener('click',()=>{
+  const value=btn.dataset.statusFilter;filters.forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+  let n=0;cards.forEach(card=>{const show=value==='all'||card.dataset.type===value;card.hidden=!show;if(show)n++;});count.textContent=String(n);
+ }));
+</script>
+</BaseLayout>

@@ -1,0 +1,30 @@
+name: WebAI research watch (staging only)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 8 * * 0,3'
+permissions:
+  contents: read
+concurrency:
+  group: webai-monitor-readonly
+  cancel-in-progress: false
+jobs:
+  stage-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Offline tests
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Collect metadata candidates only
+        run: python3 scripts/monitoring.py --sources config/monitor-feeds.json --out outputs/monitoring
+      - name: Upload for manual editorial review only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: webai-candidates-review-staging
+          path: outputs/monitoring/
+          retention-days: 7
+          if-no-files-found: warn

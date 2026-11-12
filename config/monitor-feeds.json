@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "policy": "metadata_only_no_auto_publication",
+  "sources": [
+    {
+      "id": "w3c-news",
+      "organization": "W3C",
+      "hostname": "www.w3.org",
+      "url": "https://www.w3.org/news/feed",
+      "enabled": true,
+      "note": "Official W3C news feed; verify its endpoint before live use"
+    },
+    {
+      "id": "w3c-blog",
+      "organization": "W3C",
+      "hostname": "www.w3.org",
+      "url": "https://www.w3.org/blog/feed",
+      "enabled": true,
+      "note": "Official W3C blog; not itself a technical standard"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+---
+import {atlas} from '../data/atlas.js';
+const {lang='fr'}=Astro.props;const fr=lang==='fr';
+const shortcuts=[
+ {key:'encyclopedie',icon:'◇',title:fr?'Encyclopédie':'Encyclopedia',desc:fr?'Notions et explications':'Concepts and explainers',number:atlas.topics.length},
+ {key:'outils',icon:'◈',title:fr?'Outils IA':'AI tools',desc:fr?'Solutions à comparer':'Solutions to explore',number:atlas.catalog.length},
+ {key:'ressources',icon:'▤',title:fr?'Sources':'Sources',desc:fr?'Normes et documents':'Standards and documents',number:atlas.sources.length},
+ {key:'glossaire',icon:'Aa',title:fr?'Glossaire':'Glossary',desc:fr?'Termes bilingues':'Bilingual terms',number:atlas.glossary.length}
+];
+---
+<section class="atlas-home-overview"><div class="wrap">
+  <div class="atlas-home-top"><div><span class="eyebrow"><span class="atlas-beacon"></span> THE WEBAI ATLAS</span><h2>{fr?'Un portail pour comprendre, créer et agir.':'A portal to understand, build and act.'}</h2><p>{fr?'Trouvez un concept, un outil, une publication ou un parcours. Chaque porte d’entrée mène vers des ressources concrètes.':'Find a concept, a tool, a publication or a learning path. Each route leads to concrete resources.'}</p></div>
+    <a class="atlas-home-search" href={'/'+lang+'/recherche/'}><span aria-hidden="true">⌕</span> {fr?'Rechercher dans WebAI':'Search WebAI'} <kbd>↗</kbd></a></div>
+  <div class="atlas-home-shortcuts">{shortcuts.map(x=><a href={'/'+lang+'/'+x.key+'/'} class="atlas-shortcut"><span class="atlas-shortcut-head"><span class="atlas-shortcut-icon">{x.icon}</span><span class="atlas-shortcut-number">{x.number}</span></span><strong>{x.title}</strong><small>{x.desc}</small><span class="atlas-shortcut-arrow" aria-hidden="true">↗</span></a>)}</div>
+  <div class="atlas-persona"><div><span class="eyebrow">{fr?'VOUS ÊTES…':'YOU ARE…'}</span><strong>{fr?'Un parcours adapté à votre profil':'Find a path that fits you'}</strong></div>
+  <div class="atlas-persona-links"><a href={'/'+lang+'/parcours/'}>{fr?'Débutant':'Beginner'} ↗</a><a href={'/'+lang+'/parcours/'}>{fr?'Enseignant':'Educator'} ↗</a><a href={'/'+lang+'/parcours/'}>{fr?'Développeur':'Developer'} ↗</a><a href={'/'+lang+'/parcours/'}>{fr?'Chercheur':'Researcher'} ↗</a></div></div>
+<div class="atlas-action-ribbon">
+ <div><span class="eyebrow">{fr?'OUTILS D’AIDE À LA DÉCISION':'DECISION SUPPORT'}</span><strong>{fr?'Pour aller de la connaissance à l’action':'From knowledge to action'}</strong></div>
+ <div class="atlas-action-ribbon-links"><a href={'/'+lang+'/comparateur/'}>{fr?'Comparer les outils':'Compare tools'} ↗</a><a href={'/'+lang+'/guides/'}>{fr?'Guides pas à pas':'Practical guides'} ↗</a><a href={'/'+lang+'/fiche-verification/'}>{fr?'Vérifier une source':'Check a source'} ↗</a></div>
+ </div></div></section>
+<section class="atlas-home-feature"><div class="wrap atlas-feature-grid">
+  <div><span class="eyebrow">{fr?'APPRENDRE EN FAISANT':'LEARN BY DOING'}</span><h2>{fr?'Un laboratoire, pas une vitrine.':'A laboratory, not a showcase.'}</h2><p>{fr?'Composez un prompt structuré, vérifiez du JSON, estimez une longueur de texte, mesurez un contraste et expérimentez la validation d’une action agentique. Toutes ces opérations s’exécutent localement.':'Build a structured prompt, check JSON, estimate text length, measure contrast and experiment with an agent approval gate. These operations run locally.'}</p><a href={'/'+lang+'/laboratoire/'} class="atlas-pill-cta">{fr?'Ouvrir WebAI Studio':'Open WebAI Studio'} ↗</a></div>
+  <div class="atlas-feature-visual" aria-hidden="true"><div class="atlas-feature-head"><span></span><span></span><span></span><strong>WebAI / Studio</strong></div><div class="atlas-feature-lines"><span>01 · PROMPT</span><span class="on">02 · VALIDATE JSON ✓</span><span>03 · MEASURE</span><span>04 · CONTRAST</span></div><div class="atlas-feature-glow">✳</div></div>
+</div></section>

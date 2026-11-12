@@ -1,0 +1,35 @@
+name: Validate WebAI
+on:
+  pull_request:
+  push:
+    branches: [main, 'feat/**']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+      - name: Verify French and English page parity and language links
+        run: npm run verify:locales
+      - name: Assert localized static routes and Pagefind
+        run: |
+          test -f dist/fr/index.html
+          test -f dist/en/index.html
+          test -f dist/fr/comparateur/index.html
+          test -f dist/en/guides/index.html
+          test -f dist/fr/carte/index.html
+          test -f dist/en/statuts/index.html
+          test -f dist/fr/encyclopedie/rag/index.html
+          test -f dist/en/encyclopedie/webmcp/index.html
+          test -f dist/fr/fiche-verification/index.html
+          test -f dist/pagefind/pagefind.js

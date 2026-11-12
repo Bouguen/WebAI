@@ -1,0 +1,54 @@
+---
+const {lang='fr'}=Astro.props;const fr=lang==='fr';
+---
+<div class="studio-intro"><span class="atlas-beacon"></span><div><strong>{fr?'Tous les outils fonctionnent localement':'All tools work locally'}</strong><p>{fr?'Pas d’envoi de vos textes à un service distant. Aucune génération IA n’est simulée comme si elle provenait d’un modèle réel.':'No text is sent to a remote service. No fake AI output is presented as model-generated.'}</p></div></div>
+<div class="studio-grid">
+<section class="studio-card"><span class="studio-number">01 / {fr?'CONCEPTION':'DESIGN'}</span><h2>{fr?'Constructeur de prompts':'Prompt builder'}</h2><p>{fr?'Structurez une demande claire et copiez-la dans l’outil de votre choix.':'Build a clear request and copy it to your tool of choice.'}</p>
+  <label>{fr?'Rôle attendu':'Expected role'}<input id="prompt-role" placeholder={fr?'Ex. chercheur documentaire':'E.g. research analyst'}/></label>
+  <label>{fr?'Objectif':'Goal'}<textarea id="prompt-goal" rows="2" placeholder={fr?'Décrivez le résultat recherché…':'Describe the desired outcome…'}></textarea></label>
+  <label>{fr?'Contexte et contraintes':'Context and constraints'}<textarea id="prompt-context" rows="2" placeholder={fr?'Public, sources, limites…':'Audience, sources, constraints…'}></textarea></label>
+  <label>{fr?'Format de réponse':'Output format'}<select id="prompt-format"><option value="structured">{fr?'Réponse structurée':'Structured answer'}</option><option value="table">{fr?'Tableau':'Table'}</option><option value="steps">{fr?'Étapes':'Steps'}</option><option value="json">JSON</option></select></label>
+  <button class="studio-action" id="prompt-build" type="button">{fr?'Composer le prompt':'Build prompt'} ↗</button>
+  <label class="studio-output">{fr?'Résultat modifiable':'Editable result'}<textarea id="prompt-output" rows="7" placeholder={fr?'Le prompt composé apparaîtra ici.':'Your composed prompt will appear here.'}></textarea></label>
+  <button class="studio-copy" id="prompt-copy" type="button">{fr?'Copier le prompt':'Copy prompt'}</button><span id="prompt-message" role="status" class="studio-status"></span>
+</section>
+<section class="studio-card"><span class="studio-number">02 / {fr?'DONNÉES':'DATA'}</span><h2>{fr?'Validateur et formateur JSON':'JSON validator & formatter'}</h2><p>{fr?'Vérifiez la syntaxe, formatez ou minifiez un document JSON.':'Check syntax, pretty-print or minify a JSON document.'}</p>
+  <label>{fr?'Votre JSON':'Your JSON'}<textarea id="json-input" rows="9" spellcheck="false" placeholder='{"source":"WebAI","status":"draft"}'></textarea></label>
+  <div class="studio-actions"><button class="studio-action" id="json-pretty" type="button">{fr?'Valider et formater':'Validate & format'}</button><button class="studio-copy" id="json-minify" type="button">{fr?'Minifier':'Minify'}</button></div>
+  <div id="json-result" class="studio-result" role="status">{fr?'Aucun JSON vérifié.':'No JSON checked yet.'}</div>
+</section>
+<section class="studio-card"><span class="studio-number">03 / {fr?'ANALYSE':'ANALYSIS'}</span><h2>{fr?'Estimateur de longueur':'Text length estimator'}</h2><p>{fr?'Compte les caractères et mots, et donne seulement un ordre de grandeur des tokens.':'Counts characters and words; token counts are a rough estimate only.'}</p>
+  <label>{fr?'Texte à analyser':'Text to analyze'}<textarea id="token-text" rows="7" placeholder={fr?'Collez votre texte ici…':'Paste your text here…'}></textarea></label>
+  <div class="studio-metrics"><div><b id="metric-chars">0</b><span>{fr?'Caractères':'Characters'}</span></div><div><b id="metric-words">0</b><span>{fr?'Mots':'Words'}</span></div><div><b id="metric-tokens">≈ 0</b><span>{fr?'Tokens estimés':'Est. tokens'}</span></div></div>
+  <p class="studio-help">{fr?'Estimation simplifiée (environ 4 caractères par token), non substituable au tokenizer du modèle.':'Simplified approximation (~4 characters/token), not a substitute for the model tokenizer.'}</p>
+</section>
+<section class="studio-card"><span class="studio-number">04 / {fr?'ACCESSIBILITÉ':'ACCESSIBILITY'}</span><h2>{fr?'Vérificateur de contraste':'Contrast checker'}</h2><p>{fr?'Comparez deux couleurs selon la formule de contraste WCAG.':'Compare two colors using the WCAG contrast formula.'}</p>
+  <div class="studio-colors"><label>{fr?'Texte':'Text'}<input id="contrast-fg" type="color" value="#183153"/></label><label>{fr?'Fond':'Background'}<input id="contrast-bg" type="color" value="#f3f8ff"/></label></div>
+  <div id="contrast-demo" class="studio-contrast-demo">WebAI · Aa 123</div>
+  <div class="studio-metrics"><div><b id="contrast-ratio">—</b><span>{fr?'Ratio':'Ratio'}</span></div><div><b id="contrast-aa">—</b><span>WCAG AA</span></div></div>
+  <p class="studio-help">{fr?'Le contrôle automatisé du contraste ne remplace pas un audit d’accessibilité complet.':'Contrast calculation is not a full accessibility audit.'}</p>
+</section>
+<section class="studio-card studio-wide"><span class="studio-number">05 / {fr?'SÉCURITÉ':'SAFETY'}</span><h2>{fr?'Simulation de validation d’un agent':'Agent approval simulation'}</h2><p>{fr?'Une action sensible doit rester bloquée avant autorisation explicite. Cette démonstration ne contacte aucun service et ne réserve rien.':'Sensitive actions stay blocked until explicit approval. This demo contacts no service and makes no booking.'}</p>
+  <div class="studio-agent-flow"><span>{fr?'Tâche : préparer une réservation fictive':'Task: prepare a fictional booking'}</span><span aria-hidden="true">→</span><span id="agent-stage">{fr?'Action en attente':'Awaiting approval'}</span></div>
+  <div class="studio-actions"><button id="agent-approve" type="button" class="studio-action">{fr?'Autoriser la simulation':'Approve simulation'}</button><button id="agent-reset" type="button" class="studio-copy">{fr?'Réinitialiser':'Reset'}</button></div>
+  <div id="agent-result" role="status" class="studio-result">{fr?'Aucune action effectuée.':'No action performed.'}</div>
+</section>
+</div>
+<script is:inline define:vars={{lang}}>
+  const fr=lang==='fr';
+  const $=id=>document.getElementById(id);
+  $('prompt-build')?.addEventListener('click',()=>{
+    const role=$('prompt-role').value.trim(),goal=$('prompt-goal').value.trim(),context=$('prompt-context').value.trim(),format=$('prompt-format').value;
+    const formatLabel=({structured:fr?'réponse structurée':'structured answer',table:fr?'tableau':'table',steps:fr?'étapes':'steps',json:'JSON'})[format];
+    $('prompt-output').value=fr?['Rôle : '+(role||'assistant documentaire'), 'Objectif : '+(goal||'[préciser l’objectif]'),'Contexte et contraintes : '+(context||'indiquer les hypothèses et limites'), 'Format de sortie : '+formatLabel,'Consignes : distinguer faits, interprétations et incertitudes ; citer les sources vérifiables ; ne pas inventer de références.'].join('\n\n'):['Role: '+(role||'research assistant'),'Goal: '+(goal||'[specify goal]'),'Context and constraints: '+(context||'state assumptions and limitations'),'Output format: '+formatLabel,'Guidelines: distinguish facts from interpretation and uncertainty; cite verifiable sources; do not invent references.'].join('\n\n');
+  });
+  $('prompt-copy')?.addEventListener('click',async()=>{const output=$('prompt-output').value;if(!output)return;try{await navigator.clipboard.writeText(output);$('prompt-message').textContent=fr?'Copié.':'Copied.';}catch(e){$('prompt-output').focus();$('prompt-output').select();$('prompt-message').textContent=fr?'Sélectionnez puis copiez le texte.':'Select and copy the text.';}});
+  const processJSON=(pretty)=>{try{const parsed=JSON.parse($('json-input').value);$('json-input').value=JSON.stringify(parsed,null,pretty?2:0);$('json-result').textContent=fr?'JSON valide.':'Valid JSON.';$('json-result').dataset.status='good';}catch(e){$('json-result').textContent=(fr?'JSON invalide : ':'Invalid JSON: ')+e.message;$('json-result').dataset.status='bad';}};
+  $('json-pretty')?.addEventListener('click',()=>processJSON(true));$('json-minify')?.addEventListener('click',()=>processJSON(false));
+  $('token-text')?.addEventListener('input',()=>{const s=$('token-text').value;$('metric-chars').textContent=String([...s].length);$('metric-words').textContent=String(s.trim()?s.trim().split(/\s+/u).length:0);$('metric-tokens').textContent='≈ '+Math.ceil(s.length/4);});
+  const luminance=(hex)=>{const parts=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));return parts[0]*.2126+parts[1]*.7152+parts[2]*.0722;};
+  const updateContrast=()=>{const fg=$('contrast-fg').value,bg=$('contrast-bg').value,l1=luminance(fg),l2=luminance(bg),ratio=(Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);$('contrast-demo').style.color=fg;$('contrast-demo').style.background=bg;$('contrast-ratio').textContent=ratio.toFixed(2)+':1';$('contrast-aa').textContent=ratio>=4.5?(fr?'Réussi':'Pass'):fr?'Insuffisant':'Fail';};
+  ['contrast-fg','contrast-bg'].forEach(x=>$(x)?.addEventListener('input',updateContrast));updateContrast();
+  $('agent-approve')?.addEventListener('click',()=>{$('agent-stage').textContent=fr?'Simulation approuvée':'Simulation approved';$('agent-result').textContent=fr?'Une action fictive a été validée dans cette démonstration. Aucune réservation réelle n’a été effectuée.':'A fictional action was approved in this demo. No real reservation was made.';$('agent-approve').disabled=true;});
+  $('agent-reset')?.addEventListener('click',()=>{$('agent-stage').textContent=fr?'Action en attente':'Awaiting approval';$('agent-result').textContent=fr?'Aucune action effectuée.':'No action performed.';$('agent-approve').disabled=false;});
+</script>

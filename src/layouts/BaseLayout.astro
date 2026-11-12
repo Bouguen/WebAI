@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+import '../styles/atlas.css';
+import '../styles/dossiers.css';
+import '../styles/hero-spatial.css';
+import { copy, nav } from '../data/site.js';
+const { lang = 'fr', title, description, active = '' } = Astro.props;
+const t = copy[lang] ?? copy.fr;
+const current = Astro.url.pathname;
+// Every localized route exists in both languages. Keep the same page and search query.
+const localizedPath = (locale) => current.replace(/^\/(?:fr|en)(?=\/|$)/, '/' + locale) + Astro.url.search;
+const localizedAbsolutePath = (locale) => new URL(current.replace(/^\/(?:fr|en)(?=\/|$)/, '/' + locale), Astro.url.origin).href;
+const languageChoices = [
+  {code:'fr', nativeName:'Français', label:'Afficher cette page en français'},
+  {code:'en', nativeName:'English', label:'View this page in English'}
+];
+const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, url: '/' + lang + '/' + item.id + '/'}));
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description ?? t.metaDescription} />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#101a30" />
+    <title>{title ? title + ' · WebAI' : t.metaTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang="fr" href={localizedAbsolutePath('fr')} />
+    <link rel="alternate" hreflang="en" href={localizedAbsolutePath('en')} />
+    <link rel="alternate" hreflang="x-default" href={localizedAbsolutePath('fr')} />
+    <script is:inline>
+      try { const theme = localStorage.getItem('webai-theme'); if(theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.skip}</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href={'/' + lang + '/'} aria-label={lang==='fr'?'WebAI — accueil':'WebAI — home'}>
+          <span class="brand-symbol" aria-hidden="true">✳</span>
+          <span>Web<span class="brand-ai">AI</span></span>
+        </a>
+        <nav id="primary-nav" class="primary-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+          {navigation.map((item) => <a class:list={['nav-link', {active: active === item.id}]} href={item.url}><span class="nav-icon" aria-hidden="true">{item.glyph}</span>{item.title}</a>)}
+        </nav>
+        <div class="header-actions">
+          <a class="icon-button search-link" href={'/' + lang + '/recherche/'} title={t.search} aria-label={t.search}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></a>
+          <nav class="locale-switch" aria-label={lang==='fr'?'Choisir la langue':'Choose language'}>
+            {languageChoices.map(choice => <a
+              href={localizedPath(choice.code)}
+              lang={choice.code}
+              hreflang={choice.code}
+              class:list={['locale-option',{selected:choice.code===lang}]}
+              aria-label={choice.label}
+              aria-current={choice.code===lang?'page':undefined}
+              title={choice.nativeName}
+            >{choice.code.toUpperCase()}</a>)}
+          </nav>
+          <button class="icon-button theme-toggle" type="button" aria-label={t.theme} title={t.theme} aria-pressed="false"><span aria-hidden="true">◐</span></button>
+          <button class="icon-button menu-toggle" type="button" aria-label={t.menu} aria-controls="primary-nav" aria-expanded="false"><span aria-hidden="true">☰</span></button>
+        </div>
+      </div>
+    </header>
+    <nav class="atlas-quickbar" aria-label={lang==='fr'?'Accès aux espaces WebAI':'WebAI topic navigation'}><div class="wrap atlas-quickbar-shell">
+      <div class="atlas-quickbar-inner">
+       {[
+         ['encyclopedie','◇',lang==='fr'?'Encyclopédie':'Encyclopedia'],
+         ['outils','◈',lang==='fr'?'Outils IA':'AI tools'],
+         ['ressources','▤',lang==='fr'?'Sources':'Sources'],
+         ['glossaire','Aa',lang==='fr'?'Glossaire':'Glossary'],
+         ['parcours','▦',lang==='fr'?'Parcours':'Learning'],
+         ['publications','⌁',lang==='fr'?'Recherche':'Research'],
+         ['secteurs','▣',lang==='fr'?'Applications':'Applications'],
+         ['laboratoire','✳','WebAI Lab'],
+         ['comparateur','⇄',lang==='fr'?'Comparateur':'Comparison'],
+         ['guides','▦',lang==='fr'?'Guides pratiques':'Practical guides'],
+         ['fiche-verification','✓',lang==='fr'?'Fiche de preuves':'Evidence check'],
+         ['methodologie','▤',lang==='fr'?'Méthodologie':'Methodology'],
+         ['carte','◎',lang==='fr'?'Carte des savoirs':'Knowledge map'],
+         ['statuts','◧',lang==='fr'?'Statuts & normes':'Standards status'],
+         ['observatoire','◎',lang==='fr'?'Observatoire':'Observatory']
+       ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
+      </div>
+    </div></nav>
+    <main id="main" data-pagefind-body><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap footer-top">
+        <div>
+          <div class="footer-brand">Web<span>AI</span><span class="footer-star">✳</span></div>
+          <p>{t.footerText}</p>
+        </div>
+        <div class="footer-links">
+          <a href={'/' + lang + '/decouvrir/'}>{t.topics.decouvrir.title}</a>
+          <a href={'/' + lang + '/verifier/'}>{t.topics.verifier.title}</a>
+          <a href={'/' + lang + '/recherche/'}>{t.search}</a>
+          <a href={'/' + lang + '/methodologie/'}>{lang === 'fr' ? 'Méthodologie' : 'Methodology'}</a>
+        </div>
+        <nav class="footer-language-links" aria-label={lang==='fr'?'Versions linguistiques':'Language versions'}>
+          <strong>{lang==='fr'?'Langues':'Languages'}</strong>
+          {languageChoices.map(choice => <a
+            href={localizedPath(choice.code)}
+            lang={choice.code}
+            hreflang={choice.code}
+            aria-current={choice.code===lang?'page':undefined}
+          >{choice.nativeName}</a>)}
+        </nav>
+      </div>
+      <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span></div>
+    </footer>
+    <script is:inline>
+      const header = document.querySelector('.site-header');
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.primary-nav');
+      const themeBtn = document.querySelector('.theme-toggle');
+      const closeMenu = () => { nav?.classList.remove('is-open'); toggle?.setAttribute('aria-expanded','false'); };
+      toggle?.addEventListener('click', () => { const open = !nav.classList.contains('is-open'); nav.classList.toggle('is-open', open); toggle.setAttribute('aria-expanded', String(open)); });
+      document.addEventListener('click', (event) => { if (!header?.contains(event.target)) closeMenu(); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') { closeMenu(); toggle?.focus(); } });
+      nav?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      themeBtn?.addEventListener('click', () => {
+        const dark = document.documentElement.dataset.theme !== 'dark' && (document.documentElement.dataset.theme === 'light' ? false : !window.matchMedia('(prefers-color-scheme: dark)').matches);
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : document.documentElement.dataset.theme === 'light' ? 'dark' : (dark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = next;
+        themeBtn.setAttribute('aria-pressed', String(next === 'dark'));
+        try { localStorage.setItem('webai-theme', next); } catch(e) {}
+      });
+    </script>
+  </body>
+</html>
