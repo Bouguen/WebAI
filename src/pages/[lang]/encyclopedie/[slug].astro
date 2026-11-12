@@ -29,7 +29,7 @@ const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary d
    </div>
   </div></header>
   <div class="wrap kb-layout">
-   <main class="kb-main">
+   <div class="kb-main">
     <aside class="kb-editorial-note">
       <strong>{fr?'Transparence éditoriale':'Editorial transparency'}</strong>
       <p>{fr?'Cette page appartient à une prévisualisation pédagogique et reste classée « à vérifier ». Les liens renvoient aux documents d’origine ; une source pertinente ne constitue pas, à elle seule, une approbation scientifique de toutes les formulations.':'This page is an educational preview marked “review required”. Links lead to original documents; a relevant primary source does not, by itself, constitute a scientific endorsement of every statement.'}</p>
@@ -69,7 +69,7 @@ const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary d
      </a>)}</div>
     </section>
     <div class="kb-end"><a href={'/'+lang+'/encyclopedie/'}>← {fr?'Toutes les notions':'All topics'}</a><a href={'/'+lang+'/fiche-verification/'}>{fr?'Examiner les preuves':'Examine the evidence'} ↗</a></div>
-   </main>
+   </div>
    <aside class="kb-aside" aria-label={fr?'Ressources complémentaires':'Related resources'}>
     <div class="kb-side-box"><span class="eyebrow">{fr?'À DÉCOUVRIR AUSSI':'RELATED KNOWLEDGE'}</span>
       {related.map(rel=><a class="kb-related" href={'/'+lang+'/encyclopedie/'+rel.slug+'/'}><span>◇</span><span>{L(rel.title,lang)}</span><span aria-hidden="true">↗</span></a>)}
