@@ -19,6 +19,8 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm test
       - run: npm run build
+      - name: Verify French and English page parity and language links
+        run: npm run verify:locales
       - name: Assert localized static routes and Pagefind
         run: |
           test -f dist/fr/index.html

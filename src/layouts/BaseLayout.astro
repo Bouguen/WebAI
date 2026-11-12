@@ -7,8 +7,13 @@ import { copy, nav } from '../data/site.js';
 const { lang = 'fr', title, description, active = '' } = Astro.props;
 const t = copy[lang] ?? copy.fr;
 const current = Astro.url.pathname;
-const other = lang === 'fr' ? 'en' : 'fr';
-const otherPath = current.replace(/^\/(fr|en)\//, '/' + other + '/');
+// Every localized route exists in both languages. Keep the same page and search query.
+const localizedPath = (locale) => current.replace(/^\/(?:fr|en)(?=\/|$)/, '/' + locale) + Astro.url.search;
+const localizedAbsolutePath = (locale) => new URL(current.replace(/^\/(?:fr|en)(?=\/|$)/, '/' + locale), Astro.url.origin).href;
+const languageChoices = [
+  {code:'fr', nativeName:'Français', label:'Afficher cette page en français'},
+  {code:'en', nativeName:'English', label:'View this page in English'}
+];
 const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, url: '/' + lang + '/' + item.id + '/'}));
 ---
 <!doctype html>
@@ -21,6 +26,9 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
     <meta name="theme-color" content="#101a30" />
     <title>{title ? title + ' · WebAI' : t.metaTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang="fr" href={localizedAbsolutePath('fr')} />
+    <link rel="alternate" hreflang="en" href={localizedAbsolutePath('en')} />
+    <link rel="alternate" hreflang="x-default" href={localizedAbsolutePath('fr')} />
     <script is:inline>
       try { const theme = localStorage.getItem('webai-theme'); if(theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme; } catch (e) {}
     </script>
@@ -29,7 +37,7 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
     <a class="skip-link" href="#main">{t.skip}</a>
     <header class="site-header">
       <div class="wrap header-inner">
-        <a class="brand" href={'/' + lang + '/'} aria-label="WebAI — accueil">
+        <a class="brand" href={'/' + lang + '/'} aria-label={lang==='fr'?'WebAI — accueil':'WebAI — home'}>
           <span class="brand-symbol" aria-hidden="true">✳</span>
           <span>Web<span class="brand-ai">AI</span></span>
         </a>
@@ -38,7 +46,17 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
         </nav>
         <div class="header-actions">
           <a class="icon-button search-link" href={'/' + lang + '/recherche/'} title={t.search} aria-label={t.search}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></a>
-          <a class="lang-switch" href={otherPath} aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}>{other.toUpperCase()}</a>
+          <nav class="locale-switch" aria-label={lang==='fr'?'Choisir la langue':'Choose language'}>
+            {languageChoices.map(choice => <a
+              href={localizedPath(choice.code)}
+              lang={choice.code}
+              hreflang={choice.code}
+              class:list={['locale-option',{selected:choice.code===lang}]}
+              aria-label={choice.label}
+              aria-current={choice.code===lang?'page':undefined}
+              title={choice.nativeName}
+            >{choice.code.toUpperCase()}</a>)}
+          </nav>
           <button class="icon-button theme-toggle" type="button" aria-label={t.theme} title={t.theme} aria-pressed="false"><span aria-hidden="true">◐</span></button>
           <button class="icon-button menu-toggle" type="button" aria-label={t.menu} aria-controls="primary-nav" aria-expanded="false"><span aria-hidden="true">☰</span></button>
         </div>
@@ -78,6 +96,15 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
           <a href={'/' + lang + '/recherche/'}>{t.search}</a>
           <a href={'/' + lang + '/methodologie/'}>{lang === 'fr' ? 'Méthodologie' : 'Methodology'}</a>
         </div>
+        <nav class="footer-language-links" aria-label={lang==='fr'?'Versions linguistiques':'Language versions'}>
+          <strong>{lang==='fr'?'Langues':'Languages'}</strong>
+          {languageChoices.map(choice => <a
+            href={localizedPath(choice.code)}
+            lang={choice.code}
+            hreflang={choice.code}
+            aria-current={choice.code===lang?'page':undefined}
+          >{choice.nativeName}</a>)}
+        </nav>
       </div>
       <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span></div>
     </footer>

@@ -52,3 +52,11 @@ The scheduled monitoring workflow only activates after its file is merged onto t
 - Tableau des statuts (`/fr/statuts/`, `/en/statuts/`) fondé sur un **instantané daté du 12 novembre 2026**, non actualisé automatiquement.
 - La page d'accueil met en valeur les dossiers ; les collections filtrables identifient les sujets approfondis.
 - Tous les dossiers restent `a_verifier` avant relecture scientifique/éditoriale. La prévisualisation reste `noindex,nofollow` et `main` demeure inchangée.
+
+## English-language experience
+
+- The English edition starts at `/en/`; the French edition stays at `/fr/`.
+- A permanent `FR | EN` selector in the header and native-name links in the footer preserve the current route, including its search query.
+- Both language editions have their own titles, descriptions, navigation, encyclopaedia dossiers, curated resources, search and interactive workshops.
+- Each built page declares its HTML language and FR/EN alternate URLs, so crawlers and assistive technologies can identify the correct language. Preview pages remain `noindex,nofollow`.
+- `npm run verify:locales` checks equivalent routes, visible language controls and alternate metadata for each page; it does not replace editorial translation review.
