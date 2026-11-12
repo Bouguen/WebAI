@@ -1,29 +1,90 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import {atlas,localized as L} from '../../../data/atlas.js';
+import {dossiers} from '../../../data/dossiers.js';
 export function getStaticPaths(){return ['fr','en'].flatMap(lang=>atlas.topics.map(topic=>({params:{lang,slug:topic.slug}})));}
-const {lang,slug}=Astro.params;const fr=lang==='fr';const topic=atlas.topics.find(x=>x.slug===slug);
-const related=atlas.topics.filter(x=>x.slug!==slug && x.category===topic.category).slice(0,3);
-const question=fr?'Pourquoi ce sujet compte-t-il ?':'Why does this matter?';
+const {lang,slug}=Astro.params;
+const fr=lang==='fr';
+const topic=atlas.topics.find(x=>x.slug===slug);
+const detail=dossiers[slug];
+const tools=detail?detail.tools.map(key=>atlas.catalog.find(t=>t.slug===key)).filter(Boolean):[];
+const relatedSlugs=detail?.relations??atlas.topics.filter(x=>x.slug!==slug&&x.category===topic.category).slice(0,3).map(x=>x.slug);
+const related=relatedSlugs.map(x=>atlas.topics.find(t=>t.slug===x)).filter(Boolean);
+const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary document',url:topic.source}];
 ---
 <BaseLayout lang={lang} title={L(topic.title,lang)} description={L(topic.summary,lang)}>
-  <article class="atlas-article">
-    <header class="atlas-article-hero"><div class="wrap">
-      <div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/encyclopedie/'}>{fr?'Encyclopédie':'Encyclopedia'}</a><span>/</span><span>{L(topic.title,lang)}</span></div>
-      <span class="atlas-eyebrow"><span class="atlas-beacon"></span>{fr?'SYNTHÈSE DE DÉCOUVERTE':'INTRODUCTORY EXPLAINER'} · {topic.category}</span>
-      <h1>{L(topic.title,lang)}</h1><p class="atlas-article-lede">{L(topic.summary,lang)}</p>
-      <div class="atlas-article-meta"><span>{fr?'Édition':'Edition'} 12.11.2026</span><span>{fr?'Lecture courte':'Short read'}</span><span>{fr?'Source primaire liée':'Primary source linked'}</span></div>
-    </div></header>
-    <div class="wrap atlas-article-layout"><div class="atlas-article-body">
-      <div class="atlas-article-note"><span aria-hidden="true">ⓘ</span><p>{fr?'Texte d’introduction éditoriale : il ne remplace pas une revue scientifique exhaustive. Les travaux longs de la Phase III restent à valider avant leur publication.':'Introductory editorial text, not a comprehensive scientific review. Longer Phase III records await editorial validation.'}</p></div>
-      <h2>{fr?'L’essentiel à comprendre':'The essential idea'}</h2><p>{L(topic.body,lang)}</p>
-      <h2>{question}</h2><p>{fr?'Ce sujet relie plusieurs dimensions du Web de l’IA : technologies, usages et responsabilités. Pour aller plus loin, examinez la source de référence et distinguez les possibilités déjà documentées des démonstrations ou propositions expérimentales.':'This topic links several dimensions of the AI-driven Web: technology, use cases and responsibilities. To go further, examine the primary reference and distinguish documented capabilities from demonstrations and experimental proposals.'}</p>
-      <h2>{fr?'Points de vigilance':'Questions to check'}</h2><ul><li>{fr?'Quelle affirmation exacte la source soutient-elle ?':'Which exact claim does the source support?'}</li><li>{fr?'La documentation décrit-elle une norme, un brouillon ou une implémentation ?':'Does the documentation describe a standard, draft or implementation?'}</li><li>{fr?'Quelles limites de qualité, de sécurité ou d’accessibilité doivent être précisées ?':'Which quality, security or accessibility limitations need attention?'}</li></ul>
-      <div class="atlas-primary-source"><span class="eyebrow">{fr?'DOCUMENT DE RÉFÉRENCE':'PRIMARY REFERENCE'}</span><p>{fr?'Pour vérifier le sujet, consulter le texte original.':'Check the original document for evidence and updates.'}</p><a href={topic.source} target="_blank" rel="noopener noreferrer">{fr?'Ouvrir la source officielle':'Open primary source'} ↗</a></div>
-      <a class="atlas-back" href={'/'+lang+'/encyclopedie/'}>← {fr?'Toutes les notions':'All topics'}</a>
-    </div><aside class="atlas-article-aside"><div class="atlas-aside-box"><span class="eyebrow">{fr?'POUR ALLER PLUS LOIN':'KEEP EXPLORING'}</span><h3>{fr?'Parcours reliés':'Connected paths'}</h3>
-      <a href={'/'+lang+'/ressources/'}>{fr?'Bibliothèque de sources':'Reference library'} ↗</a><a href={'/'+lang+'/glossaire/'}>{fr?'Glossaire bilingue':'Bilingual glossary'} ↗</a><a href={'/'+lang+'/laboratoire/'}>WebAI Lab ↗</a>
-      {related.map(x=><a href={'/'+lang+'/encyclopedie/'+x.slug+'/'}>{L(x.title,lang)} ↗</a>)}</div></aside>
+ <article class="kb-dossier">
+  <header class="kb-hero"><div class="wrap">
+   <nav class="atlas-breadcrumb" aria-label={fr?'Fil d’Ariane':'Breadcrumb'}>
+    <a href={'/'+lang+'/'}>WebAI</a><span>/</span>
+    <a href={'/'+lang+'/encyclopedie/'}>{fr?'Encyclopédie':'Encyclopedia'}</a><span>/</span><span>{L(topic.title,lang)}</span>
+   </nav>
+   <span class="atlas-eyebrow"><span class="atlas-beacon"></span>{detail?(fr?'DOSSIER DE CONNAISSANCE':'KNOWLEDGE DOSSIER'):(fr?'SYNTHÈSE DE DÉCOUVERTE':'INTRODUCTORY OVERVIEW')} · {topic.category}</span>
+   <h1>{L(topic.title,lang)}</h1>
+   <p class="kb-hero-lede">{detail?L(detail.lead,lang):L(topic.summary,lang)}</p>
+   <div class="kb-meta">
+    <span>{fr?'Édition : 12 novembre 2026':'Edition: 12 November 2026'}</span>
+    <span>{detail?(fr?'Dossier enrichi':'Extended dossier'):(fr?'Introduction courte':'Short introduction')}</span>
+    <span class="kb-review-tag">{fr?'Relecture scientifique à compléter':'Scientific review pending'}</span>
+   </div>
+  </div></header>
+  <div class="wrap kb-layout">
+   <main class="kb-main">
+    <aside class="kb-editorial-note">
+      <strong>{fr?'Transparence éditoriale':'Editorial transparency'}</strong>
+      <p>{fr?'Cette page appartient à une prévisualisation pédagogique et reste classée « à vérifier ». Les liens renvoient aux documents d’origine ; une source pertinente ne constitue pas, à elle seule, une approbation scientifique de toutes les formulations.':'This page is an educational preview marked “review required”. Links lead to original documents; a relevant primary source does not, by itself, constitute a scientific endorsement of every statement.'}</p>
+    </aside>
+    {detail ? <>
+      <div class="kb-orientation">
+       <span class="eyebrow">{fr?'REPÈRES':'AT A GLANCE'}</span>
+       <div><div><small>{fr?'Nature':'Type'}</small><strong>{L(detail.stage,lang)}</strong></div><div><small>{fr?'Pour qui ?':'Audience'}</small><strong>{L(detail.audience,lang)}</strong></div></div>
+      </div>
+      <div class="kb-article-sections">
+       {detail.sections.map((section,i)=><section class="kb-article-section" id={'part-'+(i+1)}>
+        <div class="kb-section-number">{String(i+1).padStart(2,'0')}</div>
+        <h2>{L(section.title,lang)}</h2><p>{L(section.body,lang)}</p>
+       </section>)}
+      </div>
+      <section class="kb-process">
+        <span class="eyebrow">{fr?'FIL CONDUCTEUR':'HOW IT FITS TOGETHER'}</span>
+        <h2>{fr?'Les grandes étapes':'Core steps'}</h2>
+        <ol>{detail.steps.map((step,i)=><li><span>{String(i+1).padStart(2,'0')}</span><strong>{L(step,lang)}</strong></li>)}</ol>
+      </section>
+      <section class="kb-checks">
+        <span class="eyebrow">{fr?'ESPRIT CRITIQUE':'CRITICAL THINKING'}</span>
+        <h2>{fr?'Trois questions à poser':'Three questions to ask'}</h2>
+        <ul>{detail.checks.map(check=><li><span aria-hidden="true">?</span><p>{L(check,lang)}</p></li>)}</ul>
+      </section>
+    </> : <>
+      <section class="kb-article-section"><h2>{fr?'L’idée essentielle':'Core idea'}</h2><p>{L(topic.body,lang)}</p></section>
+      <div class="kb-editorial-note"><strong>{fr?'À approfondir':'More depth ahead'}</strong><p>{fr?'Cette introduction sera enrichie après revue des publications et des sources pertinentes. Pour approfondir immédiatement le sujet, ouvrez le document original.':'This overview will be expanded after reviewing relevant research and sources. To explore the subject now, open the original document.'}</p></div>
+    </>}
+    <section class="kb-references">
+     <span class="eyebrow">{fr?'SOURCES ET DOCUMENTS':'PRIMARY SOURCES'}</span>
+     <h2>{fr?'Consulter les textes originaux':'Read the source documents'}</h2>
+     <p>{fr?'Les versions, conditions de réutilisation et statuts des documents peuvent évoluer. Vérifiez-les sur les sites d’origine.':'Versions, reuse terms and document status can change. Check them on the original sites.'}</p>
+     <div class="kb-reference-list">{references.map((ref,i)=><a href={ref.url} target="_blank" rel="noopener noreferrer">
+       <span class="kb-reference-num">{String(i+1).padStart(2,'0')}</span>
+       <strong>{ref.label}</strong><span aria-hidden="true">↗</span>
+     </a>)}</div>
+    </section>
+    <div class="kb-end"><a href={'/'+lang+'/encyclopedie/'}>← {fr?'Toutes les notions':'All topics'}</a><a href={'/'+lang+'/fiche-verification/'}>{fr?'Examiner les preuves':'Examine the evidence'} ↗</a></div>
+   </main>
+   <aside class="kb-aside" aria-label={fr?'Ressources complémentaires':'Related resources'}>
+    <div class="kb-side-box"><span class="eyebrow">{fr?'À DÉCOUVRIR AUSSI':'RELATED KNOWLEDGE'}</span>
+      {related.map(rel=><a class="kb-related" href={'/'+lang+'/encyclopedie/'+rel.slug+'/'}><span>◇</span><span>{L(rel.title,lang)}</span><span aria-hidden="true">↗</span></a>)}
+      <a class="kb-related" href={'/'+lang+'/carte/'}><span>◎</span><span>{fr?'Carte des connaissances':'Knowledge map'}</span><span aria-hidden="true">↗</span></a>
     </div>
-  </article>
+    {tools.length>0 && <div class="kb-side-box"><span class="eyebrow">{fr?'OUTILS À EXPLORER':'RELATED TOOLS'}</span>
+      <p class="kb-side-disclaimer">{fr?'Liens thématiques, sans certification ni recommandation commerciale.':'Thematic links, not certifications or endorsements.'}</p>
+      {tools.map(tool=><a class="kb-related" href={'/'+lang+'/outils/?q='+encodeURIComponent(tool.name)}><span>◈</span><span>{tool.name}</span><span aria-hidden="true">↗</span></a>)}
+      </div>}
+    <div class="kb-side-box kb-side-study"><strong>{fr?'Passer à la pratique':'Try a learning activity'}</strong>
+      <p>{fr?'Expérimentez sans API payante, ou suivez un guide étape par étape.':'Explore without a paid API, or follow a guided workshop.'}</p>
+      <a href={'/'+lang+'/laboratoire/'}>{fr?'Ouvrir WebAI Lab':'Open WebAI Lab'} ↗</a>
+      <a href={'/'+lang+'/guides/'}>{fr?'Parcourir les guides':'Browse the guides'} ↗</a>
+    </div>
+   </aside>
+  </div>
+ </article>
 </BaseLayout>

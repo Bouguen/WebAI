@@ -1,5 +1,6 @@
 import {atlas} from '../src/data/atlas.js';
 import {guides} from '../src/data/guides.js';
+import {dossiers} from '../src/data/dossiers.js';
 
 const failures=[];
 const check=(condition,message)=>{if(!condition)failures.push(message);};
@@ -34,5 +35,21 @@ for(const g of guides){
  for(const step of g.steps)check(translated(step),'Missing guide step translation: '+g.slug);
 }
 check(new Set(guides.map(g=>g.slug)).size===guides.length,'Duplicate guide slug');
+const toolSlugs=new Set(atlas.catalog.map(x=>x.slug));
+for(const [slug,d] of Object.entries(dossiers)){
+ check(topicSlugs.has(slug),'Dossier missing encyclopedia topic: '+slug);
+ check(d.review_status==='a_verifier','Dossier must be marked pending: '+slug);
+ check(translated(d.stage)&&translated(d.audience)&&translated(d.lead),'Incomplete bilingual metadata: '+slug);
+ check(Array.isArray(d.sections)&&d.sections.length>=4,'Too few dossier sections: '+slug);
+ check(Array.isArray(d.steps)&&d.steps.length>=4,'Dossier workflow incomplete: '+slug);
+ check(Array.isArray(d.checks)&&d.checks.length>=3,'Dossier checks incomplete: '+slug);
+ for(const s of d.sections)check(translated(s.title)&&translated(s.body),'Missing section translation: '+slug);
+ for(const s of d.steps)check(translated(s),'Missing workflow translation: '+slug);
+ for(const s of d.checks)check(translated(s),'Missing checkpoint translation: '+slug);
+ for(const s of d.refs)check(isHttps(s.url)&&s.label,'Invalid dossier source: '+slug);
+ for(const s of d.tools)check(toolSlugs.has(s),'Broken dossier tool link '+s+' in '+slug);
+ for(const s of d.relations)check(topicSlugs.has(s),'Broken dossier related topic '+s+' in '+slug);
+}
+check(Object.keys(dossiers).length>=10,'Expected at least 10 deep dossiers');
 if(failures.length){console.error('Data integrity errors (not factual validation):\n'+failures.join('\n'));process.exitCode=1;}
-else console.log('Structural integrity passed for '+atlas.catalog.length+' tools, '+atlas.sources.length+' sources, '+atlas.glossary.length+' glossary terms, '+atlas.topics.length+' topics, '+guides.length+' guides. This does not validate scientific accuracy or licensing.');
+else console.log('Structural integrity passed for '+atlas.catalog.length+' tools, '+atlas.sources.length+' sources, '+atlas.glossary.length+' glossary terms, '+atlas.topics.length+' topics, '+guides.length+' guides and '+Object.keys(dossiers).length+' deep dossiers. This does not validate scientific accuracy or licensing.');

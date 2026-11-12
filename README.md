@@ -42,3 +42,13 @@ See `docs/EDITORIAL_POLICY.md` and `docs/ROADMAP.md` for the review pipeline.
 New draft PR #2 adds eight bilingual practical workshops (48 steps), an interactive three-tool comparison, a local evidence worksheet with Markdown export, Pagefind full-text indexing of generated preview pages, a dated methodology page, and a staging-only RSS metadata collector. Both PRs remain separate from production until explicit publication approval.
 
 The scheduled monitoring workflow only activates after its file is merged onto the default GitHub branch. Its output is a manual review artifact, never a public news feed. The original Phase III corpus remains unapproved (initial audit dated 2026-11-12: 212 items awaiting review and rights checks, 0 eligible for release). Test and build success is *technical*, not scientific validation.
+
+
+## Phase V.3 — Dossiers approfondis et relations documentaires
+
+- 10 dossiers bilingues FR/EN couvrant RAG, agentic Web, MCP, A2A, WebMCP, C2PA, WebGPU, SEO/GEO, sécurité et accessibilité.
+- Chacun comporte quatre sections explicatives, quatre étapes, trois questions critiques, des ressources officielles, des notions associées et des outils à explorer.
+- Carte thématique filtrable (`/fr/carte/`, `/en/carte/`), sans présenter ses liens comme des relations normatives.
+- Tableau des statuts (`/fr/statuts/`, `/en/statuts/`) fondé sur un **instantané daté du 12 novembre 2026**, non actualisé automatiquement.
+- La page d'accueil met en valeur les dossiers ; les collections filtrables identifient les sujets approfondis.
+- Tous les dossiers restent `a_verifier` avant relecture scientifique/éditoriale. La prévisualisation reste `noindex,nofollow` et `main` demeure inchangée.

@@ -25,5 +25,9 @@ jobs:
           test -f dist/en/index.html
           test -f dist/fr/comparateur/index.html
           test -f dist/en/guides/index.html
+          test -f dist/fr/carte/index.html
+          test -f dist/en/statuts/index.html
+          test -f dist/fr/encyclopedie/rag/index.html
+          test -f dist/en/encyclopedie/webmcp/index.html
           test -f dist/fr/fiche-verification/index.html
           test -f dist/pagefind/pagefind.js

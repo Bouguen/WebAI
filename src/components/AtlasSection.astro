@@ -1,5 +1,6 @@
 ---
 import { atlas, localized as L } from '../data/atlas.js';
+import { dossiers } from '../data/dossiers.js';
 import StudioTools from './StudioTools.astro';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
@@ -79,7 +80,7 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
 {type==='encyclopedie' && <>
   <p class="atlas-disclaimer">{fr?'Articles de découverte et synthèses éditoriales : consultez les sources primaires attachées à chaque sujet. Le corpus scientifique approfondi de la Phase III reste en révision.':'Introductory explainers and editorial summaries: consult the primary sources for each topic. The longer Phase III scientific corpus is still under review.'}</p>
   <div class="atlas-grid atlas-grid-topics" data-atlas-list>{atlas.topics.map((topic,i)=><article class="atlas-item atlas-topic" data-atlas-card data-category={topic.category} data-search={(L(topic.title,lang)+' '+L(topic.summary,lang)+' '+topic.category).toLowerCase()}>
-    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{topic.category}</span></div>
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{dossiers[topic.slug]?(fr?"Dossier enrichi":"Extended dossier"):topic.category}</span></div>
     <h3>{L(topic.title,lang)}</h3><p>{L(topic.summary,lang)}</p>
     <a href={'/'+lang+'/encyclopedie/'+topic.slug+'/'} class="atlas-source-link">{fr?'Lire la synthèse':'Read the explainer'} ↗</a>
   </article>)}</div>
@@ -134,5 +135,8 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
       if(empty)empty.hidden=count!==0;
     };
     [input,category,audience].forEach(el=>el?.addEventListener(el===input?'input':'change',apply));
+    const params=new URLSearchParams(window.location.search);
+    const q=params.get('q');
+    if(q && input){input.value=q;apply();}
   }
 </script>

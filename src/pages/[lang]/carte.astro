@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {atlas,localized as L} from '../../data/atlas.js';
+import {dossiers} from '../../data/dossiers.js';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const themes=[
+  {id:'comprendre',title:fr?'Comprendre':'Understand',desc:fr?'Les mécanismes de base':'Core mechanisms',slugs:['rag','models','knowledge-graph','seo-geo']},
+  {id:'agents',title:fr?'Relier des agents':'Connect agents',desc:fr?'Les actions et les protocoles':'Actions and protocols',slugs:['agents','mcp','a2a','webmcp']},
+  {id:'confiance',title:fr?'Vérifier et protéger':'Verify and protect',desc:fr?'Les preuves et responsabilités':'Evidence and responsibilities',slugs:['security','c2pa','accessibility','evaluation']},
+  {id:'experience',title:fr?'Créer et expérimenter':'Build and experiment',desc:fr?'Web génératif et interfaces':'Generative Web and interfaces',slugs:['generative-web','webgpu','webxr','webai']}
+];
+const all=atlas.topics.map(t=>({slug:t.slug,title:L(t.title,lang),summary:L(t.summary,lang),category:t.category,hasDossier:Boolean(dossiers[t.slug])}));
+---
+<BaseLayout lang={lang} title={fr?'Carte des connaissances':'Knowledge map'}>
+ <section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span>{fr?'Carte des connaissances':'Knowledge map'}</div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI KNOWLEDGE MAP</span>
+ <div class="atlas-heading"><div><h1>{fr?'Relier les idées du Web de l’IA.':'Connect the ideas behind the AI Web.'}</h1><p>{fr?'Une carte thématique interactive : choisissez un axe de compréhension et suivez les liens vers les dossiers et leurs sources. Les rapprochements sont pédagogiques, et non des relations normalisées.':'An interactive thematic map: choose a learning track and follow links to dossiers and sources. These are educational connections, not formal standardized relationships.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">◎</div></div></div>
+ </div></section>
+ <section class="section"><div class="wrap">
+  <div class="map-intro"><span class="eyebrow">{fr?'PARCOURS RELIÉS':'CONNECTED PATHS'}</span><h2>{fr?'Par quelle question commencer ?':'Where will you start?'}</h2><p>{fr?'Choisissez un domaine pour afficher les notions associées. Vous pouvez aussi afficher toutes les notions.':'Choose an area to see connected topics, or view all topics.'}</p></div>
+  <div class="map-tabs" role="group" aria-label={fr?'Filtrer la carte':'Filter map'}><button type="button" data-map-tab="all" aria-pressed="true">{fr?'Toutes les notions':'All topics'}</button>
+    {themes.map(t=><button type="button" data-map-tab={t.id} aria-pressed="false">{t.title}</button>)}</div>
+  <p class="map-count" aria-live="polite"><span id="map-count">{all.length}</span> {fr?'notions affichées':'topics shown'}</p>
+  <div class="map-topic-grid">{all.map(t=><a class="map-topic" href={'/'+lang+'/encyclopedie/'+t.slug+'/'} data-map-topic={t.slug} data-map-groups={themes.filter(g=>g.slugs.includes(t.slug)).map(g=>g.id).join(' ')}>
+    <div class="map-topic-top"><span>◇</span><span>{t.hasDossier?(fr?'Dossier enrichi':'Extended dossier'):(fr?'Introduction':'Overview')}</span></div>
+    <strong>{t.title}</strong><p>{t.summary}</p><span class="map-topic-action">{fr?'Explorer la notion':'Explore topic'} ↗</span></a>)}</div>
+  <div class="map-secondary-links"><a href={'/'+lang+'/statuts/'}>{fr?'Suivre le statut des technologies':'Explore technology status'} ↗</a><a href={'/'+lang+'/parcours/'}>{fr?'Choisir un parcours adapté':'Choose a learning pathway'} ↗</a></div>
+ </div></section>
+ <script is:inline>
+ const tabs=[...document.querySelectorAll('[data-map-tab]')],topics=[...document.querySelectorAll('[data-map-topic]')],count=document.getElementById('map-count');
+ tabs.forEach(b=>b.addEventListener('click',()=>{
+   const active=b.dataset.mapTab;
+   tabs.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+   let n=0;topics.forEach(card=>{const show=active==='all'||(' '+card.dataset.mapGroups+' ').includes(' '+active+' ');card.hidden=!show;if(show)n++;});
+   count.textContent=String(n);
+ }));
+ </script>
+</BaseLayout>
