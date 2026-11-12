@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AtlasSpotlight from '../../components/AtlasSpotlight.astro';
 import DossierHighlight from '../../components/DossierHighlight.astro';
+import SpatialHero from '../../components/SpatialHero.astro';
 import { copy, nav, references } from '../../data/site.js';
 export function getStaticPaths() { return ['fr','en'].map(lang => ({params:{lang}})); }
 const { lang } = Astro.params;
@@ -22,15 +23,7 @@ const t = copy[lang];
         </div>
         <div class="hero-status"><span class="status-dot" aria-hidden="true"></span>{t.preview}</div>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="visual-grid"></div>
-        <div class="neural-ring neural-ring-one"></div><div class="neural-ring neural-ring-two"></div>
-        <div class="visual-center"><div class="visual-mark">✳</div><strong>Web<span>AI</span></strong><small>KNOWLEDGE NETWORK</small></div>
-        <div class="visual-node node-one"><span>◇</span><b>GENERATE</b></div>
-        <div class="visual-node node-two"><span>⌘</span><b>CONNECT</b></div>
-        <div class="visual-node node-three"><span>◉</span><b>DISCOVER</b></div>
-        <div class="visual-node node-four"><span>✓</span><b>VERIFY</b></div>
-      </div>
+      <SpatialHero lang={lang} />
     </div>
   </section>
   <AtlasSpotlight lang={lang} />
