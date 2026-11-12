@@ -52,6 +52,9 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
          ['publications','⌁',lang==='fr'?'Recherche':'Research'],
          ['secteurs','▣',lang==='fr'?'Applications':'Applications'],
          ['laboratoire','✳','WebAI Lab'],
+         ['comparateur','⇄',lang==='fr'?'Comparer les outils':'Compare tools'],
+         ['guides','▦',lang==='fr'?'Guides pratiques':'Practical guides'],
+         ['fiche-verification','✓',lang==='fr'?'Fiche de vérification':'Evidence worksheet'],
          ['observatoire','◎',lang==='fr'?'Observatoire':'Observatory']
        ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
        <span class="atlas-quickbar-hint">EXPLORE · LEARN · BUILD</span>

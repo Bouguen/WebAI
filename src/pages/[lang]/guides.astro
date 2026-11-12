@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {guides} from '../../data/guides.js';
+import {localized as L} from '../../data/atlas.js';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const groups={creator:fr?'Créateurs et designers':'Creators and designers',developer:fr?'Développeurs':'Developers',teacher:fr?'Enseignants et grand public':'Educators and readers',research:fr?'Chercheurs':'Researchers',organization:fr?'Organisations':'Organizations'};
+---
+<BaseLayout lang={lang} title={fr?'Guides pratiques':'Practical guides'}>
+<section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span>{fr?'Guides pratiques':'Practical guides'}</div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI · LEARNING WORKSHOPS</span>
+ <div class="atlas-heading"><div><h1>{fr?'Comprendre, puis faire.':'Learn it. Then do it.'}</h1><p>{fr?'Huit ateliers pas à pas pour publier, développer, enseigner, vérifier et expérimenter le Web de l’IA avec méthode.':'Eight step-by-step workshops to build, teach, publish and verify the AI-driven Web responsibly.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">▦</div></div></div>
+</div></section>
+<section class="section"><div class="wrap">
+ <div class="guide-intro"><div><span class="eyebrow">{fr?'PARCOURS MODULAIRES':'MODULAR PATHS'}</span><h2>{fr?'Choisissez votre atelier':'Pick your workshop'}</h2><p>{fr?'Les exercices sont des listes de contrôle pédagogiques. Cocher toutes les étapes ne constitue ni certification ni validation scientifique.':'These are teaching checklists. Completing all steps is not a certification or a scientific validation.'}</p></div><a href={'/'+lang+'/laboratoire/'} class="atlas-pill-cta">{fr?'Ouvrir le laboratoire':'Open the lab'} ↗</a></div>
+ <div class="guide-grid">{guides.map((guide,index)=><article class="guide-card" id={guide.slug}>
+  <div class="guide-card-top"><span class="guide-symbol" aria-hidden="true">{guide.icon}</span><span class="atlas-item-kind">{groups[guide.audience]}</span></div>
+  <h2>{L(guide.title,lang)}</h2><p>{L(guide.intro,lang)}</p>
+  <div class="guide-info"><span>{guide.duration} min</span><span aria-live="polite"><b data-guide-progress>0</b> / {guide.steps.length} {fr?'étapes':'steps'}</span></div>
+  <div class="guide-progress-track"><span data-guide-progress-bar style="width:0%"></span></div>
+  <details><summary>{fr?'Voir les étapes et commencer':'Open steps and start'} <span aria-hidden="true">⌄</span></summary>
+    <div class="guide-steps">{guide.steps.map((step,j)=><label><input type="checkbox" data-guide-step/><span><b>{String(j+1).padStart(2,'0')}</b>{L(step,lang)}</span></label>)}</div>
+  </details>
+  <div class="guide-footer"><a href={guide.source} target="_blank" rel="noopener noreferrer">{fr?'Consulter la référence':'Read the reference'} ↗</a>
+    <button type="button" data-guide-reset>{fr?'Recommencer':'Reset'}</button></div>
+ </article>)}</div>
+</div></section>
+<script is:inline>
+ document.querySelectorAll('.guide-card').forEach(card=>{
+   const boxes=[...card.querySelectorAll('[data-guide-step]')];
+   const progress=card.querySelector('[data-guide-progress]');
+   const bar=card.querySelector('[data-guide-progress-bar]');
+   const update=()=>{const n=boxes.filter(b=>b.checked).length;progress.textContent=String(n);bar.style.width=String(100*n/boxes.length)+'%';};
+   boxes.forEach(b=>b.addEventListener('change',update));
+   card.querySelector('[data-guide-reset]')?.addEventListener('click',()=>{boxes.forEach(b=>b.checked=false);update();});
+ });
+</script>
+</BaseLayout>

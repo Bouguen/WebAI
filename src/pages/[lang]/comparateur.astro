@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {atlas,localized as L} from '../../data/atlas.js';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const rows=atlas.catalog.map(x=>({slug:x.slug,name:x.name,category:x.category,kind:x.kind,audience:x.audience,desc:L(x.desc,lang),url:x.url}));
+const options=atlas.catalog.map(x=>({value:x.slug,label:x.name}));
+---
+<BaseLayout lang={lang} title={fr?'Comparateur de solutions':'Solution comparison'}>
+<section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/outils/'}>{fr?'Outils':'Tools'}</a><span>/</span>{fr?'Comparateur':'Comparison'}</div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI · INDEPENDENT COMPARISON</span>
+ <div class="atlas-heading"><div><h1>{fr?'Comparer sans se tromper de critères.':'Compare the criteria, not the hype.'}</h1><p>{fr?'Sélectionnez jusqu’à trois solutions et examinez leurs usages, catégories et documentations. Aucun prix ou score inventé : seules des informations descriptives sont comparées.':'Choose up to three tools and compare their purposes, categories and documentation. No invented pricing or scores: only descriptive metadata is compared.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">◈</div></div></div>
+</div></section>
+<section class="section"><div class="wrap">
+ <div class="compare-setup"><div class="guide-intro"><div><span class="eyebrow">{fr?'COMPARAISON ÉQUITABLE':'FAIR COMPARISON'}</span><h2>{fr?'Construisez votre comparaison':'Build your comparison'}</h2></div></div>
+ <div class="compare-presets"><span>{fr?'Suggestions :':'Examples:'}</span>
+ <button type="button" data-compare-preset="local">{fr?'IA locale':'Local AI'}</button>
+ <button type="button" data-compare-preset="rag">RAG</button>
+ <button type="button" data-compare-preset="dev">{fr?'Création Web':'Web creation'}</button></div>
+ <div class="compare-selects">{[1,2,3].map((slot,i)=><label>{fr?'Solution':'Solution'} {slot}
+ <select class="compare-select" aria-label={(fr?'Solution à comparer ':'Comparison tool ')+slot}>
+ <option value="">{fr?'— Non sélectionné —':'— Not selected —'}</option>{options.map(o=><option value={o.value} selected={['webllm','ollama','lmstudio'][i]===o.value}>{o.label}</option>)}
+ </select></label>)}</div>
+ <div class="compare-actions"><button type="button" class="studio-action" id="compare-run">{fr?'Actualiser la comparaison':'Update comparison'} ↗</button><button type="button" class="studio-copy" id="compare-copy">{fr?'Copier le lien':'Copy link'}</button><span id="compare-message" role="status"></span></div>
+ </div>
+ <div id="comparison-result" aria-live="polite"></div>
+ <div class="compare-method"><span class="eyebrow">{fr?'LIMITES DE LA COMPARAISON':'COMPARISON LIMITATIONS'}</span><p>{fr?'Cette comparaison n’évalue ni les performances, ni les prix, ni les pratiques réelles de confidentialité, ni le statut juridique actuel des licences. Les descriptions proviennent de la première édition du répertoire WebAI. Vérifiez toujours les sources officielles, conditions et versions avant de choisir.':'This comparison does not assess performance, pricing, actual privacy practices or current legal license conditions. Descriptions come from the initial WebAI directory edition. Always check the official documentation, terms and versions before deciding.'}</p>
+  <a href={'/'+lang+'/guides/#selection'}>{fr?'Guide : choisir un outil IA':'Guide: choosing an AI tool'} ↗</a></div>
+</div></section>
+<script is:inline define:vars={{rows,lang}}>
+ const fr=lang==='fr';
+ const bySlug=new Map(rows.map(x=>[x.slug,x]));
+ const pick=[...document.querySelectorAll('.compare-select')];
+ const result=document.getElementById('comparison-result');
+ const message=document.getElementById('compare-message');
+ const presets={local:['webllm','ollama','lmstudio'],rag:['llamaindex','haystack','langchain'],dev:['astro','gradio','streamlit']};
+ const category={local:fr?'IA locale':'On-device AI',creation:fr?'Création':'Creation',recherche:fr?'Recherche':'Retrieval',agents:'Agents',evaluation:fr?'Évaluation':'Evaluation',modeles:fr?'Modèles':'Models',multimedia:fr?'Multimédia':'Multimedia',confiance:fr?'Confiance':'Trust',automatisation:fr?'Automatisation':'Automation'};
+ const audiences={dev:fr?'Développeurs':'Developers',creator:fr?'Créateurs':'Creators',pro:fr?'Professionnels':'Professionals',research:fr?'Chercheurs':'Researchers'};
+ function addEl(tag,cls,text,parent){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;parent.appendChild(el);return el;}
+ function update(){
+  const selected=[...new Set(pick.map(x=>x.value).filter(Boolean))].map(s=>bySlug.get(s)).filter(Boolean);
+  result.replaceChildren();
+  if(!selected.length){addEl('p','atlas-empty',fr?'Choisissez au moins un outil.':'Choose at least one tool.',result);return;}
+  if(selected.length!==pick.filter(x=>x.value).length){addEl('p','compare-alert',fr?'Une solution répétée n’apparaît qu’une fois.':'Duplicate selections are shown only once.',result);}
+  const wrapper=addEl('div','compare-table-wrap',undefined,result),table=addEl('table','compare-table',undefined,wrapper),caption=addEl('caption','sr-only',fr?'Comparaison d’outils':'Tools comparison',table);
+  const head=addEl('thead','',undefined,table),hr=addEl('tr','',undefined,head);
+  addEl('th','',fr?'Critère':'Criterion',hr).scope='col';
+  selected.forEach(x=>{const th=addEl('th','',x.name,hr);th.scope='col';});
+  const body=addEl('tbody','',undefined,table);
+  const fields=[
+   [fr?'Domaine':'Category',x=>category[x.category]||x.category],
+   [fr?'Présentation':'Description',x=>x.desc],
+   [fr?'Type de ressource':'Resource type',x=>x.kind],
+   [fr?'Public indicatif':'Indicative audience',x=>audiences[x.audience]||x.audience]
+  ];
+  fields.forEach(([label,fn])=>{const tr=addEl('tr','',undefined,body);const th=addEl('th','',label,tr);th.scope='row';selected.forEach(x=>addEl('td','',fn(x),tr));});
+  const tr=addEl('tr','',undefined,body);const th=addEl('th','',fr?'Documentation':'Documentation',tr);th.scope='row';
+  selected.forEach(x=>{const td=addEl('td','',undefined,tr);const a=addEl('a','compare-official',fr?'Site officiel ↗':'Official site ↗',td);a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';});
+  const warning=addEl('p','atlas-disclaimer',fr?'Comparez les usages, pas des performances non mesurées.':'Compare intended use, not unmeasured performance.',result);
+ }
+ document.getElementById('compare-run')?.addEventListener('click',update);
+ pick.forEach(s=>s.addEventListener('change',update));
+ document.querySelectorAll('[data-compare-preset]').forEach(b=>b.addEventListener('click',()=>{
+   (presets[b.dataset.comparePreset]||[]).forEach((x,i)=>{if(pick[i])pick[i].value=x;});update();
+ }));
+ document.getElementById('compare-copy')?.addEventListener('click',async()=>{
+   const url=new URL(window.location.href);url.searchParams.set('tools',pick.map(x=>x.value).filter(Boolean).join(','));
+   try{await navigator.clipboard.writeText(url.toString());message.textContent=fr?'Lien copié.':'Link copied.';}catch(e){message.textContent=fr?'Copiez l’adresse dans votre navigateur.':'Copy the address from your browser.';}
+ });
+ const params=new URLSearchParams(window.location.search).get('tools');if(params){params.split(',').slice(0,3).forEach((x,i)=>{if(bySlug.has(x.trim()))pick[i].value=x.trim();});}
+ update();
+</script>
+</BaseLayout>

@@ -1,14 +1,19 @@
 {
   "name": "webai-portal",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "build": "npm run verify:data && astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "verify:data": "node scripts/validate-data.mjs",
+    "test": "node scripts/validate-data.mjs && python3 -m unittest discover -s tests -p 'test_*.py' -v"
   },
   "dependencies": {
     "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "pagefind": "1.5.2"
   }
 }

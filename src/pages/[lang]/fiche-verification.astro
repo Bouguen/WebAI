@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const checks=fr?[
+['first','Source primaire identifiée','Le lien mène au document originel ou à l’organisme responsable.'],
+['supports','Affirmation directement étayée','Le passage indiqué confirme précisément l’affirmation, dans son contexte.'],
+['dated','Dates et versions vérifiées','Date de publication, événement et dernière révision sont distingués.'],
+['conflicts','Sources contradictoires examinées','Les désaccords connus sont décrits plutôt que masqués.'],
+['rights','Droits et attribution vérifiés','Les citations et réutilisations respectent les permissions.'],
+['review','Relecture humaine consignée','Un responsable éditorial a relu et documenté la conclusion.']
+]:[
+['first','Primary source identified','The link points to the original document or responsible organization.'],
+['supports','Claim directly supported','The passage supports this exact claim in its context.'],
+['dated','Dates and versions checked','Publication, event and revision dates are distinct.'],
+['conflicts','Conflicting evidence considered','Known disagreement is described rather than hidden.'],
+['rights','Rights and attribution checked','Quotations and reuse follow relevant permissions.'],
+['review','Human review recorded','An accountable editor reviewed and recorded the conclusion.']
+];
+---
+<BaseLayout lang={lang} title={fr?'Fiche de vérification':'Evidence worksheet'}>
+<section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/verifier/'}>{fr?'Vérifier':'Verify'}</a><span>/</span>{fr?'Fiche de vérification':'Evidence worksheet'}</div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI · EVIDENCE WORKSHEET</span>
+ <div class="atlas-heading"><div><h1>{fr?'Une affirmation. Des preuves. Des limites.':'One claim. Evidence. Limitations.'}</h1><p>{fr?'Documentez une affirmation et les sources examinées. Cette fiche ne vérifie rien automatiquement : elle structure la relecture humaine.':'Document a claim and the sources consulted. This worksheet does not automatically verify anything: it structures human review.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">✓</div></div></div></div></section>
+<section class="section"><div class="wrap verify-layout"><div class="verify-form">
+ <span class="eyebrow">{fr?'FICHE LOCALE':'LOCAL WORKSHEET'}</span><h2>{fr?'Décrivez l’élément à vérifier':'Describe what needs checking'}</h2>
+ <form id="evidence-form" autocomplete="off">
+  <label>{fr?'Affirmation exacte':'Exact claim'}<textarea name="claim" rows="3" placeholder={fr?'Copiez une seule affirmation factuelle à la fois…':'Enter one factual claim at a time…'}></textarea></label>
+  <div class="verify-fields"><label>{fr?'Source / organisme':'Source / organization'}<input name="source" placeholder="W3C, article, documentation…"/></label><label>{fr?'URL de la source':'Source URL'}<input name="url" type="url" placeholder="https://…"/></label></div>
+  <label>{fr?'Extrait et contexte':'Excerpt and context'}<textarea name="excerpt" rows="4" placeholder={fr?'Indiquez le passage pertinent et sa section…':'Add the relevant passage and its section…'}></textarea></label>
+  <div class="verify-fields"><label>{fr?'Date du document':'Document date'}<input name="sourceDate" type="date"/></label><label>{fr?'Date de la vérification':'Review date'}<input name="reviewDate" type="date"/></label></div>
+  <label>{fr?'Incertitudes, contradictions ou limites':'Uncertainty, contradictions or limitations'}<textarea name="notes" rows="4"></textarea></label>
+  <fieldset class="verify-checklist"><legend>{fr?'Contrôles à effectuer':'Checks to perform'}</legend>
+  {checks.map(([id,title,explanation])=><label><input type="checkbox" name={'check-'+id}/><span><strong>{title}</strong><small>{explanation}</small></span></label>)}
+  </fieldset>
+  <div class="verify-actions"><button type="button" id="verify-export" class="studio-action">{fr?'Télécharger la fiche Markdown':'Download Markdown worksheet'}</button><button type="button" class="studio-copy" id="verify-copy">{fr?'Copier le contenu':'Copy worksheet'}</button><button type="reset" class="studio-copy">{fr?'Effacer':'Clear'}</button></div>
+  <div id="verify-feedback" role="status" class="studio-status"></div>
+ </form>
+ </div><aside class="verify-aside"><div class="atlas-aside-box"><span class="eyebrow">{fr?'RÈGLE EDITORIALE':'EDITORIAL RULE'}</span><h3>{fr?'Pas d’approbation automatique':'No automated approval'}</h3>
+ <p>{fr?'Cocher les cases ne rend pas un contenu fiable. L’export conserve volontairement le statut « à vérifier » jusqu’à validation formelle par un relecteur responsable.':'Checking boxes does not establish reliability. The exported record intentionally keeps “review required” status until a responsible editor formally approves it.'}</p>
+ <a href={'/'+lang+'/ressources/'}>{fr?'Consulter les sources':'Browse primary sources'} ↗</a>
+ <a href={'/'+lang+'/guides/#verification'}>{fr?'Guide de vérification':'Verification guide'} ↗</a>
+ <a href="https://www.nist.gov/itl/ai-risk-management-framework" rel="noopener noreferrer" target="_blank">NIST AI Risk Management Framework ↗</a>
+ </div></aside></div></section>
+<script is:inline define:vars={{lang}}>
+const fr=lang==='fr';const form=document.getElementById('evidence-form');const feedback=document.getElementById('verify-feedback');
+const keys=['first','supports','dated','conflicts','rights','review'];
+function build(){
+ const f=new FormData(form);
+ const get=k=>String(f.get(k)||'').trim().replace(/\r/g,'');
+ const sections=fr?['# Fiche de vérification WebAI','**Statut : à vérifier — non approuvé**','## Affirmation','## Source','## Extrait et contexte','## Limites / incertitudes','## Contrôles','## Métadonnées']:['# WebAI evidence worksheet','**Status: review required — not approved**','## Claim','## Source','## Excerpt and context','## Limitations / uncertainties','## Checks','## Metadata'];
+ const checks=keys.map((k,i)=>'- ['+(f.has('check-'+k)?'x':' ')+'] '+(fr?['Source primaire','Passage pertinent','Dates contrôlées','Contradictions examinées','Droits vérifiés','Relecture humaine'][i]:['Primary source','Supporting passage','Dates checked','Conflicts assessed','Rights reviewed','Human review'][i])).join('\n');
+ return [sections[0],sections[1],sections[2],get('claim')||'—',sections[3],(get('source')||'—')+'\n'+(get('url')||''),sections[4],get('excerpt')||'—',sections[5],get('notes')||'—',sections[6],checks,sections[7],(fr?'Date du document : ':'Document date: ')+(get('sourceDate')||'—'),(fr?'Date de relecture : ':'Review date: ')+(get('reviewDate')||'—'),'Editorial approval: pending'].join('\n\n')+'\n';
+}
+document.getElementById('verify-copy')?.addEventListener('click',async()=>{
+ try{await navigator.clipboard.writeText(build());feedback.textContent=fr?'Fiche copiée, non vérifiée.':'Worksheet copied; not verified.';}catch(e){feedback.textContent=fr?'Copie impossible : utilisez le téléchargement.':'Copy failed: use download.';}
+});
+document.getElementById('verify-export')?.addEventListener('click',()=>{
+ const blob=new Blob([build()],{type:'text/markdown;charset=utf-8'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='webai-fiche-a-verifier.md';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ feedback.textContent=fr?'Fiche créée localement, statut à vérifier.':'Local worksheet created, review required.';
+});
+</script>
+</BaseLayout>
