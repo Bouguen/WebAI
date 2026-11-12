@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;const fr=lang==='fr';
+const process=fr?[
+["01","Identifier","Retrouver l’auteur, l’organisme, le document original et ses droits."],
+["02","Contextualiser","Distinguer date de l’événement, publication, version et mise à jour."],
+["03","Vérifier","Lire les preuves et rechercher les contradictions significatives."],
+["04","Qualifier","Distinguer norme officielle, brouillon, prépublication et annonce commerciale."],
+["05","Relire","Attribuer une responsabilité éditoriale, vérifier les droits et documenter les limites."],
+["06","Réviser","Mettre à jour les pages et conserver un historique des corrections."]
+]:[
+["01","Identify","Find the author, organization, original document and applicable rights."],
+["02","Contextualize","Distinguish event, publication, version and update dates."],
+["03","Verify","Read the evidence and examine material contradictions."],
+["04","Classify","Separate standards, drafts, preprints and commercial announcements."],
+["05","Review","Assign editorial accountability, check rights and document limitations."],
+["06","Revise","Update pages and retain a correction history."]
+];
+const status=fr?[
+["Brouillon","Document en préparation, non publié comme référence"],
+["À vérifier","Vérifications scientifique et juridique incomplètes"],
+["Validé","Relecture humaine formelle, preuve et droits confirmés"],
+["À actualiser","Une mise à jour ou une nouvelle contradiction nécessite une revue"]
+]:[
+["Draft","Content in preparation, not published as a reference"],
+["Review required","Scientific and rights review incomplete"],
+["Validated","Formal human review, evidence and rights confirmed"],
+["Re-review needed","A change or contradiction requires another review"]
+];
+---
+<BaseLayout lang={lang} title={fr?'Méthodologie et transparence':'Editorial methodology and transparency'}>
+<section class="atlas-hero"><div class="wrap"><div class="atlas-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><span>{fr?'Méthodologie':'Methodology'}</span></div>
+ <span class="atlas-eyebrow"><span class="atlas-beacon"></span>WEBAI · EVIDENCE BY DESIGN</span>
+ <div class="atlas-heading"><div><h1>{fr?'La connaissance se vérifie.':'Knowledge needs verification.'}</h1><p>{fr?'WebAI vise à expliquer le Web de l’IA sans confondre documentation, expérimentation, spéculation et preuve. Voici les règles de publication et l’état réel du corpus préparatoire.':'WebAI aims to explain the AI-driven Web without confusing documentation, experiment, speculation and evidence. Here is our publication policy and the real status of the preparatory corpus.'}</p></div><div class="atlas-hero-figure" aria-hidden="true"><div class="atlas-fig-orbit"></div><div class="atlas-fig-center">✓</div></div></div>
+</div></section>
+<section class="section"><div class="wrap">
+ <div class="method-intro"><span class="eyebrow">{fr?'SNAPSHOT ÉDITORIAL':'EDITORIAL SNAPSHOT'} · 12.11.2026</span><h2>{fr?'Les brouillons ne deviennent pas automatiquement des articles.':'Drafts do not automatically become articles.'}</h2>
+ <p>{fr?'Le dossier scientifique WebAI Phase III a fait l’objet d’un audit de métadonnées initial. Les chiffres suivants décrivent cet inventaire à cette date, et non la qualité scientifique de ses textes. Le nouvel Atlas WebAI est une collection pédagogique distincte.':'The WebAI Phase III research corpus was initially audited for metadata. The numbers describe that inventory at the stated date, not the scientific quality of its writing. The new WebAI Atlas is a separate educational collection.'}</p></div>
+ <div class="method-stats"><div><b>212</b><span>{fr?'Fiches préparatoires':'Preparatory records'}</span></div><div><b>212</b><span>{fr?'En attente de relecture':'Awaiting review'}</span></div><div><b>212</b><span>{fr?'Droits à vérifier':'Rights unverified'}</span></div><div><b>0</b><span>{fr?'Approuvées pour publication':'Approved for publication'}</span></div></div>
+ <div class="method-info">{fr?'Ces indicateurs sont un instantané daté issu de la Phase IV, et ne constituent pas un tableau de bord mis à jour en temps réel.':'These are dated Phase IV snapshot metrics, not a live-updating editorial dashboard.'}</div>
+ <div class="method-head"><span class="eyebrow">{fr?'CONTRÔLE QUALITÉ':'QUALITY PROCESS'}</span><h2>{fr?'Six étapes avant une publication de référence':'Six steps toward a reference publication'}</h2></div>
+ <div class="method-grid">{process.map(([number,title,desc])=><article class="method-card"><span>{number}</span><h3>{title}</h3><p>{desc}</p></article>)}</div>
+ <div class="method-standards"><div><span class="eyebrow">{fr?'STATUTS DE CONTENU':'CONTENT LABELS'}</span><h2>{fr?'Des limites explicites':'Transparent limits'}</h2><div class="method-status-list">{status.map(([title,desc])=><div><strong>{title}</strong><p>{desc}</p></div>)}</div></div>
+ <aside><h3>{fr?'Ce que le portail ne prétend pas':'What this portal does not claim'}</h3><ul>
+  <li>{fr?'Les liens ajoutés ne sont pas tous des sources évaluées par les pairs.':'Not every reference is peer-reviewed.'}</li>
+  <li>{fr?'Un contenu C2PA ne garantit pas la vérité de son propos.':'C2PA metadata does not guarantee the truth of content.'}</li>
+  <li>{fr?'Les simulations ne sont pas des services d’IA en production.':'Simulations are not production AI services.'}</li>
+  <li>{fr?'Le W3C Web & AI Interest Group n’est pas WebAI, ce projet indépendant.':'The W3C Web & AI Interest Group is not this independent WebAI portal.'}</li>
+  <li>{fr?'Aucune actualité n’est publiée automatiquement par notre pilote de veille.':'Our research-monitoring pilot does not auto-publish news.'}</li>
+ </ul></aside></div>
+ <div class="method-cta"><div><span class="eyebrow">{fr?'PARTICIPER À LA VÉRIFICATION':'PRACTICE EVIDENCE REVIEW'}</span><h2>{fr?'Préparez votre propre fiche de preuves.':'Create your own evidence worksheet.'}</h2></div><a href={'/'+lang+'/fiche-verification/'} class="atlas-pill-cta">{fr?'Ouvrir la fiche':'Open worksheet'} ↗</a></div>
+ <p class="method-affiliation">{fr?'Indépendance éditoriale : ce portail n’est ni administré, ni soutenu, ni certifié par le W3C ou par les fournisseurs présentés.':'Editorial independence: this portal is not managed, sponsored or certified by the W3C or featured providers.'}
+ <a href="https://www.w3.org/groups/ig/webai/" rel="noopener noreferrer" target="_blank">{fr?'Voir le groupe W3C Web & AI':'W3C Web & AI group'} ↗</a></p>
+</div></section>
+</BaseLayout>

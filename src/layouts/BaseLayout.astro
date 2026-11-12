@@ -55,11 +55,12 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
          ['comparateur','⇄',lang==='fr'?'Comparer les outils':'Compare tools'],
          ['guides','▦',lang==='fr'?'Guides pratiques':'Practical guides'],
          ['fiche-verification','✓',lang==='fr'?'Fiche de vérification':'Evidence worksheet'],
+         ['methodologie','▤',lang==='fr'?'Méthodologie':'Methodology'],
          ['observatoire','◎',lang==='fr'?'Observatoire':'Observatory']
        ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
        <span class="atlas-quickbar-hint">EXPLORE · LEARN · BUILD</span>
     </div></div>
-    <main id="main"><slot /></main>
+    <main id="main" data-pagefind-body><slot /></main>
     <footer class="site-footer">
       <div class="wrap footer-top">
         <div>
@@ -70,6 +71,7 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
           <a href={'/' + lang + '/decouvrir/'}>{t.topics.decouvrir.title}</a>
           <a href={'/' + lang + '/verifier/'}>{t.topics.verifier.title}</a>
           <a href={'/' + lang + '/recherche/'}>{t.search}</a>
+          <a href={'/' + lang + '/methodologie/'}>{lang === 'fr' ? 'Méthodologie' : 'Methodology'}</a>
         </div>
       </div>
       <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span></div>

@@ -36,3 +36,9 @@ Node 22+. Astro output is static in `dist/`. For preview use branch `feat/webai-
 - WebAI is independent of the W3C Web & AI Interest Group.
 
 See `docs/EDITORIAL_POLICY.md` and `docs/ROADMAP.md` for the review pipeline.
+
+## Phase V.2 additions
+
+New draft PR #2 adds eight bilingual practical workshops (48 steps), an interactive three-tool comparison, a local evidence worksheet with Markdown export, Pagefind full-text indexing of generated preview pages, a dated methodology page, and a staging-only RSS metadata collector. Both PRs remain separate from production until explicit publication approval.
+
+The scheduled monitoring workflow only activates after its file is merged onto the default GitHub branch. Its output is a manual review artifact, never a public news feed. The original Phase III corpus remains unapproved (initial audit dated 2026-11-12: 212 items awaiting review and rights checks, 0 eligible for release). Test and build success is *technical*, not scientific validation.
