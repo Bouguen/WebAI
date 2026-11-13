@@ -3,17 +3,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import RagLab from '../../components/RagLab.astro';
 import AtlasSection from '../../components/AtlasSection.astro';
 import ResearchHub from '../../components/ResearchHub.astro';
+import ReferenceSection from '../../components/ReferenceSection.astro';
+import {referenceNav} from '../../data/referenceContent.js';
 import {copy, nav, references} from '../../data/site.js';
+const referenceRoutes=['concept','technologies','standards','acteurs','chronologie','faq'];
 const atlasRoutes=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire'];
-export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; return ['fr','en'].flatMap(lang => [...nav.map(({id}) => id),...routeIds].map(section => ({params:{lang, section}}))); }
+export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; const sections=[...new Set([...nav.map(({id})=>id),...routeIds,...referenceRoutes])];return ['fr','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}}))); }
 const {lang, section} = Astro.params;
 const t = copy[lang];
 const atlasPage = atlasRoutes.includes(section);
-const page = t.topics[section] ?? {title:section,subtitle:'',tags:[],points:[],detail:''};
+const isReference=referenceRoutes.includes(section);
+const referenceTitle=referenceNav.find(x=>x.id===section)?.title?.[lang]??(section==='faq'?'FAQ':section==='chronologie'?(lang==='fr'?'Chronologie':'Timeline'):section);
+const page = t.topics[section] ?? {title:referenceTitle,subtitle:lang==='fr'?'Référence documentée du Web généré par l’IA':'Documented AI-generated Web reference',tags:[],points:[],detail:''};
 const related = nav.filter(n => n.id !== section).slice(0,3);
 ---
 <BaseLayout lang={lang} title={page.title} description={page.subtitle} active={section}>
-  {atlasPage ? <AtlasSection lang={lang} type={section} /> : <><section class="inner-hero"><div class="wrap">
+  {isReference ? <ReferenceSection lang={lang} type={section}/> : atlasPage ? <AtlasSection lang={lang} type={section} /> : <><section class="inner-hero"><div class="wrap">
     <div class="breadcrumbs"><a href={'/'+lang+'/'}>WebAI</a><span aria-hidden="true">/</span><span>{page.title}</span></div>
     <span class="eyebrow"><span class="eyebrow-dot"></span>{t.editorial}</span>
     <h1>{page.title}<span class="heading-spark" aria-hidden="true">✳</span></h1>
