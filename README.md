@@ -4,6 +4,20 @@ WebAI is an **independent, bilingual (FR/EN) reference portal** about the Web ge
 
 **Primary navigation:** Concept · Technologies · Standards · AI Tools · Applications · Research · Ecosystem · Observatory. A secondary, visible navigation offers encyclopedia, bibliography, glossary, timeline, FAQ, WebAI Lab and research utilities.
 
+## AI Agents — new reference directory (preview PR)
+
+The new bilingual `/{fr|en}/agents/` directory adds **22 documented agent solutions**, clearly separated into **12 ready-to-use products** and **10 developer frameworks/platforms**. Each of the 44 FR/EN profile routes includes:
+
+- What the agent or framework does, its intended audience and a concrete use case
+- A source-backed starting procedure and four practical evaluation steps
+- Risks, permissions, limitations and explicit independent-review status
+- Official product/project link, documentation and cross-cutting OWASP safety reference
+- Related agents and links to WebAI standards and local WebAI Lab
+
+The directory includes **browser-only search**, filters by type/domain and **side-by-side comparison of up to three profiles**. The main reference navigation now includes *Agents IA / AI Agents* without expanding beyond eight items; Observatory is still accessible from the secondary menu. A homepage feature promotes the directory.
+
+**Research dossier:** `docs/WEBAI_AGENTS_REFERENCE_2026-11-13.md`. Entries are curated, **not sponsored or independently certified**, and may change with vendor releases, terms and subscription availability. No live agents or paid APIs are connected to WebAI.
+
 ## Reference edition — 13 November 2026 (PR #4)
 
 - **36 encyclopedia dossiers**, each with six substantive bilingual sections, source references, practical methods, limits and critical questions.
