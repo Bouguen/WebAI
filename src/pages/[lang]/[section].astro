@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RagLab from '../../components/RagLab.astro';
 import AtlasSection from '../../components/AtlasSection.astro';
+import ResearchHub from '../../components/ResearchHub.astro';
 import {copy, nav, references} from '../../data/site.js';
 const atlasRoutes=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire'];
 export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; return ['fr','en'].flatMap(lang => [...nav.map(({id}) => id),...routeIds].map(section => ({params:{lang, section}}))); }
@@ -35,5 +36,5 @@ const related = nav.filter(n => n.id !== section).slice(0,3);
       {related.map(item => <a href={'/'+lang+'/'+item.id+'/'}><span aria-hidden="true">{item.glyph}</span>{t.topics[item.id].title}<span class="aside-arrow" aria-hidden="true">↗</span></a>)}
       <a class="aside-all" href={'/'+lang+'/'}>{t.allSections}</a></div>
     </aside>
-  </div></section></>}
+  </div></section><ResearchHub lang={lang} section={section}/></>}
 </BaseLayout>
