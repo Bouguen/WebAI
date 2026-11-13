@@ -45,6 +45,10 @@ for(const route of routes){
     assert(html.includes('class="locale-switch"'),'Missing visible locale selector: /'+locale+'/'+urlPart);
     assert(html.includes('href="/'+locale+'/'),'No local navigation for /'+locale+'/'+urlPart);
     assert(html.includes('noindex,nofollow'),'Preview indexing guard missing: /'+locale+'/'+urlPart);
+    for(const hit of html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)){
+      const visible=hit[2].replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim();
+      assert(!visible.endsWith('.'),'Heading ending with a full stop: /'+locale+'/'+urlPart+' — '+visible.slice(-85));
+    }
   }
 }
 assert(fr.size>=40,'Too few French pages: '+fr.size);
