@@ -136,3 +136,13 @@
 @media(max-width:760px){.ref-tech-grid,.ref-pillars{grid-template-columns:1fr}.ref-hero{padding:27px 0 34px}.ref-hero-grid{grid-template-columns:1fr}.ref-hero-emblem{display:none}.ref-standard-grid{grid-template-columns:1fr;gap:15px}.ref-standard-links{border-left:0;border-top:1px solid var(--line);padding:13px 0 0}.ref-next .wrap{grid-template-columns:1fr}.reference-home-timeline{grid-template-columns:1fr}.ref-body.section{padding:35px 0 64px}.atlas-quickbar-inner{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:580px){.ref-actors,.reference-index-pillar-grid,.reference-home-standards,.reference-home-actors{grid-template-columns:1fr}.ref-actor,.ref-pillar,.ref-tech-card{padding:20px}.ref-thesis{padding:21px}.ref-timeline-item{grid-template-columns:102px minmax(0,1fr);gap:16px}.ref-timeline-date{padding-right:12px}.ref-timeline-date>span{font-size:.83rem}.ref-faq summary{padding:14px 13px;gap:10px}.ref-faq-answer{padding:15px}.ref-standard{padding:18px}.ref-next-links{grid-template-columns:1fr}.ref-hero h1{font-size:clamp(2.1rem,9.3vw,3rem)}.ref-breadcrumb-links a{padding:5px 8px;font-size:.72rem}.atlas-quickbar-inner{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}.atlas-quickbar a{padding:5px 3px;font-size:.67rem}}
 @media(max-width:360px){.atlas-quickbar-inner{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Publication-linked contributors, not member profiles or implied endorsements. */
+.ref-researchers{margin-top:60px;padding-top:38px;border-top:1px solid var(--line)}
+.ref-researchers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.ref-researcher{display:flex;flex-direction:column;gap:11px;min-width:0;border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--surface)}
+.ref-researcher h3{font-size:1.2rem;margin:7px 0}
+.ref-researcher p{font-size:.85rem;line-height:1.8;margin:0}
+.ref-researcher-links{margin-top:auto;display:flex;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:13px}
+.ref-researcher-links a{font-size:.79rem;color:var(--primary);font-weight:760}
+@media(max-width:650px){.ref-researchers-grid{grid-template-columns:1fr}.ref-researchers{margin-top:42px}}
