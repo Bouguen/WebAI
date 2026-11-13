@@ -10,12 +10,12 @@ import WatchDepth from './WatchDepth.astro';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
 const config={
-  outils:{ icon:'◈', fr:['Annuaire des outils','Des logiciels, plateformes et bibliothèques pour créer, rechercher, expérimenter et évaluer.'],en:['Tool directory','Software, platforms and libraries to build, search, experiment and evaluate.'] },
+  outils:{ icon:'◈', fr:['Annuaire des outils','Répertoire commenté de logiciels, plateformes et bibliothèques du Web de l’IA, avec fiches, limites et sources supplémentaires.'],en:['Tool directory','Documented AI Web software, platforms and libraries, with detailed profiles, caveats and further reading.'] },
   ressources:{ icon:'▤', fr:['Bibliothèque de référence','Textes officiels, normes, publications scientifiques et documentation de première main.'],en:['Reference library','Official texts, standards, research papers and first-party documentation.'] },
-  glossaire:{ icon:'Aa', fr:['Glossaire du Web de l’IA','Une terminologie bilingue pour comprendre les mots qui façonnent le Web.'],en:['AI Web glossary','Bilingual terminology for the concepts shaping the Web.'] },
-  encyclopedie:{ icon:'◇', fr:['Encyclopédie WebAI','Les concepts qui relient les technologies, les sources et les usages.'],en:['WebAI encyclopedia','The concepts connecting technologies, primary sources and real applications.'] },
-  parcours:{ icon:'▦', fr:['Parcours d’apprentissage','Un chemin pour chaque profil, du premier contact à l’expérimentation.'],en:['Learning pathways','A guided path for every audience, from first steps to experimentation.'] },
-  secteurs:{ icon:'▣', fr:['Applications & secteurs','Comment les transformations du Web se traduisent dans des activités concrètes.'],en:['Applications & industries','How changes in the Web translate into practical use cases.'] },
+  glossaire:{ icon:'Aa', fr:['Glossaire du Web de l’IA','Terminologie de référence bilingue pour identifier les concepts, méthodes, standards et pratiques du Web de l’IA.'],en:['AI Web glossary','A bilingual reference vocabulary for AI Web concepts, methods, standards and practices.'] },
+  encyclopedie:{ icon:'◇', fr:['Encyclopédie WebAI','36 dossiers de référence reliant fonctionnement, standards, publications originales, cas et limites du Web de l’IA.'],en:['WebAI encyclopedia','36 reference dossiers connecting technology, standards, primary publications, use cases and limitations.'] },
+  parcours:{ icon:'▦', fr:['Parcours d’analyse et d’exploration','Des itinéraires thématiques pour explorer les sources, comparer les outils et examiner les architectures selon les besoins.'],en:['Research and exploration pathways','Structured routes to explore primary sources, compare tools and review architectures by use case.'] },
+  secteurs:{ icon:'▣', fr:['Applications & cas d’usage','Comment les transformations du Web se traduisent dans des activités concrètes.'],en:['Applications and use cases','How changes in the Web translate into practical use cases.'] },
   publications:{ icon:'⌁', fr:['Recherche scientifique','Travaux fondateurs et protocoles d’évaluation, avec renvoi vers les documents originaux.'],en:['Scientific research','Foundational work and evaluation methods with links to original papers.'] },
   observatoire:{ icon:'◎', fr:['Observatoire des évolutions','Suivre les standards, publications et versions sans confondre veille et actualités validées.'],en:['Technology observatory','Follow standards, papers and releases without treating a monitoring queue as verified news.'] },
   laboratoire:{ icon:'✳', fr:['WebAI Studio & Lab','Des outils interactifs réellement exécutés dans votre navigateur, sans API ni compte.'],en:['WebAI Studio & Lab','Interactive tools that run entirely in your browser, without an API or account.'] }
@@ -101,13 +101,13 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}</div>
 </>}
 {type==='glossaire' && <>
-  <p class="atlas-disclaimer">{fr?'Première sélection de définitions pédagogiques bilingues. Les termes peuvent avoir plusieurs sens selon le domaine ; ces définitions ne remplacent pas les spécifications.':'Initial bilingual teaching definitions. Terms can have domain-specific meanings; these are not replacements for specifications.'}</p>
+  <p class="atlas-disclaimer">{fr?'77 définitions bilingues documentant le vocabulaire du Web de l’IA. Les termes peuvent varier selon les domaines ; consultez les textes originaux pour les usages normatifs.':'77 bilingual definitions covering the AI Web. Meaning can vary across domains; consult primary documents for normative use.'}</p>
   <div class="atlas-glossary" data-atlas-list>{atlas.glossary.map(g=><article class="atlas-term" data-atlas-card data-category={g.category} data-search={(g.fr+' '+g.en+' '+L(g.definition,lang)).toLowerCase()}>
     <div><h3>{lang==='fr'?g.fr:g.en}</h3><span>{lang==='fr'?g.en:g.fr}</span></div><p>{L(g.definition,lang)}</p>
   </article>)}</div>
 </>}
 {type==='encyclopedie' && <>
-  <p class="atlas-disclaimer">{fr?'Articles de découverte et synthèses éditoriales : consultez les sources primaires attachées à chaque sujet. Le corpus scientifique approfondi de la Phase III reste en révision.':'Introductory explainers and editorial summaries: consult the primary sources for each topic. The longer Phase III scientific corpus is still under review.'}</p>
+  <p class="atlas-disclaimer">{fr?'36 dossiers de référence avec mécanismes, usages, études de cas, limites et documents primaires. Les contenus sont en attente de relecture scientifique et éditoriale.':'36 source-linked reference dossiers with mechanisms, use cases, limitations and primary texts. Independent scientific and editorial review remains pending.'}</p>
   <div class="atlas-grid atlas-grid-topics" data-atlas-list>{atlas.topics.map((topic,i)=><article class="atlas-item atlas-topic" data-atlas-card data-category={topic.category} data-search={(L(topic.title,lang)+' '+L(topic.summary,lang)+' '+topic.category).toLowerCase()}>
     <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{dossiers[topic.slug]?(fr?"Dossier enrichi":"Extended dossier"):topic.category}</span></div>
     <h3>{L(topic.title,lang)}</h3><p>{L(topic.summary,lang)}</p>
