@@ -82,6 +82,15 @@ check(!!agentScript,'Interactive agent directory browser code missing');
 if(agentScript){try{new Script(agentScript[1],{filename:'AgentsDirectory.astro inline script'});}catch(e){failed.push('Invalid agent directory JS: '+e.message);}}
 for(const id of ['agent-query','agent-kind','agent-category','agent-count','agents-compare-panel'])check(agentComponent.includes('id="'+id+'"'),'Missing interactive directory element: '+id);
 
+// The shared source methodology must be authored once and never repeated inside cards.
+const sourceLibrary=readFileSync(new URL('../src/components/AtlasSection.astro',import.meta.url),'utf8');
+const resourceArea=sourceLibrary.slice(sourceLibrary.indexOf("{type==='ressources'"),sourceLibrary.indexOf("{type==='glossaire'"));
+check((resourceArea.match(/id="methode-sources"/g)||[]).length===1,'Source methodology must have exactly one entry point');
+check(!resourceArea.includes('atlas-tool-references atlas-resource-guide'),'Source cards must not repeat shared methodology');
+check(resourceArea.includes('resourceCats.filter(cat=>resourceReading[cat])'),'Each source family should have one shared reading guide');
+check(resourceArea.includes('atlas-resource-origin'),'Individual source cards must identify original host');
+check(resourceArea.includes('new URL(s.url).hostname'),'Source host must derive from its own URL');
+
 check(referenceNav.length===8,'Main reference navigation must offer eight meaningful categories');
 check(new Set(referenceNav.map(x=>x.id)).size===referenceNav.length,'Reference navigation contains duplicates');
 for(const item of referenceNav)check(translated(item.title),'Missing translated reference navigation: '+item.id);
