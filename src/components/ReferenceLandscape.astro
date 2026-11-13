@@ -1,0 +1,53 @@
+---
+import {atlas,localized as L} from '../data/atlas.js';
+import {referencePillars,standardsRegister,ecosystemActors,referenceTimeline} from '../data/referenceContent.js';
+const {lang='fr'}=Astro.props;const fr=lang==='fr';
+const representative=standardsRegister.filter(x=>['HTML Living Standard','JSON-LD 1.1','Model Context Protocol','Agent2Agent (A2A)','WebMCP','C2PA'].includes(x.name));
+const featuredActors=ecosystemActors.slice(0,6);
+const topic=slug=>atlas.topics.find(x=>x.slug===slug);
+---
+<section class="reference-index section" aria-labelledby="reference-index-title">
+ <div class="wrap">
+  <div class="ref-section-heading">
+   <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'QUATRE DIMENSIONS DU WEBAI':'FOUR DIMENSIONS OF WEBAI'}</span>
+   <h2 id="reference-index-title">{fr?'Un Web. Plusieurs transformations à documenter.':'One Web. Multiple transformations to document.'}</h2>
+   <p>{fr?'L’IA intervient dans la création, l’accès à l’information, les actions effectuées par des agents et la confiance accordée aux contenus. Ce sont des domaines à comparer, non les étapes obligatoires d’une évolution unique.':'AI affects creation, information access, agent actions and trust. These are domains to compare, not mandatory stages of one inevitable evolution.'}</p>
+  </div>
+  <div class="reference-index-pillar-grid">{referencePillars.map(p=><article class="reference-index-pillar">
+    <span class="reference-index-pillar-number">{p.num}</span><span class="reference-index-pillar-tag">{L(p.tag,lang)}</span>
+    <h3>{L(p.name,lang)}</h3><p>{L(p.description,lang)}</p>
+    <div class="reference-index-pillar-links">{p.topics.slice(0,2).map(slug=>{const t=topic(slug);return t?<a href={'/'+lang+'/encyclopedie/'+slug+'/'}>{L(t.title,lang)} ↗</a>:null})}</div>
+  </article>)}</div>
+ </div>
+</section>
+<section class="reference-index-standards section" aria-labelledby="reference-standards-home">
+ <div class="wrap">
+  <div class="section-heading">
+   <div><span class="eyebrow">{fr?'NORMES ET PROTOCOLES':'STANDARDS AND PROTOCOLS'}</span>
+   <h2 id="reference-standards-home">{fr?'L’interopérabilité a besoin de textes précis.':'Interoperability starts with precise specifications.'}</h2>
+   <p>{fr?'Du HTML aux outils d’agents : comparez le rôle et le statut des documents, avec accès aux textes originaux.':'From HTML to agent tools: compare specification scope and status, with direct links to original documents.'}</p></div>
+   <a class="text-link" href={'/'+lang+'/standards/'}>{fr?'Consulter le registre':'Explore the registry'} ↗</a>
+  </div>
+  <div class="reference-home-standards">{representative.map(item=><article>
+   <div class="reference-home-standard-top"><strong>{item.name}</strong><span>{item.owner}</span></div>
+   <p>{L(item.scope,lang)}</p>
+   <div><small>{L(item.status,lang)}</small><a href={item.url} target="_blank" rel="noopener noreferrer">{fr?'Source':'Source'} ↗</a></div>
+  </article>)}</div>
+ </div>
+</section>
+<section class="reference-index-ecosystem section" aria-labelledby="reference-ecosystem-home">
+ <div class="wrap">
+  <div class="section-heading">
+   <div><span class="eyebrow">{fr?'ÉCOSYSTÈME DOCUMENTÉ':'DOCUMENTED ECOSYSTEM'}</span>
+   <h2 id="reference-ecosystem-home">{fr?'Des standards, des projets et des acteurs identifiables.':'Standards, projects and accountable organizations.'}</h2>
+   <p>{fr?'Le répertoire distingue organismes de normalisation, projets open source, initiatives de sécurité et fournisseurs de ressources. Aucune affiliation n’est sous-entendue.':'The directory separates standards bodies, open-source projects, security initiatives and content providers. No affiliation is implied.'}</p></div>
+   <a class="text-link" href={'/'+lang+'/acteurs/'}>{fr?'Tous les acteurs':'All organizations'} ↗</a>
+  </div>
+  <div class="reference-home-actors">{featuredActors.map(item=><a href={item.url} target="_blank" rel="noopener noreferrer"><strong>{item.name}</strong><span>{L(item.kind,lang)}</span><small>↗</small></a>)}</div>
+  <div class="reference-home-timeline">
+    <div><span class="eyebrow">{fr?'REPÈRE CHRONOLOGIQUE':'HISTORICAL REFERENCE'}</span>
+    <h3>{fr?'Des jalons vérifiables, pas des prédictions.':'Verifiable milestones, not predictions.'}</h3></div>
+    <div>{referenceTimeline.slice(-3).map(event=><a href={'/'+lang+'/chronologie/'}><time>{event.year}</time><span>{L(event.title,lang)}</span><span aria-hidden="true">↗</span></a>)}</div>
+  </div>
+ </div>
+</section>
