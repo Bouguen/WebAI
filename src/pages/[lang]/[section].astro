@@ -8,7 +8,7 @@ import {referenceNav} from '../../data/referenceContent.js';
 import {copy, nav, references} from '../../data/site.js';
 const referenceRoutes=['concept','technologies','standards','acteurs','chronologie','faq'];
 const atlasRoutes=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire'];
-export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; const sections=[...new Set([...nav.map(({id})=>id),...routeIds,...referenceRoutes])];return ['fr','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}}))); }
+export function getStaticPaths() { const routeIds=['outils','ressources','glossaire','encyclopedie','parcours','secteurs','publications','observatoire','laboratoire']; const allPrevious=['decouvrir','comprendre','explorer','experimenter','apprendre','suivre','verifier'];const referencePages=['concept','technologies','standards','acteurs','chronologie','faq'];const sections=[...new Set([...allPrevious,...routeIds,...referencePages])];return ['fr','en'].flatMap(lang=>sections.map(section=>({params:{lang,section}}))); }
 const {lang, section} = Astro.params;
 const t = copy[lang];
 const atlasPage = atlasRoutes.includes(section);
