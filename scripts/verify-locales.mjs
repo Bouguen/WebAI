@@ -45,13 +45,25 @@ for(const route of routes){
     assert(html.includes('class="locale-switch"'),'Missing visible locale selector: /'+locale+'/'+urlPart);
     assert(html.includes('href="/'+locale+'/'),'No local navigation for /'+locale+'/'+urlPart);
     assert(html.includes('noindex,nofollow'),'Preview indexing guard missing: /'+locale+'/'+urlPart);
+    for(const hit of html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)){
+      const visible=hit[2].replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').trim();
+      assert(!visible.endsWith('.'),'Heading ending with a full stop: /'+locale+'/'+urlPart+' — '+visible.slice(-85));
+    }
   }
 }
 assert(fr.size>=40,'Too few French pages: '+fr.size);
 assert(en.size>=40,'Too few English pages: '+en.size);
 const enHome=en.get('')||'';
-assert(enHome.includes('The Web is evolving.'),'English homepage headline is missing');
-assert(!enHome.includes('Comprendre les transformations du Web'),'French homepage hero leaked into EN');
+assert(enHome.includes('The Web generated'),'English reference homepage headline is missing');
+assert(!enHome.includes('Le Web généré'),'French homepage hero leaked into EN');
+assert((fr.get('')||'').includes('Le Web généré'),'French reference homepage headline is missing');
+for(const route of ['concept','technologies','standards','acteurs','chronologie','faq']){
+ assert(fr.has(route),'Missing French reference category: '+route);
+ assert(en.has(route),'Missing English reference category: '+route);
+}
+for(const segment of ['/concept/','/technologies/','/standards/','/acteurs/','/observatoire/']){
+ assert(enHome.includes('href="/en'+segment+'"'),'Reference homepage missing link '+segment);
+}
 if(failures.length){
   console.error('WebAI language parity failed:\n'+failures.join('\n'));
   process.exitCode=1;

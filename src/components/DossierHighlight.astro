@@ -2,14 +2,14 @@
 import {atlas,localized as L} from '../data/atlas.js';
 import {dossiers} from '../data/dossiers.js';
 const {lang='fr'}=Astro.props;const fr=lang==='fr';
-const featured=['rag','agents','mcp','webmcp','c2pa','webgpu'].map(slug=>({topic:atlas.topics.find(t=>t.slug===slug),dossier:dossiers[slug]})).filter(x=>x.topic&&x.dossier);
+const featured=['rag','agents','mcp','webmcp','c2pa','webgpu','ai-search-visibility','agent-ready-html','crawler-governance','browser-ai-models','provenance-evidence','ai-transparency-eu'].map(slug=>({topic:atlas.topics.find(t=>t.slug===slug),dossier:dossiers[slug]})).filter(x=>x.topic&&x.dossier);
 ---
 <section class="kb-dossier-highlight"><div class="wrap">
  <div class="kb-highlight-heading"><div>
-  <span class="eyebrow"><span class="atlas-beacon"></span>WEBAI · DEEP KNOWLEDGE</span>
-  <h2>{fr?'Des dossiers pour aller au-delà des définitions.':'Beyond the definitions.'}</h2>
-  <p>{fr?'Explorez les mécanismes, les usages, les limites et les sources des grandes technologies du Web de l’IA. Dossiers de préversion, soumis à relecture éditoriale.':'Explore mechanisms, use cases, limits and primary sources behind major AI Web technologies. Preview dossiers are awaiting editorial review.'}</p>
- </div><a href={'/'+lang+'/carte/'}>{fr?'Voir la carte des connaissances':'Explore the knowledge map'} ↗</a></div>
+  <span class="eyebrow"><span class="atlas-beacon"></span>WEBAI · DOSSIERS DE RÉFÉRENCE</span>
+  <h2>{fr?'Une encyclopédie documentée des transformations du Web.':'A source-led encyclopedia of the changing Web.'}</h2>
+  <p>{fr?'Les 36 dossiers de l’encyclopédie relient architectures, usages, recherches et documents d’origine. Voici des entrées majeures sur les agents, la recherche, les modèles locaux, les standards et la confiance. Les textes restent soumis à relecture éditoriale.':'The encyclopedia’s 36 dossiers connect architectures, applications, research and primary sources. This selection covers agents, search, local inference, standards and trust. Editorial review remains pending.'}</p>
+ </div><a href={'/'+lang+'/carte/'}>{fr?'Carte des relations':'Explore topic relationships'} ↗</a></div>
  <div class="kb-highlight-grid">{featured.map(({topic,dossier})=><a class="kb-highlight-card" href={'/'+lang+'/encyclopedie/'+topic.slug+'/'}>
  <span>{L(dossier.stage,lang)}</span><strong>{L(topic.title,lang)}</strong><p>{L(topic.summary,lang)}</p><span>{fr?'Ouvrir le dossier':'Read the dossier'} ↗</span>
  </a>)}</div>

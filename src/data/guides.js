@@ -1,3 +1,4 @@
+import {researchGuides} from './researchGuides.js';
 export const guides = [
   {
     "slug": "publication",
@@ -344,3 +345,5 @@ export const guides = [
     "updated_at": "2026-11-12"
   }
 ];
+
+guides.push(...researchGuides);

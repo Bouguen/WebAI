@@ -3,7 +3,13 @@ import '../styles/global.css';
 import '../styles/atlas.css';
 import '../styles/dossiers.css';
 import '../styles/hero-spatial.css';
-import { copy, nav } from '../data/site.js';
+import '../styles/research-hub.css';
+import '../styles/tool-profiles.css';
+import '../styles/extra-sections.css';
+import '../styles/reference.css';
+import '../styles/visual-refresh.css';
+import {copy} from '../data/site.js';
+import {referenceNav} from '../data/referenceContent.js';
 const { lang = 'fr', title, description, active = '' } = Astro.props;
 const t = copy[lang] ?? copy.fr;
 const current = Astro.url.pathname;
@@ -14,7 +20,7 @@ const languageChoices = [
   {code:'fr', nativeName:'Français', label:'Afficher cette page en français'},
   {code:'en', nativeName:'English', label:'View this page in English'}
 ];
-const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, url: '/' + lang + '/' + item.id + '/'}));
+const navigation = referenceNav.map(item=>({...item,title:item.title[lang],url:'/'+lang+'/'+item.id+'/'}));
 ---
 <!doctype html>
 <html lang={lang}>
@@ -23,7 +29,7 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description ?? t.metaDescription} />
     <meta name="robots" content="noindex,nofollow" />
-    <meta name="theme-color" content="#101a30" />
+    <meta name="theme-color" content="#234052" />
     <title>{title ? title + ' · WebAI' : t.metaTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" hreflang="fr" href={localizedAbsolutePath('fr')} />
@@ -42,7 +48,7 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
           <span>Web<span class="brand-ai">AI</span></span>
         </a>
         <nav id="primary-nav" class="primary-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
-          {navigation.map((item) => <a class:list={['nav-link', {active: active === item.id}]} href={item.url}><span class="nav-icon" aria-hidden="true">{item.glyph}</span>{item.title}</a>)}
+          {navigation.map((item) => <a class:list={['nav-link', {active: current===item.url || active===item.id}]} aria-current={current===item.url?'page':undefined} href={item.url}><span class="nav-icon" aria-hidden="true">{item.glyph}</span>{item.title}</a>)}
         </nav>
         <div class="header-actions">
           <a class="icon-button search-link" href={'/' + lang + '/recherche/'} title={t.search} aria-label={t.search}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg></a>
@@ -66,20 +72,17 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
       <div class="atlas-quickbar-inner">
        {[
          ['encyclopedie','◇',lang==='fr'?'Encyclopédie':'Encyclopedia'],
-         ['outils','◈',lang==='fr'?'Outils IA':'AI tools'],
-         ['ressources','▤',lang==='fr'?'Sources':'Sources'],
+         ['ressources','▤',lang==='fr'?'Sources & bibliographie':'Sources & bibliography'],
          ['glossaire','Aa',lang==='fr'?'Glossaire':'Glossary'],
-         ['parcours','▦',lang==='fr'?'Parcours':'Learning'],
-         ['publications','⌁',lang==='fr'?'Recherche':'Research'],
-         ['secteurs','▣',lang==='fr'?'Applications':'Applications'],
+         ['chronologie','◷',lang==='fr'?'Chronologie':'Timeline'],
+         ['faq','?',lang==='fr'?'Questions fréquentes':'FAQ'],
          ['laboratoire','✳','WebAI Lab'],
-         ['comparateur','⇄',lang==='fr'?'Comparateur':'Comparison'],
-         ['guides','▦',lang==='fr'?'Guides pratiques':'Practical guides'],
-         ['fiche-verification','✓',lang==='fr'?'Fiche de preuves':'Evidence check'],
-         ['methodologie','▤',lang==='fr'?'Méthodologie':'Methodology'],
+         ['comparateur','⇄',lang==='fr'?'Comparateur':'Compare tools'],
          ['carte','◎',lang==='fr'?'Carte des savoirs':'Knowledge map'],
-         ['statuts','◧',lang==='fr'?'Statuts & normes':'Standards status'],
-         ['observatoire','◎',lang==='fr'?'Observatoire':'Observatory']
+         ['guides','▦',lang==='fr'?'Guides techniques':'Technical guides'],
+         ['statuts','◧',lang==='fr'?'Statuts des normes':'Standards status'],
+         ['methodologie','▤',lang==='fr'?'Méthodologie':'Methodology'],
+         ['fiche-verification','✓',lang==='fr'?'Vérification des preuves':'Evidence review']
        ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
       </div>
     </div></nav>
@@ -91,8 +94,10 @@ const navigation = nav.map((item) => ({...item, title: t.topics[item.id].title, 
           <p>{t.footerText}</p>
         </div>
         <div class="footer-links">
-          <a href={'/' + lang + '/decouvrir/'}>{t.topics.decouvrir.title}</a>
-          <a href={'/' + lang + '/verifier/'}>{t.topics.verifier.title}</a>
+          <a href={'/'+lang+'/concept/'}>{lang==='fr'?'Concept':'Concept'}</a>
+          <a href={'/'+lang+'/technologies/'}>{lang==='fr'?'Technologies':'Technologies'}</a>
+          <a href={'/'+lang+'/standards/'}>{lang==='fr'?'Standards':'Standards'}</a>
+          <a href={'/'+lang+'/acteurs/'}>{lang==='fr'?'Acteurs':'Organizations'}</a>
           <a href={'/' + lang + '/recherche/'}>{t.search}</a>
           <a href={'/' + lang + '/methodologie/'}>{lang === 'fr' ? 'Méthodologie' : 'Methodology'}</a>
         </div>

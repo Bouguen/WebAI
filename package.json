@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run verify:data && astro build && pagefind --site dist && npm run verify:locales",
+    "build": "npm run verify:data && astro build && node scripts/strip-heading-periods.mjs && pagefind --site dist && npm run verify:locales",
     "preview": "astro preview",
-    "verify:data": "node scripts/validate-data.mjs",
-    "test": "node scripts/validate-data.mjs && python3 -m unittest discover -s tests -p 'test_*.py' -v",
+    "verify:data": "node scripts/validate-data.mjs && node scripts/check-extension.mjs",
+    "test": "npm run verify:data && python3 -m unittest discover -s tests -p 'test_*.py' -v",
     "verify:locales": "node scripts/verify-locales.mjs"
   },
   "dependencies": {

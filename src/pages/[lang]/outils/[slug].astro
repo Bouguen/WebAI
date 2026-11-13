@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {atlas,localized as L} from '../../../data/atlas.js';
+export function getStaticPaths(){
+ return ['fr','en'].flatMap(lang=>atlas.catalog.map(tool=>({params:{lang,slug:tool.slug}})));
+}
+const {lang,slug}=Astro.params;
+const fr=lang==='fr';
+const tool=atlas.catalog.find(t=>t.slug===slug);
+const profile=tool.profile;
+const sibling=atlas.catalog.filter(item=>item.category===tool.category&&item.slug!==slug).slice(0,5);
+const glossary=atlas.glossary.filter(item=>item.category===tool.category).slice(0,5);
+const checkpoints=(fr?[
+ 'Définir la tâche, les données permises et les utilisateurs concernés.',
+ 'Lire la documentation du fournisseur et les conditions de réutilisation.',
+ 'Construire un exemple réduit avec données fictives ou autorisées.',
+ 'Mesurer les erreurs, la performance et les résultats réellement observés.',
+ 'Documenter les versions, les limites et la décision humaine avant publication.'
+]:[
+ 'Define the task, authorized data and intended users.',
+ 'Read vendor documentation and reuse terms.',
+ 'Build a small test with fictional or authorized data.',
+ 'Measure failures, performance and actual observed outcomes.',
+ 'Document versions, limitations and human approval before publishing.'
+]);
+const links=[
+ {label:{fr:'Site officiel de la solution',en:'Official product website'},url:tool.url,kind:'primary'},
+ ...profile.references
+];
+---
+<BaseLayout lang={lang} title={tool.name+' — '+(fr?'fiche d’outil':'tool profile')} description={L(profile.explain,lang)}>
+<article class="tool-profile-page">
+ <header class="atlas-hero tool-profile-hero"><div class="wrap">
+  <nav class="atlas-breadcrumb" aria-label={fr?'Fil d’Ariane':'Breadcrumb'}>
+   <a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/outils/'}>{fr?'Outils IA':'AI tools'}</a><span>/</span><span>{tool.name}</span>
+  </nav>
+  <span class="atlas-eyebrow"><span class="atlas-beacon"></span>{fr?'ANNUAIRE · FICHE D’ÉTUDE':'DIRECTORY · TOOL PROFILE'} · {tool.category}</span>
+  <h1>{tool.name}</h1>
+  <p class="tool-profile-lede">{L(profile.explain,lang)}</p>
+  <div class="kb-meta"><span>{tool.category}</span><span>{tool.kind}</span><span>{fr?'Édition : 13 novembre 2026':'Edition: 13 November 2026'}</span><span class="kb-review-tag">{fr?'Description à vérifier indépendamment':'Independent review pending'}</span></div>
+ </div></header>
+ <div class="wrap tool-profile-layout">
+ <div class="tool-profile-article">
+  <div class="kb-editorial-note"><strong>{fr?'Précision éditoriale':'Editorial note'}</strong>
+   <p>{fr?'Cette fiche est un guide documentaire, pas une certification ni un partenariat. La disponibilité, les fonctions, les licences et les prix peuvent évoluer. Les sources thématiques expliquent un contexte technique : elles ne constituent pas une approbation de cet outil par leurs auteurs.':'This is an educational review, not a certification or endorsement. Availability, features, licenses and prices may change. Thematic references explain technical context; their authors do not endorse this tool.'}</p>
+  </div>
+  <nav class="kb-toc" aria-label={fr?'Plan de la fiche':'Tool profile outline'}>
+    <span class="eyebrow">{fr?'PLAN DE LECTURE':'READING OUTLINE'}</span>
+    <ol>
+      <li><a href="#purpose">{fr?'01 · Présentation et rôle':'01 · Purpose and scope'}</a></li>
+      <li><a href="#example">{fr?'02 · Cas d’utilisation':'02 · Practical example'}</a></li>
+      <li><a href="#limits">{fr?'03 · Limites et risques':'03 · Limitations and risks'}</a></li>
+      <li><a href="#evaluation">{fr?'04 · Comment évaluer':'04 · How to evaluate'}</a></li>
+      <li><a href="#method">{fr?'05 · Méthode d’essai':'05 · Practical workflow'}</a></li>
+      <li><a href="#references">{fr?'06 · Sources complémentaires':'06 · Supporting sources'}</a></li>
+    </ol>
+  </nav>
+  <section class="tool-profile-section" id="purpose">
+    <span class="eyebrow">{fr?'FONCTIONNEMENT':'HOW IT WORKS'}</span>
+    <h2>{fr?'Présentation détaillée et domaine d’application':'Detailed description and use cases'}</h2>
+    <p>{L(profile.explain,lang)}</p>
+    <p>{L(profile.context,lang)}</p>
+    <p>{fr?'Ce profil éclaire le rôle de la solution dans une architecture WebAI : production, récupération, exécution, orchestration, évaluation ou vérification. Le choix dépend des données, des capacités observées et de la facilité à expliquer les résultats.':'The profile clarifies the tool’s role within a WebAI architecture: content creation, retrieval, execution, orchestration, evaluation or verification. Selection depends on data, observed capabilities and explainability of outcomes.'}</p>
+  </section>
+  <section class="tool-profile-section" id="example">
+    <span class="eyebrow">{fr?'EXEMPLE COMMENTÉ':'APPLIED EXAMPLE'}</span>
+    <h2>{fr?'Un scénario de mise en pratique':'A practical scenario'}</h2>
+    <p>{L(profile.use,lang)}</p>
+    <div class="tool-profile-scenario">
+      <strong>{fr?'Comment documenter l’expérience':'How to document the experiment'}</strong>
+      <p>{fr?'Notez la question initiale, les données utilisées, les paramètres, la version logicielle, la sortie réellement obtenue et les modifications apportées. Conservez la distinction entre résultat reproductible, interprétation pédagogique et performance non mesurée.':'Record the initial question, data used, parameters, software version, actual output and any changes made. Keep reproducible results separate from educational interpretation and unmeasured claims.'}</p>
+    </div>
+  </section>
+  <section class="tool-profile-section" id="limits">
+    <span class="eyebrow">{fr?'CE QU’IL FAUT VÉRIFIER':'LIMITS AND TRADE-OFFS'}</span>
+    <h2>{fr?'Limites, précautions et coûts cachés':'Limitations, safeguards and hidden costs'}</h2>
+    <p>{L(profile.limit,lang)}</p>
+    <p>{fr?'Avant un déploiement réel, vérifiez auprès du fournisseur la licence de l’outil, celle des modèles ou ressources associés, la politique de confidentialité, le statut des fonctionnalités nécessaires et les exigences d’accessibilité. Les estimations non datées ne doivent pas être traitées comme des faits actuels.':'Before live deployment, consult the provider for the tool license, model and asset licenses, privacy policy, necessary feature availability and accessibility requirements. Undated estimates should not be treated as current facts.'}</p>
+  </section>
+  <section class="tool-profile-section" id="evaluation">
+    <span class="eyebrow">{fr?'ANALYSE CRITIQUE':'CRITICAL REVIEW'}</span>
+    <h2>{fr?'Trois questions avant de choisir cet outil':'Three questions before choosing this tool'}</h2>
+    <ol class="tool-profile-questions">{profile.questions[lang].map((question,index)=><li><span>{String(index+1).padStart(2,'0')}</span><p>{question}</p></li>)}</ol>
+  </section>
+  <section class="tool-profile-section" id="method">
+    <span class="eyebrow">{fr?'ATELIER GUIDÉ':'GUIDED WORKFLOW'}</span>
+    <h2>{fr?'Tester la solution étape par étape':'Evaluate the solution step by step'}</h2>
+    <ol class="tool-profile-steps">{checkpoints.map((step,index)=><li><span>{String(index+1).padStart(2,'0')}</span><p>{step}</p></li>)}</ol>
+    <p>{fr?'Pour les actions de modification, d’envoi ou de publication, prévoyez une confirmation explicite et une vérification de l’état final.':'For editing, sending or publishing actions, obtain explicit approval and verify the final system state.'}</p>
+  </section>
+  <section class="tool-profile-section" id="references">
+    <span class="eyebrow">{fr?'DOCUMENTATION ET LECTURES':'DOCUMENTATION AND SOURCES'}</span>
+    <h2>{fr?'Site officiel, documentation et sources complémentaires':'Official site, technical documentation and further references'}</h2>
+    <p>{fr?'Les trois références complémentaires ci-dessous servent à vérifier des aspects techniques ou à approfondir le contexte de l’outil. Leurs auteurs n’ont pas nécessairement évalué ni recommandé cette solution.':'The three additional references help verify technical aspects or understand the surrounding technology. Their authors have not necessarily tested or endorsed this solution.'}</p>
+    <div class="tool-profile-references">{links.map((ref,index)=><a href={ref.url} target="_blank" rel="noopener noreferrer">
+      <span class="tool-profile-ref-index">{String(index+1).padStart(2,'0')}</span>
+      <div><strong>{L(ref.label,lang)}</strong><small>{new URL(ref.url).hostname}</small></div>
+      <span aria-hidden="true">↗</span>
+    </a>)}</div>
+  </section>
+  <div class="kb-end"><a href={'/'+lang+'/outils/'}>← {fr?'Retour à l’annuaire AI Tools':'Back to AI Tools'}</a><a href={'/'+lang+'/comparateur/'}>{fr?'Comparer les solutions':'Compare solutions'} ↗</a></div>
+ </div>
+ <aside class="tool-profile-aside" aria-label={fr?'Lectures connexes':'Related reading'}>
+   <div class="kb-side-box">
+     <span class="eyebrow">{fr?'OUTILS DU MÊME DOMAINE':'TOOLS IN THIS CATEGORY'}</span>
+     {sibling.map(item=><a class="kb-related" href={'/'+lang+'/outils/'+item.slug+'/'}><span>◈</span><span>{item.name}</span><span aria-hidden="true">↗</span></a>)}
+   </div>
+   {glossary.length>0&&<div class="kb-side-box">
+     <span class="eyebrow">{fr?'NOTIONS ASSOCIÉES':'RELATED TERMS'}</span>
+     {glossary.map(item=><div class="tool-profile-term"><strong>{lang==='fr'?item.fr:item.en}</strong><p>{L(item.definition,lang)}</p></div>)}
+   </div>}
+   <div class="kb-side-box kb-side-study">
+     <strong>{fr?'Mise en pratique sans compte':'Try a browser-only experiment'}</strong>
+     <p>{fr?'Les outils du WebAI Lab permettent de tester des principes voisins sans connexion à des plateformes externes.':'WebAI Lab tools let you explore related principles without connecting to external platforms.'}</p>
+     <a href={'/'+lang+'/laboratoire/'}>{fr?'Ouvrir les laboratoires':'Open the labs'} ↗</a>
+   </div>
+ </aside>
+ </div>
+</article>
+</BaseLayout>

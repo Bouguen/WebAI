@@ -1,0 +1,189 @@
+---
+const {lang='fr'}=Astro.props;const fr=lang==='fr';
+const modules=[
+ ['06','ROBOTS','Politique de robots IA','AI crawler policy','Préparer un robots.txt avec des instructions distinctes selon les robots.','Draft a robots.txt with distinct instructions for different crawlers.'],
+ ['07','JSON-LD','Générateur de données liées','Structured data builder','Construire un objet JSON-LD Article, Dataset ou LearningResource.','Build a JSON-LD Article, Dataset or LearningResource object.'],
+ ['08','RAG','Découpage documentaire','Document chunking','Observer comment des fragments de texte se chevauchent.','Explore overlapping text chunks without embeddings or vector search.'],
+ ['09','XML','Contrôle de sitemap','Sitemap checker','Vérifier la syntaxe d’un sitemap XML sans visiter les URLs.','Inspect sitemap XML syntax without visiting URLs.'],
+ ['10','A11Y','Audit HTML indicatif','Basic HTML accessibility audit','Repérer quelques problèmes HTML courants ; ce n’est pas un audit WCAG.','Flag common HTML issues; this is not a WCAG audit.'],
+ ['11','URL','Analyseur d’URL','URL inspector','Décomposer une adresse et ses paramètres sans effectuer de requête.','Inspect an address and query parameters without making a request.'],
+ ['12','MCP','Descripteur d’outil MCP','MCP tool descriptor','Préparer un exemple de schéma d’entrée ; aucun serveur MCP connecté.','Draft an input schema; no MCP server is connected.'],
+ ['13','JSON','Comparateur JSON','JSON comparison','Comparer deux documents JSON, clés et valeurs comprises.','Compare two JSON documents, including keys and values.'],
+ ['14','SOURCES','Examen de citation','Citation review worksheet','Confronter manuellement une affirmation à un extrait.','Manually compare a claim with a supporting excerpt.'],
+ ['15','MARKDOWN','Aperçu Markdown sûr','Safe Markdown preview','Afficher titres, listes et paragraphes en échappant le HTML.','Preview headings, lists and paragraphs with HTML escaped.']
+];
+---
+<div class="studio-expansion-header">
+  <span class="eyebrow">{fr?'NOUVEAUX OUTILS · ANALYSE LOCALE':'NEW TOOLS · LOCAL ANALYSIS'}</span>
+  <h2>{fr?'Passer de la théorie aux vérifications pratiques':'Turn concepts into practical checks'}</h2>
+  <p>{fr?'Dix nouveaux modules exécutés uniquement dans votre navigateur. Aucun envoi de texte, aucune IA distante, aucune promesse de validation exhaustive. Les contrôles signalent les limites de leur propre méthode.':'Ten additional modules execute in your browser only. No text uploads, no remote AI and no claim of complete validation. Each checker explains its own limits.'}</p>
+</div>
+<div class="studio-grid studio-expansion">
+<section class="studio-card"><span class="studio-number">06 / ROBOTS</span><h2>{fr?'Politique de robots IA':'AI crawler policy'}</h2><p>{fr?'Comparez le traitement des robots de recherche et de collecte. robots.txt n’est pas une protection d’accès.':'Compare search and training crawler preferences. robots.txt does not enforce access control.'}</p>
+ <label>{fr?'Chemin à exclure':'Path to disallow'}<input id="labx-robots-path" value="/private/" placeholder="/private/"/></label>
+ <label>{fr?'Robot concerné':'Crawler'}<select id="labx-robots-bot"><option value="OAI-SearchBot">OAI-SearchBot</option><option value="GPTBot">GPTBot</option><option value="Googlebot">Googlebot</option><option value="Google-Extended">Google-Extended</option><option value="*">{fr?'Tous les robots':'All bots'}</option></select></label>
+ <button class="studio-action" type="button" id="labx-robots-build">{fr?'Composer robots.txt':'Build robots.txt'}</button>
+ <pre class="studio-result studio-code" id="labx-robots-result" role="status">{fr?'Le fichier sera affiché ici.':'The file will appear here.'}</pre>
+ <p class="studio-help"><a href="https://developers.openai.com/api/docs/bots" target="_blank" rel="noopener noreferrer">{fr?'Référence sur les robots OpenAI':'OpenAI crawler documentation'} ↗</a></p>
+</section>
+<section class="studio-card"><span class="studio-number">07 / JSON-LD</span><h2>{fr?'Générateur de données structurées':'Structured data builder'}</h2><p>{fr?'Décrivez une ressource sans inventer de propriétés non présentes sur la page. Ce générateur ne vérifie pas les règles des moteurs.':'Describe a resource without inventing invisible properties. This builder does not test search engine eligibility.'}</p>
+ <label>{fr?'Type':'Type'}<select id="labx-ld-type"><option>Article</option><option>Dataset</option><option>LearningResource</option></select></label>
+ <label>{fr?'Titre exact':'Exact title'}<input id="labx-ld-title" value="WebAI — Guide des agents"/></label>
+ <label>{fr?'URL publique (HTTPS)':'Public URL (HTTPS)'}<input id="labx-ld-url" type="url" value="https://web-ai.site/fr/"/></label>
+ <label>{fr?'Auteur ou organisation':'Author or organization'}<input id="labx-ld-author" value="WebAI"/></label>
+ <button class="studio-action" type="button" id="labx-ld-build">{fr?'Générer le JSON-LD':'Generate JSON-LD'}</button>
+ <pre class="studio-result studio-code" id="labx-ld-result" role="status">—</pre>
+</section>
+<section class="studio-card"><span class="studio-number">08 / RAG</span><h2>{fr?'Simulateur de découpage RAG':'RAG chunking explorer'}</h2><p>{fr?'Visualisez un découpage déterministe par mots avec chevauchement. Aucun embedding ni index vectoriel.':'Visualize deterministic word chunks with overlap. No embeddings or vector index.'}</p>
+ <label>{fr?'Texte du corpus':'Corpus text'}<textarea id="labx-chunk-text" rows="5">{fr?'Le Web génératif combine modèles de langage, sources documentaires et interfaces humaines. Un agent peut utiliser un outil mais doit respecter les autorisations. Les sources citées doivent réellement soutenir les affirmations.' :'The generative Web combines language models, documentary sources and human interfaces. An agent can use a tool but must respect permissions. Cited sources should support the claims.'}</textarea></label>
+ <div class="studio-inline"><label>{fr?'Mots par fragment':'Words per chunk'}<input id="labx-chunk-size" type="number" min="5" max="300" value="20"/></label><label>{fr?'Chevauchement':'Overlap'}<input id="labx-chunk-overlap" type="number" min="0" max="100" value="4"/></label></div>
+ <button class="studio-action" type="button" id="labx-chunk-run">{fr?'Découper':'Split text'}</button>
+ <div class="studio-result" id="labx-chunk-result" role="status">—</div>
+</section>
+<section class="studio-card"><span class="studio-number">09 / XML</span><h2>{fr?'Inspecteur de sitemap XML':'XML sitemap inspector'}</h2><p>{fr?'Analyse le XML et quelques éléments du protocole Sitemap, sans accès réseau ni contrôle d’indexation.':'Parses XML and some Sitemap protocol elements, without fetching URLs or checking indexing.'}</p>
+ <label>{fr?'Contenu sitemap.xml':'sitemap.xml content'}<textarea id="labx-sitemap-input" rows="6" spellcheck="false">{'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.org/fr/</loc></url></urlset>'}</textarea></label>
+ <button class="studio-action" type="button" id="labx-sitemap-run">{fr?'Vérifier le document':'Inspect document'}</button>
+ <div class="studio-result" id="labx-sitemap-result" role="status">—</div>
+</section>
+<section class="studio-card"><span class="studio-number">10 / A11Y</span><h2>{fr?'Contrôle HTML indicatif':'Basic HTML checks'}</h2><p>{fr?'Repère les balises h1, main, images sans alt et champs sans noms accessibles. Cela ne remplace pas WCAG ou des tests humains.':'Checks h1, main, missing image alt attributes and unlabeled inputs. Not a replacement for WCAG or human testing.'}</p>
+ <label>{fr?'Source HTML':'HTML source'}<textarea id="labx-html-input" rows="6" spellcheck="false">{'<html lang="fr"><main><h1>Le WebAI</h1><img src="image.png" alt="Schéma de concepts"><label for="q">Recherche</label><input id="q"></main></html>'}</textarea></label>
+ <button class="studio-action" type="button" id="labx-html-run">{fr?'Lancer les contrôles':'Run checks'}</button>
+ <div class="studio-result" id="labx-html-result" role="status">—</div>
+</section>
+<section class="studio-card"><span class="studio-number">11 / URL</span><h2>{fr?'Analyseur d’URL':'URL inspector'}</h2><p>{fr?'Identifiez hôte, chemin, paramètres et fragment. L’outil n’ouvre pas l’adresse et n’évalue pas sa fiabilité.':'Find host, path, query and fragment. No network request or trust verification.'}</p>
+ <label>URL<input id="labx-url-input" type="url" value="https://example.org/fr/recherche?q=webai&amp;lang=fr#sources"/></label>
+ <button class="studio-action" type="button" id="labx-url-run">{fr?'Analyser':'Analyze'}</button>
+ <pre class="studio-result studio-code" id="labx-url-result" role="status">—</pre>
+</section>
+<section class="studio-card"><span class="studio-number">12 / MCP</span><h2>{fr?'Créateur de descripteur MCP':'MCP tool descriptor builder'}</h2><p>{fr?'Construisez un objet descriptif compatible avec les notions d’outil et de schéma JSON, sans exposer de serveur ni exécuter une action.':'Draft tool metadata and a JSON input schema without running or exposing a server.'}</p>
+ <label>{fr?'Nom technique':'Technical name'}<input id="labx-mcp-name" value="rechercher_dossier"/></label>
+ <label>{fr?'Description de l’action':'Action description'}<input id="labx-mcp-desc" value="Rechercher une fiche de WebAI"/></label>
+ <label>{fr?'Paramètre obligatoire':'Required parameter'}<input id="labx-mcp-param" value="question"/></label>
+ <button class="studio-action" type="button" id="labx-mcp-run">{fr?'Générer le descripteur':'Generate descriptor'}</button>
+ <pre class="studio-result studio-code" id="labx-mcp-result" role="status">—</pre>
+</section>
+<section class="studio-card"><span class="studio-number">13 / JSON</span><h2>{fr?'Comparateur de documents JSON':'JSON document comparison'}</h2><p>{fr?'Compare les valeurs et chemins de deux structures JSON, sans appliquer de modifications.':'Compare paths and values in two JSON documents without changing either.'}</p>
+ <label>JSON A<textarea id="labx-diff-a" rows="4" spellcheck="false">{'{"titre":"WebAI","version":1,"visible":true}'}</textarea></label>
+ <label>JSON B<textarea id="labx-diff-b" rows="4" spellcheck="false">{'{"titre":"WebAI","version":2,"langue":"fr"}'}</textarea></label>
+ <button class="studio-action" type="button" id="labx-diff-run">{fr?'Comparer les différences':'Compare differences'}</button>
+ <pre class="studio-result studio-code" id="labx-diff-result" role="status">—</pre>
+</section>
+<section class="studio-card"><span class="studio-number">14 / SOURCES</span><h2>{fr?'Fiche de vérification de citation':'Citation review worksheet'}</h2><p>{fr?'Consignez l’affirmation, le passage source et la date ; vous décidez de leur concordance. Aucune vérification sémantique automatique.':'Record a claim, source excerpt and date; you decide whether evidence supports it. No automatic semantic verification.'}</p>
+ <label>{fr?'Affirmation':'Claim'}<textarea id="labx-evidence-claim" rows="2"></textarea></label>
+ <label>{fr?'Passage original':'Original excerpt'}<textarea id="labx-evidence-quote" rows="3"></textarea></label>
+ <label>{fr?'URL de la source':'Source URL'}<input id="labx-evidence-url" type="url" placeholder="https://example.org/document"/></label>
+ <label>{fr?'Date de consultation':'Date checked'}<input id="labx-evidence-date" type="date"/></label>
+ <label>{fr?'Jugement humain':'Human judgment'}<select id="labx-evidence-judgment"><option value="à vérifier">{fr?'À vérifier':'To review'}</option><option value="soutenu">{fr?'Soutenu par le passage':'Supported by excerpt'}</option><option value="insuffisant">{fr?'Preuve insuffisante':'Insufficient evidence'}</option><option value="contradictoire">{fr?'Contradictoire':'Contradictory'}</option></select></label>
+ <button class="studio-action" type="button" id="labx-evidence-run">{fr?'Composer la fiche':'Prepare worksheet'}</button>
+ <textarea id="labx-evidence-result" class="studio-report" rows="7" readonly aria-label={fr?'Fiche de vérification':'Review worksheet'}></textarea>
+</section>
+<section class="studio-card"><span class="studio-number">15 / MARKDOWN</span><h2>{fr?'Aperçu Markdown sans scripts':'Safe Markdown preview'}</h2><p>{fr?'Affiche des titres, paragraphes, listes et citations à partir de texte brut. Ce n’est pas un moteur CommonMark complet.':'Render headings, paragraphs, lists and quotes from plain text. This is not a complete CommonMark engine.'}</p>
+ <label>Markdown<textarea id="labx-md-input" rows="7" spellcheck="false">{'# WebAI\n\n## Points essentiels\n- Sources primaires\n- Dossiers datés\n\n> Vérifier avant de publier'}</textarea></label>
+ <button class="studio-action" type="button" id="labx-md-run">{fr?'Afficher le rendu':'Render preview'}</button>
+ <div class="studio-result studio-md-preview" id="labx-md-result" role="status">—</div>
+</section>
+</div>
+<script is:inline define:vars={{lang}}>
+(()=>{
+const fr=lang==='fr';
+const $=id=>document.getElementById('labx-'+id);
+const val=id=>$(id)?.value||'';
+const show=(id,value)=>{const el=$(id);if(el)el.textContent=String(value);};
+const E=(f,e)=>fr?f:e;
+const bind=(id,fn)=>$(id)?.addEventListener('click',()=>{try{fn();}catch(e){show(id==='md-run'?'md-result':id.replace(/-run$|-build$/,'')+'-result',E('Erreur : ','Error: ')+e.message);}});
+const pretty=v=>JSON.stringify(v,null,2);
+bind('robots-build',()=>{
+ const raw=val('robots-path').trim();
+ if(!/^\/[a-zA-Z0-9/_~.\-]*$/.test(raw))throw Error(E('Chemin absolu simple requis, sans espace ni nouvelle ligne.','A simple absolute path is required.'));
+ const robot=val('robots-bot');
+ show('robots-result',`User-agent: ${robot}\nDisallow: ${raw}\n\n# ${E('Préférence déclarée aux robots coopératifs. Pas de contrôle d’accès.','Directive for cooperative crawlers; not an access control.')}`);
+});
+bind('ld-build',()=>{
+ const title=val('ld-title').trim();if(!title)throw Error(E('Titre requis.','Title required.'));
+ const raw=val('ld-url').trim();if(!/^https:\/\//i.test(raw))throw Error(E('URL HTTPS requise.','HTTPS URL required.'));
+ const url=new URL(raw);
+ const data={'@context':'https://schema.org/','@type':val('ld-type'),name:title,url:url.href};
+ const author=val('ld-author').trim();
+ if(author)data.author={'@type':'Organization',name:author};
+ show('ld-result',pretty(data));
+});
+bind('chunk-run',()=>{
+ const text=val('chunk-text').trim().slice(0,20000);
+ const words=text.split(/\s+/u).filter(Boolean);
+ const size=Number(val('chunk-size')), overlap=Number(val('chunk-overlap'));
+ if(!Number.isInteger(size)||size<5||size>300||!Number.isInteger(overlap)||overlap<0||overlap>=size)throw Error(E('Taille de 5 à 300 ; chevauchement inférieur à la taille.','Size 5–300; overlap must be smaller than size.'));
+ if(!words.length)throw Error(E('Saisissez un texte.','Enter some text.'));
+ const output=[];for(let i=0;i<words.length;i+=size-overlap){output.push(`[${output.length+1}] ${words.slice(i,i+size).join(' ')}`);if(i+size>=words.length)break;if(output.length>=200)break;}
+ show('chunk-result',E('Fragments : ','Chunks: ')+output.length+'\n\n'+output.join('\n\n'));
+});
+bind('sitemap-run',()=>{
+ const xml=val('sitemap-input').trim();if(!xml||xml.length>200000)throw Error(E('XML vide ou trop volumineux.','Missing or oversized XML.'));
+ const dom=new DOMParser().parseFromString(xml,'application/xml');
+ const err=dom.querySelector('parsererror');if(err)throw Error(E('XML mal formé.','Malformed XML.'));
+ const root=dom.documentElement;
+ const namespace='http://www.sitemaps.org/schemas/sitemap/0.9';
+ if(root.localName!=='urlset'||root.namespaceURI!==namespace)throw Error(E('La racine doit être urlset dans l’espace de noms Sitemap.','Root must be urlset in the Sitemap namespace.'));
+ const nodes=[...root.getElementsByTagNameNS(namespace,'url')];
+ let invalid=0;const sample=[];
+ for(const item of nodes){const l=item.getElementsByTagNameNS(namespace,'loc')[0]?.textContent?.trim()||'';try{const u=new URL(l);if(!['https:','http:'].includes(u.protocol))invalid++;}catch{invalid++;}if(sample.length<5)sample.push(l||E('(loc manquant)','(missing loc)'));}
+ show('sitemap-result',E('XML analysé. Entrées : ','XML parsed. Entries: ')+nodes.length+'\n'+E('Adresses manquantes ou incorrectes : ','Missing or invalid locations: ')+invalid+'\n'+sample.join('\n')+'\n\n'+E('Aucun test réseau ni schéma XSD complet.','No network check or full XSD validation.'));
+});
+bind('html-run',()=>{
+ const html=val('html-input');if(!html||html.length>200000)throw Error(E('HTML vide ou trop volumineux.','Missing or oversized HTML.'));
+ const dom=new DOMParser().parseFromString(html,'text/html');
+ const checks=[];
+ const report=(ok,frText,enText)=>checks.push((ok?'✓ ':'! ')+E(frText,enText));
+ report(!!dom.querySelector('html[lang]'),"Élément html avec langue déclarée.","HTML document language declared.");
+ report(dom.querySelectorAll('h1').length===1,"Un seul titre h1.","Exactly one h1 heading.");
+ report(dom.querySelectorAll('main').length===1,"Un élément main principal.","Exactly one main landmark.");
+ const images=[...dom.querySelectorAll('img')];report(images.every(img=>img.hasAttribute('alt')),"Toutes les images possèdent alt (y compris alt vide décoratif).","All images have alt attributes (including empty decorative alt).");
+ const inputs=[...dom.querySelectorAll('input:not([type=hidden]),select,textarea')];
+ const labeled=inputs.every(input=>!!input.getAttribute('aria-label')||!!input.getAttribute('aria-labelledby')||!!input.closest('label')||!!(input.id&&[...dom.querySelectorAll('label[for]')].some(label=>label.htmlFor===input.id)));
+ report(labeled,"Tous les champs ont une étiquette détectable.","All form fields have a detectable label.");
+ report([...dom.querySelectorAll('button')].every(b=>!!b.textContent.trim()||!!b.getAttribute('aria-label')),"Boutons avec nom textuel ou aria-label.","Buttons with text or aria-label.");
+ show('html-result',checks.join('\n')+'\n\n'+E('Audit partiel sur HTML statique, sans exécuter JavaScript.','Partial static HTML check, without executing JavaScript.'));
+});
+bind('url-run',()=>{
+ const raw=val('url-input').replace(/&amp;/g,'&').trim();const u=new URL(raw);
+ if(!['https:','http:'].includes(u.protocol))throw Error(E('Adresse http(s) requise.','HTTP(S) URL required.'));
+ const params=[...u.searchParams.entries()].map(([k,v])=>k+' = '+v);
+ show('url-result',pretty({protocol:u.protocol,hostname:u.hostname,port:u.port||E('par défaut','default'),path:u.pathname,query:params,fragment:u.hash||'',origin:u.origin})+'\n'+E('Aucune requête réseau effectuée.','No network request made.'));
+});
+bind('mcp-run',()=>{
+ const name=val('mcp-name').trim(),param=val('mcp-param').trim();
+ if(!/^[a-z][a-z0-9_\-]{1,62}$/i.test(name)||!/^[a-z][a-z0-9_\-]{0,60}$/i.test(param))throw Error(E('Utilisez des noms techniques simples, sans espaces.','Use simple technical names without spaces.'));
+ show('mcp-result',pretty({name,description:val('mcp-desc').trim()||E('Action expérimentale','Experimental action'),inputSchema:{type:'object',properties:{[param]:{type:'string',description:E('Valeur recherchée','Input value')}},required:[param],additionalProperties:false}})+'\n'+E('Exemple conceptuel : aucune exécution, aucune validation exhaustive de la spécification.','Conceptual example: no execution or comprehensive specification validation.'));
+});
+bind('diff-run',()=>{
+ const a=JSON.parse(val('diff-a')),b=JSON.parse(val('diff-b'));
+ const results=[];const safe=(x)=>JSON.stringify(x);
+ const walk=(left,right,path,depth)=>{
+   if(results.length>80||depth>12)return;
+   if(safe(left)===safe(right))return;
+   if(left===null||right===null||typeof left!=='object'||typeof right!=='object'||Array.isArray(left)!==Array.isArray(right)){results.push(path+': '+safe(left)+' → '+safe(right));return;}
+   const keys=new Set([...Object.keys(left),...Object.keys(right)]);
+   for(const key of keys){if(!(key in left))results.push(path+'.'+key+': + '+safe(right[key]));else if(!(key in right))results.push(path+'.'+key+': − '+safe(left[key]));else walk(left[key],right[key],path+'.'+key,depth+1);}
+ };
+ walk(a,b,'$',0);
+ show('diff-result',results.length?results.join('\n'):E('Documents identiques.','Documents are identical.'));
+});
+bind('evidence-run',()=>{
+ const claim=val('evidence-claim').trim(),quote=val('evidence-quote').trim();if(!claim||!quote)throw Error(E('Affirmation et extrait requis.','Claim and excerpt required.'));
+ const url=val('evidence-url').trim();if(url&&!/^https:\/\//i.test(url))throw Error(E('La source doit utiliser HTTPS.','Source must use HTTPS.'));
+ $('evidence-result').value=[E('FICHE DE VÉRIFICATION — jugement manuel','EVIDENCE WORKSHEET — human judgment'),E('Affirmation','Claim')+': '+claim,E('Source','Source')+': '+(url||E('non renseignée','not specified')),E('Date','Date')+': '+val('evidence-date'),E('Passage','Excerpt')+': '+quote,E('Jugement déclaré par l’utilisateur','User-selected judgment')+': '+val('evidence-judgment'),E('À contrôler : contexte, date, pertinence, droits et contradiction.','Review context, date, relevance, rights and contradictions.')].join('\n\n');
+});
+bind('md-run',()=>{
+ const root=$('md-result');root.replaceChildren();
+ const lines=val('md-input').slice(0,30000).split(/\r?\n/);let list=null;
+ for(const line of lines){
+   if(!line.trim()){list=null;continue;}
+   const heading=line.match(/^(#{1,4})\s+(.+)$/);
+   const bullet=line.match(/^\s*[-*]\s+(.+)$/);
+   if(heading){list=null;const el=document.createElement('h'+Math.min(heading[1].length+1,6));el.textContent=heading[2];root.append(el);}
+   else if(bullet){if(!list){list=document.createElement('ul');root.append(list);}const item=document.createElement('li');item.textContent=bullet[1];list.append(item);}
+   else {list=null;const tag=line.startsWith('> ')?'blockquote':'p';const node=document.createElement(tag);node.textContent=tag==='blockquote'?line.slice(2):line;root.append(node);}
+ }
+ if(!root.children.length)show('md-result',E('Aucun contenu.','No content.'));
+});
+})();
+</script>
