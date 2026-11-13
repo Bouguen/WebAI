@@ -4,14 +4,15 @@ import AtlasSpotlight from '../../components/AtlasSpotlight.astro';
 import DossierHighlight from '../../components/DossierHighlight.astro';
 import SpatialHero from '../../components/SpatialHero.astro';
 import ReferenceLandscape from '../../components/ReferenceLandscape.astro';
+import AgentsTeaser from '../../components/AgentsTeaser.astro';
 import {referenceNav} from '../../data/referenceContent.js';
 import {copy, references} from '../../data/site.js';
 export function getStaticPaths() { return ['fr','en'].map(lang => ({params:{lang}})); }
 const { lang } = Astro.params;
 const t = copy[lang];
 const refSummaries={
- fr:{concept:'Cadre, définitions, principes et frontières conceptuelles.',technologies:'Modèles, recherche, agents, Web sémantique, inférence locale.',standards:'Statuts, protocoles, interopérabilité et textes originaux.',outils:'51 logiciels et plateformes documentés avec sources.',secteurs:'Dix domaines d’application et scénarios contextualisés.',publications:'Études scientifiques, méthodes, limites et bibliographie.',acteurs:'Organismes, projets, normalisation et initiatives majeures.',observatoire:'Versions, jalons, travaux et méthodes de vérification.'},
- en:{concept:'Scope, definitions, principles and conceptual boundaries.',technologies:'Models, search, agents, semantic Web and local inference.',standards:'Status, protocols, interoperability and original specifications.',outils:'51 documented software and platform profiles.',secteurs:'Ten fields of application and contextual case studies.',publications:'Scientific studies, methods, limitations and bibliography.',acteurs:'Organizations, standards projects and key initiatives.',observatoire:'Versions, milestones, research and verification methods.'}
+ fr:{concept:'Cadre, définitions, principes et frontières conceptuelles.',technologies:'Modèles, recherche, agents, Web sémantique, inférence locale.',standards:'Statuts, protocoles, interopérabilité et textes originaux.',agents:'Agents utilisables, frameworks, modes d’emploi et sécurité.',outils:'51 logiciels et plateformes documentés avec sources.',secteurs:'Dix domaines d’application et scénarios contextualisés.',publications:'Études scientifiques, méthodes, limites et bibliographie.',acteurs:'Organismes, projets, normalisation et initiatives majeures.',observatoire:'Versions, jalons, travaux et méthodes de vérification.'},
+ en:{concept:'Scope, definitions, principles and conceptual boundaries.',technologies:'Models, search, agents, semantic Web and local inference.',standards:'Status, protocols, interoperability and original specifications.',agents:'Ready-to-use agents, frameworks, usage guides and safety.',outils:'51 documented software and platform profiles.',secteurs:'Ten fields of application and contextual case studies.',publications:'Scientific studies, methods, limitations and bibliography.',acteurs:'Organizations, standards projects and key initiatives.',observatoire:'Versions, milestones, research and verification methods.'}
 };
 ---
 <BaseLayout lang={lang}>
@@ -56,6 +57,7 @@ const refSummaries={
     </div>
   </section>
   <ReferenceLandscape lang={lang} />
+  <AgentsTeaser lang={lang} />
   <AtlasSpotlight lang={lang} />
   <DossierHighlight lang={lang} />
   <section class="section">

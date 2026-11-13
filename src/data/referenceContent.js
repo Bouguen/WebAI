@@ -3,11 +3,12 @@ export const referenceNav=[
  {id:'concept',glyph:'✦',title:{fr:'Concept',en:'Concept'}},
  {id:'technologies',glyph:'◈',title:{fr:'Technologies',en:'Technologies'}},
  {id:'standards',glyph:'⌘',title:{fr:'Standards',en:'Standards'}},
+ {id:'agents',glyph:'✧',title:{fr:'Agents IA',en:'AI Agents'}},
  {id:'outils',glyph:'◇',title:{fr:'Outils IA',en:'AI Tools'}},
  {id:'secteurs',glyph:'▣',title:{fr:'Applications',en:'Applications'}},
  {id:'publications',glyph:'⌁',title:{fr:'Recherche',en:'Research'}},
  {id:'acteurs',glyph:'◎',title:{fr:'Acteurs',en:'Ecosystem'}},
- {id:'observatoire',glyph:'◉',title:{fr:'Observatoire',en:'Observatory'}}
+ /* Observatoire accessible depuis le second menu pour conserver huit entrées principales */
 ];
 export const referencePillars=[
  {id:'creation',num:'01',name:{fr:'Créer et publier',en:'Create and publish'},tag:{fr:'Le Web généré',en:'The generated Web'},description:{fr:'Les modèles participent à produire des textes, médias, interfaces et services. La publication nécessite attribution, contrôle des faits, accessibilité et suivi des versions.',en:'Models assist with creating text, media, interfaces and services. Publishing needs attribution, fact checks, accessibility and version control.'},topics:['generative-web','models','provenance-evidence'],source:'https://developers.google.com/search/docs/fundamentals/creating-helpful-content'},

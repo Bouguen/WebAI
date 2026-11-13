@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import {agentDirectory,agentBySlug,agentKinds,agentCategories} from '../../../data/agents.js';
+export function getStaticPaths(){
+ return ['fr','en'].flatMap(lang=>agentDirectory.map(a=>({params:{lang,slug:a.slug}})));
+}
+const {lang,slug}=Astro.params;
+const fr=lang==='fr',L=x=>x?.[lang]??x?.fr??'';
+const agent=agentBySlug[slug];
+const related=agentDirectory.filter(a=>a.slug!==slug&&(a.category===agent.category||a.kind===agent.kind)).slice(0,4);
+const sources=[
+ {name:fr?'Site officiel ou fiche du fournisseur':'Official product or project website',url:agent.website},
+ {name:fr?'Documentation, installation et modes d’emploi':'Documentation, setup and usage guide',url:agent.docs},
+ {name:fr?'Référence indépendante sur les risques d’injection':'Independent prompt-injection risk reference',url:'https://genai.owasp.org/llmrisk/llm01-prompt-injection/'}
+];
+---
+<BaseLayout lang={lang} active="agents" title={agent.name+' — '+(fr?'fiche agent IA':'AI agent profile')} description={L(agent.description)}>
+ <article class="agent-profile">
+  <header class="agents-hero agent-profile-hero">
+   <div class="wrap">
+    <nav class="agents-breadcrumb" aria-label={fr?'Fil d’Ariane':'Breadcrumb'}><a href={'/'+lang+'/'}>WebAI</a><span>/</span><a href={'/'+lang+'/agents/'}>{fr?'Agents IA':'AI Agents'}</a><span>/</span><span>{agent.name}</span></nav>
+    <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'DOSSIER DE RÉFÉRENCE · AGENTS IA':'REFERENCE PROFILE · AI AGENTS'}</span>
+    <h1>{agent.name}</h1>
+    <p class="agent-profile-lede">{L(agent.description)}</p>
+    <div class="agent-profile-tags"><span>{L(agentKinds[agent.kind])}</span><span>{L(agentCategories[agent.category])}</span><span>{agent.provider}</span></div>
+    <div class="agents-hero-actions"><a class="button button-primary" href={agent.docs} target="_blank" rel="noopener noreferrer">{fr?'Consulter le mode d’emploi officiel':'Open official usage documentation'} ↗</a><a class="button button-secondary" href={'/'+lang+'/agents/'}>{fr?'Tous les agents':'All agents'} ↗</a></div>
+   </div>
+  </header>
+  <div class="wrap agent-profile-layout">
+   <div class="agent-profile-main">
+    <div class="agents-profile-notice"><strong>{fr?'Statut documentaire : à vérifier':'Research status: pending review'}</strong><p>{fr?'Cette fiche décrit les capacités publiées par le fournisseur ou le projet. Elle n’est ni un classement commercial, ni une certification indépendante, ni la promesse que chaque fonction est disponible sur votre compte. Les prix et versions évoluent.':'This profile summarizes the provider or project documentation. It is not a commercial ranking, independent certification or a guarantee of account-level availability. Versions and pricing change.'}</p></div>
+    <nav class="agent-profile-toc" aria-label={fr?'Sommaire de la fiche':'Profile outline'}>
+     <span class="eyebrow">{fr?'DANS CETTE FICHE':'ON THIS PAGE'}</span>
+     <a href="#agent-presentation">{fr?'Présentation et champ d’utilisation':'Overview and scope'}</a>
+     <a href="#agent-scenario">{fr?'Cas concret et résultat attendu':'Example and expected outcome'}</a>
+     <a href="#agent-start">{fr?'Comment commencer':'How to get started'}</a>
+     <a href="#agent-steps">{fr?'Procédure en quatre étapes':'Four-step walkthrough'}</a>
+     <a href="#agent-risks">{fr?'Limites, confidentialité et risques':'Limitations, privacy and risks'}</a>
+     <a href="#agent-sources">{fr?'Références et documentations':'Documentation and references'}</a>
+    </nav>
+    <section class="agent-profile-section" id="agent-presentation">
+     <span class="eyebrow">{fr?'DÉFINITION':'OVERVIEW'}</span>
+     <h2>{fr?'Rôle et environnement de fonctionnement':'Purpose and operating environment'}</h2>
+     <p>{L(agent.description)}</p>
+     <p>{agent.kind==='pret'?(fr?'Il s’agit d’une solution destinée à être utilisée dans un environnement fourni ou installé. Vérifiez les modes disponibles, les comptes autorisés et la portée des actions avant de confier une tâche.':'This solution can be used in a provided or installed environment. Check available modes, authorized accounts and action scope before assigning work.'):(fr?'Il s’agit d’une infrastructure de développement ou d’orchestration. Un développeur doit configurer les modèles, outils, règles d’accès, déploiement et tests : l’installation ne crée pas à elle seule un agent fiable.':'This is a development or orchestration infrastructure. A developer must configure models, tools, access policy, deployment and testing: installing it alone does not create a reliable agent.')}</p>
+     <div class="agent-profile-specs"><div><small>{fr?'Éditeur ou projet':'Provider or project'}</small><strong>{agent.provider}</strong></div><div><small>{fr?'Nature':'Type'}</small><strong>{L(agentKinds[agent.kind])}</strong></div><div><small>{fr?'Domaine':'Domain'}</small><strong>{L(agentCategories[agent.category])}</strong></div><div><small>{fr?'Environnement de référence':'Runtime category'}</small><strong>{agent.runtime}</strong></div></div>
+    </section>
+    <section class="agent-profile-section" id="agent-scenario">
+     <span class="eyebrow">{fr?'CAS PRATIQUE':'USE CASE'}</span>
+     <h2>{fr?'Une application concrète':'A practical application'}</h2>
+     <p>{L(agent.scenario)}</p>
+     <div class="agent-profile-example"><strong>{fr?'Comment juger le résultat':'How to judge the outcome'}</strong><p>{fr?'Avant de commencer, fixez un livrable attendu, des données autorisées, des critères de réussite et des actions à confirmer. Conservez les liens ou fichiers source. Comparez la sortie annoncée à l’état réellement observé.':'Before starting, define the expected artifact, authorized data, success criteria and actions requiring approval. Keep source links or files. Compare claimed success to the actually observed outcome.'}</p></div>
+    </section>
+    <section class="agent-profile-section" id="agent-start">
+     <span class="eyebrow">{fr?'PRISE EN MAIN':'GETTING STARTED'}</span>
+     <h2>{fr?'Avant votre première tâche':'Before your first task'}</h2>
+     <p>{L(agent.start)}</p>
+     <p>{fr?'Consultez les prérequis d’installation, les licences, les modèles et les éventuelles restrictions de votre formule directement sur le site du fournisseur. Ne collez jamais de clés API dans une page publique ou dans un prompt partagé.':'Read setup prerequisites, licensing, model requirements and account restrictions on the provider site. Never paste API keys into a public page or a shared prompt.'}</p>
+    </section>
+    <section class="agent-profile-section" id="agent-steps">
+     <span class="eyebrow">{fr?'PROCÉDURE RECOMMANDÉE':'RECOMMENDED WORKFLOW'}</span>
+     <h2>{fr?'Quatre étapes pour une expérimentation contrôlée':'Four steps for a controlled evaluation'}</h2>
+     <ol class="agent-profile-steps">{agent.steps.map((step,index)=><li><span>{String(index+1).padStart(2,'0')}</span><p>{L(step)}</p></li>)}</ol>
+    </section>
+    <section class="agent-profile-section" id="agent-risks">
+     <span class="eyebrow">{fr?'ÉVALUATION CRITIQUE':'CRITICAL EVALUATION'}</span>
+     <h2>{fr?'Limites et précautions':'Limitations and safeguards'}</h2>
+     <p>{L(agent.limits)}</p>
+     <p>{fr?'Évaluez séparément la qualité des réponses, la bonne sélection des outils, les autorisations, la reproductibilité, le coût total et les risques de manipulation par des données externes. Si l’agent peut envoyer, supprimer, payer ou publier, imposez une confirmation et vérifiez l’opération dans le service concerné.':'Evaluate answer quality, tool selection, permissions, reproducibility, total cost and prompt injection risk separately. If the agent can send, delete, pay or publish, require explicit confirmation and verify the outcome in the destination system.'}</p>
+     <div class="agent-profile-matrix">
+      <strong>{fr?'Critères à examiner avant adoption':'Criteria to check before adoption'}</strong>
+      <ul><li>{fr?'Données et périmètre autorisés':'Authorized data and scope'}</li><li>{fr?'Vraies actions possibles et confirmations':'Actual actions and approval requirements'}</li><li>{fr?'Sources, traces et possibilité d’annuler':'Evidence, traces and rollback'}</li><li>{fr?'Maintenance, version, accessibilité et conditions d’accès':'Maintenance, versions, accessibility and access terms'}</li></ul>
+     </div>
+    </section>
+    <section class="agent-profile-section" id="agent-sources">
+     <span class="eyebrow">{fr?'SOURCES ORIGINALES':'ORIGINAL SOURCES'}</span><h2>{fr?'Documentation et références':'Documentation and references'}</h2>
+     <p>{fr?'La documentation du fournisseur décrit un produit ou un projet, sans constituer une évaluation indépendante. La référence OWASP est transversale et ne signifie pas que cet outil particulier a été testé par OWASP.':'Vendor documentation describes a product or project rather than serving as independent validation. The OWASP source covers general risks and does not mean OWASP tested or endorsed this tool.'}</p>
+     <div class="agent-profile-sources">{sources.map((s,i)=><a href={s.url} target="_blank" rel="noopener noreferrer"><span>{String(i+1).padStart(2,'0')}</span><div><strong>{s.name}</strong><small>{new URL(s.url).hostname}</small></div><span aria-hidden="true">↗</span></a>)}</div>
+    </section>
+   </div>
+   <aside class="agent-profile-aside">
+    <div class="agents-aside-card"><span class="eyebrow">{fr?'AGENTS CONNEXES':'RELATED AGENTS'}</span>{related.map(r=><a href={'/'+lang+'/agents/'+r.slug+'/'}><strong>{r.name}</strong><small>{L(agentCategories[r.category])}</small></a>)}</div>
+    <div class="agents-aside-card"><span class="eyebrow">{fr?'WEBAI · STANDARDS':'WEBAI · STANDARDS'}</span><p>{fr?'Les agents utilisant des outils peuvent faire intervenir MCP, A2A ou des interfaces de page. Ces protocoles ne confèrent pas d’autorisation à eux seuls.':'Agents using tools may involve MCP, A2A or page APIs. These protocols do not grant authorization on their own.'}</p><a href={'/'+lang+'/standards/'}>{fr?'Consulter le registre':'Explore the standards registry'} ↗</a></div>
+    <div class="agents-aside-card"><span class="eyebrow">{fr?'WEBAI LAB':'WEBAI LAB'}</span><p>{fr?'Essayez des contrôles de données et de schémas dans le navigateur, sans activer de service d’agent distant.':'Try browser-only data and schema checks without activating a remote agent service.'}</p><a href={'/'+lang+'/laboratoire/'}>{fr?'Explorer le laboratoire':'Explore the lab'} ↗</a></div>
+   </aside>
+  </div>
+  <div class="wrap agent-profile-back"><a href={'/'+lang+'/agents/'}>← {fr?'Revenir au répertoire des agents IA':'Back to AI agent directory'}</a></div>
+ </article>
+</BaseLayout>

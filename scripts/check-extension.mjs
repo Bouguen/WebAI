@@ -7,6 +7,7 @@ import {sectorPlaybooks} from '../src/data/sectorPlaybooks.js';
 import {learningPathDetails} from '../src/data/learningPathDetails.js';
 import {scienceSources} from '../src/data/scienceSources.js';
 import {referenceNav,referencePillars,technologyGroups,standardsRegister,ecosystemActors,referenceTimeline,referenceFaq,referenceResearchers} from '../src/data/referenceContent.js';
+import {agentDirectory,agentCategories,agentKinds,agentFaq,agentGuides} from '../src/data/agents.js';
 const failed=[];
 const check=(ok,msg)=>{if(!ok)failed.push(msg);};
 const validHttps=value=>{try{return new URL(value).protocol==='https:';}catch{return false;}};
@@ -58,6 +59,38 @@ for(const name of ['robots','ld','chunk','sitemap','html','url','mcp','diff','ev
  check(lab.includes('id="labx-'+name+'-run"')||lab.includes('id="labx-'+name+'-build"'),'Missing interactive lab module: '+name);
 }
 check((lab.match(/class="studio-card"/g)||[]).length===10,'Lab extension should contain ten modules');
+check(agentDirectory.length===22,'Directory should contain 22 AI agent profiles');
+check(agentDirectory.filter(x=>x.kind==='pret').length===12,'Expected 12 ready-to-use AI agents');
+check(agentDirectory.filter(x=>x.kind==='creation').length===10,'Expected 10 agent builder frameworks');
+check(referenceNav.some(x=>x.id==='agents'),'Agents IA must appear in the primary reference navigation');
+check(new Set(agentDirectory.map(x=>x.slug)).size===agentDirectory.length,'Duplicate agent slugs');
+check(Object.keys(agentCategories).length===6,'Six distinct agent categories required');
+check(Object.keys(agentKinds).length===2,'Agent products and developer frameworks must remain distinct');
+for(const agent of agentDirectory){
+ check(agent.status==='a_verifier','Agent profile must be pending review: '+agent.slug);
+ check(validHttps(agent.website)&&validHttps(agent.docs),'Missing official HTTPS sources: '+agent.slug);
+ check(translated(agent.description)&&agent.description.fr.length>110&&agent.description.en.length>100,'Agent description too short or missing translation: '+agent.slug);
+ check(translated(agent.scenario)&&translated(agent.start)&&translated(agent.limits),'Missing bilingual usage and limits: '+agent.slug);
+ check(agent.steps.length===4&&agent.steps.every(translated),'Four bilingual walkthrough steps required: '+agent.slug);
+ check(!!agentCategories[agent.category]&&!!agentKinds[agent.kind],'Unknown agent type or category: '+agent.slug);
+}
+check(agentFaq.length>=5&&agentFaq.every(x=>translated(x.q)&&translated(x.a)&&validHttps(x.source)),'Agent FAQ incomplete');
+check(agentGuides.length===2&&agentGuides.every(x=>x.steps.length===5&&validHttps(x.source)),'Agent guides incomplete');
+const agentComponent=readFileSync(new URL('../src/components/AgentsDirectory.astro',import.meta.url),'utf8');
+const agentScript=agentComponent.match(/<script is:inline>([\s\S]*?)<\/script>/);
+check(!!agentScript,'Interactive agent directory browser code missing');
+if(agentScript){try{new Script(agentScript[1],{filename:'AgentsDirectory.astro inline script'});}catch(e){failed.push('Invalid agent directory JS: '+e.message);}}
+for(const id of ['agent-query','agent-kind','agent-category','agent-count','agents-compare-panel'])check(agentComponent.includes('id="'+id+'"'),'Missing interactive directory element: '+id);
+
+// The shared source methodology must be authored once and never repeated inside cards.
+const sourceLibrary=readFileSync(new URL('../src/components/AtlasSection.astro',import.meta.url),'utf8');
+const resourceArea=sourceLibrary.slice(sourceLibrary.indexOf("{type==='ressources'"),sourceLibrary.indexOf("{type==='glossaire'"));
+check((resourceArea.match(/id="methode-sources"/g)||[]).length===1,'Source methodology must have exactly one entry point');
+check(!resourceArea.includes('atlas-tool-references atlas-resource-guide'),'Source cards must not repeat shared methodology');
+check(resourceArea.includes('resourceCats.filter(cat=>resourceReading[cat])'),'Each source family should have one shared reading guide');
+check(resourceArea.includes('atlas-resource-origin'),'Individual source cards must identify original host');
+check(resourceArea.includes('new URL(s.url).hostname'),'Source host must derive from its own URL');
+
 check(referenceNav.length===8,'Main reference navigation must offer eight meaningful categories');
 check(new Set(referenceNav.map(x=>x.id)).size===referenceNav.length,'Reference navigation contains duplicates');
 for(const item of referenceNav)check(translated(item.title),'Missing translated reference navigation: '+item.id);

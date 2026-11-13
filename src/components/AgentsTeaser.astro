@@ -1,0 +1,20 @@
+---
+const {lang='fr'}=Astro.props;
+const fr=lang==='fr';
+---
+<section class="agents-home-feature section" aria-labelledby="agents-home-title">
+ <div class="wrap agents-home-layout">
+  <div>
+   <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'NOUVEL ESPACE DE RÉFÉRENCE':'NEW REFERENCE DIRECTORY'}</span>
+   <h2 id="agents-home-title">{fr?'Agents IA : de l’assistant au système capable d’agir':'AI agents: from assistants to action-oriented systems'}</h2>
+   <p>{fr?'L’agent IA occupe désormais une place centrale dans le Web : il peut rechercher, naviguer, programmer et coordonner des outils. WebAI distingue les solutions déjà utilisables des SDK et frameworks permettant de développer ses propres agents. Chaque entrée est reliée aux guides et sources officielles.':'AI agents increasingly shape how the Web is researched, navigated and operated. WebAI distinguishes usable agent products from SDKs and frameworks for developing new agents. Every entry links to usage guidance and original sources.'}</p>
+   <p>{fr?'Le répertoire ne classe pas les produits du « meilleur » au « moins bon » : les critères dépendent des tâches, des droits accordés et des résultats contrôlables.':'The directory does not rank products best to worst: suitability depends on tasks, permissions and verifiable outcomes.'}</p>
+   <a class="button button-primary" href={'/'+lang+'/agents/'}>{fr?'Explorer les 22 fiches Agents IA':'Explore 22 AI agent profiles'} ↗</a>
+  </div>
+  <div class="agents-home-kinds">
+   <div><strong>12</strong><span>{fr?'Agents et solutions prêts à l’emploi':'Ready-to-use agent products'}</span></div>
+   <div><strong>10</strong><span>{fr?'Frameworks et plateformes de création':'Agent frameworks and builder platforms'}</span></div>
+   <div><strong>44</strong><span>{fr?'Fiches individuelles françaises et anglaises':'Individual French and English profile pages'}</span></div>
+  </div>
+ </div>
+</section>

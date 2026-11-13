@@ -57,13 +57,23 @@ const enHome=en.get('')||'';
 assert(enHome.includes('The Web generated'),'English reference homepage headline is missing');
 assert(!enHome.includes('Le Web généré'),'French homepage hero leaked into EN');
 assert((fr.get('')||'').includes('Le Web généré'),'French reference homepage headline is missing');
-for(const route of ['concept','technologies','standards','acteurs','chronologie','faq']){
+for(const route of ['concept','technologies','standards','acteurs','chronologie','faq','agents']){
  assert(fr.has(route),'Missing French reference category: '+route);
  assert(en.has(route),'Missing English reference category: '+route);
 }
 for(const segment of ['/concept/','/technologies/','/standards/','/acteurs/','/observatoire/']){
  assert(enHome.includes('href="/en'+segment+'"'),'Reference homepage missing link '+segment);
 }
+for(const slug of ['chatgpt-work','codex','claude-code','jules','langgraph','crewai','google-adk','openai-agents-sdk','n8n-ai-agent']){
+ assert(fr.has('agents/'+slug),'Missing French agent profile: '+slug);
+ assert(en.has('agents/'+slug),'Missing English agent profile: '+slug);
+}
+assert((fr.get('')||'').includes('href="/fr/agents/"'),'French homepage missing AI Agents entry');
+assert(enHome.includes('href="/en/agents/"'),'English homepage missing AI Agents entry');
+const frAgents=fr.get('agents')||'';
+const enAgents=en.get('agents')||'';
+assert(frAgents.includes('id="agent-query"')&&enAgents.includes('id="agent-query"'),'Missing bilingual directory search controls');
+assert(frAgents.includes('data-agent-card')&&enAgents.includes('data-agent-card'),'Bilingual directory cards not rendered');
 if(failures.length){
   console.error('WebAI language parity failed:\n'+failures.join('\n'));
   process.exitCode=1;
