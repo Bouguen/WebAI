@@ -109,7 +109,7 @@ export const toolProfilesA=[
       "fr": "Une fiche publiée par l’auteur n’est pas une validation indépendante et une licence de dépôt ne couvre pas toujours les données.",
       "en": "An author-provided card is not independent verification, and repository licensing does not automatically settle data rights."
     },
-    "docs": "https://huggingface.co/docs/hub/model-cards"
+    "docs": "https://github.com/huggingface/huggingface_hub"
   },
   {
     "slug": "diffusers",
@@ -397,6 +397,6 @@ export const toolProfilesA=[
       "fr": "L’absence de manifeste n’est pas une preuve de génération IA ; les signatures validées ne confirment pas la vérité factuelle.",
       "en": "Missing manifests are not proof of AI generation; valid signatures do not establish factual truth."
     },
-    "docs": "https://spec.c2pa.org/"
+    "docs": "https://github.com/contentauth/c2patool/releases"
   }
 ];
