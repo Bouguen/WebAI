@@ -11,6 +11,9 @@ const tools=detail?detail.tools.map(key=>atlas.catalog.find(t=>t.slug===key)).fi
 const relatedSlugs=detail?.relations??atlas.topics.filter(x=>x.slug!==slug&&x.category===topic.category).slice(0,3).map(x=>x.slug);
 const related=relatedSlugs.map(x=>atlas.topics.find(t=>t.slug===x)).filter(Boolean);
 const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary document',url:topic.source}];
+const snapshot=detail?.snapshot_date??'2026-11-12';
+const editionDate=new Intl.DateTimeFormat(fr?'fr-FR':'en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(snapshot+'T12:00:00Z'));
+
 ---
 <BaseLayout lang={lang} title={L(topic.title,lang)} description={L(topic.summary,lang)}>
  <article class="kb-dossier">
@@ -23,7 +26,7 @@ const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary d
    <h1>{L(topic.title,lang)}</h1>
    <p class="kb-hero-lede">{detail?L(detail.lead,lang):L(topic.summary,lang)}</p>
    <div class="kb-meta">
-    <span>{fr?'Édition : 12 novembre 2026':'Edition: 12 November 2026'}</span>
+    <span>{fr?'Édition : '+editionDate:'Edition: '+editionDate}</span>
     <span>{detail?(fr?'Dossier enrichi':'Extended dossier'):(fr?'Introduction courte':'Short introduction')}</span>
     <span class="kb-review-tag">{fr?'Relecture scientifique à compléter':'Scientific review pending'}</span>
    </div>
@@ -39,18 +42,27 @@ const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary d
        <span class="eyebrow">{fr?'REPÈRES':'AT A GLANCE'}</span>
        <div><div><small>{fr?'Nature':'Type'}</small><strong>{L(detail.stage,lang)}</strong></div><div><small>{fr?'Pour qui ?':'Audience'}</small><strong>{L(detail.audience,lang)}</strong></div></div>
       </div>
+      <nav class="kb-toc" aria-label={fr?'Plan de lecture du dossier':'Dossier table of contents'}>
+        <span class="eyebrow">{fr?'DANS CE DOSSIER':'IN THIS DOSSIER'}</span>
+        <ol>{detail.sections.map((item,i)=><li><a href={'#part-'+(i+1)}>{String(i+1).padStart(2,'0')} · {L(item.title,lang)}</a></li>)}</ol>
+        <div class="kb-toc-extras">
+          <a href="#process">{fr?'Méthode pratique':'Practical workflow'} ↓</a>
+          <a href="#critical">{fr?'Questions critiques':'Critical questions'} ↓</a>
+          <a href="#sources">{fr?'Textes originaux':'Primary sources'} ↓</a>
+        </div>
+      </nav>
       <div class="kb-article-sections">
        {detail.sections.map((section,i)=><section class="kb-article-section" id={'part-'+(i+1)}>
         <div class="kb-section-number">{String(i+1).padStart(2,'0')}</div>
         <h2>{L(section.title,lang)}</h2><p>{L(section.body,lang)}</p>
        </section>)}
       </div>
-      <section class="kb-process">
+      <section class="kb-process" id="process">
         <span class="eyebrow">{fr?'FIL CONDUCTEUR':'HOW IT FITS TOGETHER'}</span>
         <h2>{fr?'Les grandes étapes':'Core steps'}</h2>
         <ol>{detail.steps.map((step,i)=><li><span>{String(i+1).padStart(2,'0')}</span><strong>{L(step,lang)}</strong></li>)}</ol>
       </section>
-      <section class="kb-checks">
+      <section class="kb-checks" id="critical">
         <span class="eyebrow">{fr?'ESPRIT CRITIQUE':'CRITICAL THINKING'}</span>
         <h2>{fr?'Trois questions à poser':'Three questions to ask'}</h2>
         <ul>{detail.checks.map(check=><li><span aria-hidden="true">?</span><p>{L(check,lang)}</p></li>)}</ul>
@@ -59,7 +71,7 @@ const references=detail?detail.refs:[{label:fr?'Document d’origine':'Primary d
       <section class="kb-article-section"><h2>{fr?'L’idée essentielle':'Core idea'}</h2><p>{L(topic.body,lang)}</p></section>
       <div class="kb-editorial-note"><strong>{fr?'À approfondir':'More depth ahead'}</strong><p>{fr?'Cette introduction sera enrichie après revue des publications et des sources pertinentes. Pour approfondir immédiatement le sujet, ouvrez le document original.':'This overview will be expanded after reviewing relevant research and sources. To explore the subject now, open the original document.'}</p></div>
     </>}
-    <section class="kb-references">
+    <section class="kb-references" id="sources">
      <span class="eyebrow">{fr?'SOURCES ET DOCUMENTS':'PRIMARY SOURCES'}</span>
      <h2>{fr?'Consulter les textes originaux':'Read the source documents'}</h2>
      <p>{fr?'Les versions, conditions de réutilisation et statuts des documents peuvent évoluer. Vérifiez-les sur les sites d’origine.':'Versions, reuse terms and document status can change. Check them on the original sites.'}</p>
