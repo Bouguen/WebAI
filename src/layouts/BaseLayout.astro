@@ -8,6 +8,7 @@ import '../styles/tool-profiles.css';
 import '../styles/extra-sections.css';
 import '../styles/reference.css';
 import '../styles/visual-refresh.css';
+import '../styles/agents.css';
 import {copy} from '../data/site.js';
 import {referenceNav} from '../data/referenceContent.js';
 const { lang = 'fr', title, description, active = '' } = Astro.props;
@@ -80,7 +81,7 @@ const navigation = referenceNav.map(item=>({...item,title:item.title[lang],url:'
          ['comparateur','⇄',lang==='fr'?'Comparateur':'Compare tools'],
          ['carte','◎',lang==='fr'?'Carte des savoirs':'Knowledge map'],
          ['guides','▦',lang==='fr'?'Guides techniques':'Technical guides'],
-         ['statuts','◧',lang==='fr'?'Statuts des normes':'Standards status'],
+         ['observatoire','◉',lang==='fr'?'Observatoire':'Observatory'],
          ['methodologie','▤',lang==='fr'?'Méthodologie':'Methodology'],
          ['fiche-verification','✓',lang==='fr'?'Vérification des preuves':'Evidence review']
        ].map(([slug,icon,label])=><a href={'/'+lang+'/'+slug+'/'} aria-current={current==='/'+lang+'/'+slug+'/'?'page':undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}
@@ -97,6 +98,7 @@ const navigation = referenceNav.map(item=>({...item,title:item.title[lang],url:'
           <a href={'/'+lang+'/concept/'}>{lang==='fr'?'Concept':'Concept'}</a>
           <a href={'/'+lang+'/technologies/'}>{lang==='fr'?'Technologies':'Technologies'}</a>
           <a href={'/'+lang+'/standards/'}>{lang==='fr'?'Standards':'Standards'}</a>
+          <a href={'/'+lang+'/agents/'}>{lang==='fr'?'Agents IA':'AI Agents'}</a>
           <a href={'/'+lang+'/acteurs/'}>{lang==='fr'?'Acteurs':'Organizations'}</a>
           <a href={'/' + lang + '/recherche/'}>{t.search}</a>
           <a href={'/' + lang + '/methodologie/'}>{lang === 'fr' ? 'Méthodologie' : 'Methodology'}</a>
