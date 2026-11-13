@@ -1,7 +1,7 @@
 ---
 import {atlas,localized as L} from '../data/atlas.js';
 import {dossiers} from '../data/dossiers.js';
-import {referenceNav,referencePillars,technologyGroups,standardsRegister,ecosystemActors,referenceTimeline,referenceFaq} from '../data/referenceContent.js';
+import {referenceNav,referencePillars,technologyGroups,standardsRegister,ecosystemActors,referenceTimeline,referenceFaq,referenceResearchers} from '../data/referenceContent.js';
 const {lang='fr',type='concept'}=Astro.props;
 const fr=lang==='fr';
 const configs={
@@ -91,6 +91,22 @@ const labelDossier=fr?'Lire le dossier de référence':'Read reference dossier';
    <div class="ref-actor-bottom"><a href={actor.url} target="_blank" rel="noopener noreferrer">{fr?'Site ou documentation d’origine':'Official site or documentation'} ↗</a>
    <a href={'/'+lang+'/encyclopedie/'+actor.topic+'/'}>{fr?'Notion associée':'Related dossier'} ↗</a></div>
  </article>)}</div>
+
+ <div class="ref-researchers">
+  <div class="ref-section-heading">
+   <span class="eyebrow">{fr?'CHERCHEURS ET PUBLICATIONS FONDATRICES':'RESEARCHERS AND FOUNDATIONAL PAPERS'}</span>
+   <h2>{fr?'Identifier les contributions, pas inventer des affiliations.':'Trace contributions, not invented affiliations.'}</h2>
+   <p>{fr?'Ces travaux illustrent plusieurs étapes historiques de la recherche. Les noms correspondent aux auteurs cités ; aucune participation ou approbation de WebAI n’est suggérée.':'These papers illustrate several historical research milestones. Names refer to credited authors; no involvement with or endorsement of WebAI is implied.'}</p>
+  </div>
+  <div class="ref-researchers-grid">{referenceResearchers.map(r=><article class="ref-researcher">
+    <div><span class="ref-number">{r.year}</span><h3>{r.name}</h3></div>
+    <p>{L(r.work,lang)}</p>
+    <div class="ref-researcher-links">
+     <a href={r.source} rel="noopener noreferrer" target="_blank">{fr?'Consulter la publication d’origine':'Original publication'} ↗</a>
+     {r.topics.slice(0,1).map(slug=>{const t=topic(slug);return t?<a href={'/'+lang+'/encyclopedie/'+slug+'/'}>{L(t.title,lang)} ↗</a>:null})}
+    </div>
+  </article>)}</div>
+ </div>
  </div></section>}
 {type==='chronologie' && <section class="ref-body section"><div class="wrap">
  <div class="ref-section-heading"><span class="eyebrow">{fr?'REPÈRES HISTORIQUES':'HISTORICAL MILESTONES'}</span>
