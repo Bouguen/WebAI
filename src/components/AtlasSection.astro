@@ -86,18 +86,32 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}</div>
 </>}
 {type==='ressources' && <>
-  <p class="atlas-disclaimer">{fr?'Bibliothèque de textes originaux, avec des guides de lecture : statut de la source, méthode de consultation et points de vigilance. La présence d’un document ne constitue pas une approbation de ses conclusions.':'Original publications with reading guides: source status, consultation methods and caveats. Inclusion does not endorse every claim.'}</p>
-  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{atlas.sources.map((s,i)=><article class="atlas-item atlas-source atlas-source-enriched" data-atlas-card data-category={s.category} data-search={(s.name+' '+L(s.desc,lang)+' '+L(resourceReading[s.category]?.purpose,lang)+' '+s.category).toLowerCase()}>
+  <p class="atlas-disclaimer">{fr?'Une bibliothèque de références originales. Chaque carte présente une source particulière, tandis que les conseils méthodologiques communs sont regroupés dans un guide unique, par famille de documents. L’inclusion d’une source ne signifie pas que WebAI approuve toutes ses conclusions.':'A library of original references. Each card describes a particular document, while shared evaluation advice lives in one methodology guide organized by source family. Inclusion does not mean WebAI endorses every conclusion.'}</p>
+  <details class="atlas-source-methodology" id="methode-sources">
+    <summary>
+      <span class="atlas-source-methodology-heading"><span class="atlas-source-methodology-icon" aria-hidden="true">▤</span><span><strong>{fr?'Guide de lecture et de vérification des sources':'Source reading and verification guide'}</strong><small>{fr?'Une méthode commune, déclinée par type de document':'One shared method, adapted to each document type'}</small></span></span>
+      <span class="atlas-source-methodology-hint">{fr?'Voir les méthodes':'View methods'}</span>
+    </summary>
+    <div class="atlas-source-methodology-body">
+      <p>{fr?'Choisissez la famille qui correspond au document à examiner. Ces règles ne sont pas répétées dans chaque fiche : elles concernent l’ensemble des références de même type.':'Choose the family matching the document you want to examine. These rules are not repeated on individual cards: they apply to all references of the same type.'}</p>
+      <div class="atlas-source-methodology-grid">
+        {resourceCats.filter(cat=>resourceReading[cat]).map(cat=><details class="atlas-source-methodology-category">
+          <summary>{catLabels[cat]??cat}</summary>
+          <div class="atlas-source-methodology-category-body">
+            <p>{L(resourceReading[cat].purpose,lang)}</p>
+            <ol>{resourceReading[cat].steps.map(step=><li>{L(step,lang)}</li>)}</ol>
+            <p class="atlas-source-methodology-caution"><strong>{fr?'Point de vigilance':'Caution'} :</strong> {L(resourceReading[cat].caution,lang)}</p>
+          </div>
+        </details>)}
+      </div>
+    </div>
+  </details>
+  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{atlas.sources.map((s,i)=><article class="atlas-item atlas-source atlas-source-enriched" data-atlas-card data-category={s.category} data-search={(s.name+' '+L(s.desc,lang)+' '+s.category).toLowerCase()}>
     <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{catLabels[s.category]??s.category}</span></div>
     <h3>{s.name}</h3>
     <p>{L(s.desc,lang)}</p>
-    {resourceReading[s.category]&&<details class="atlas-tool-references atlas-resource-guide">
-      <summary>{fr?'Comment lire et vérifier cette source':'How to read and evaluate this source'}</summary>
-      <p>{L(resourceReading[s.category].purpose,lang)}</p>
-      <ol>{resourceReading[s.category].steps.map(step=><li>{L(step,lang)}</li>)}</ol>
-      <p><strong>{fr?'Attention':'Caution'} :</strong> {L(resourceReading[s.category].caution,lang)}</p>
-    </details>}
-    <a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Consulter le texte original':'Read the original document'} ↗</a>
+    <div class="atlas-resource-origin"><span>{fr?'Site de la source':'Source website'}</span><span>{new URL(s.url).hostname.replace(/^www\\./,'')}</span></div>
+    <a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Consulter le document original':'Open original document'} ↗</a>
   </article>)}</div>
 </>}
 {type==='glossaire' && <>
