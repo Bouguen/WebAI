@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AgentsDirectory from '../../../components/AgentsDirectory.astro';
+export function getStaticPaths(){return ['fr','en'].map(lang=>({params:{lang}}));}
+const {lang}=Astro.params;
+const fr=lang==='fr';
+---
+<BaseLayout lang={lang} active="agents" title={fr?'Agents IA — répertoire, comparaison et mode d’emploi':'AI Agents — directory, comparison and how-to'} description={fr?'Répertoire indépendant d’agents IA et de frameworks, avec fiches d’utilisation, comparaison, documentations officielles et conseils de sécurité':'Independent directory of AI agents and frameworks, including usage profiles, comparison, official documentation and safety guidance'}>
+ <AgentsDirectory lang={lang}/>
+</BaseLayout>
