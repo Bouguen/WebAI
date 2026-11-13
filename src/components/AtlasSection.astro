@@ -3,6 +3,7 @@ import { atlas, localized as L } from '../data/atlas.js';
 import { dossiers } from '../data/dossiers.js';
 import StudioTools from './StudioTools.astro';
 import LabExpansion from './LabExpansion.astro';
+import {sectorPlaybooks} from '../data/sectorPlaybooks.js';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
 const config={
@@ -110,9 +111,20 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}
 </div>}
 {type==='secteurs' && <>
-  <p class="atlas-disclaimer">{fr?'Ces exemples sont des scénarios de conception, pas des études de déploiements vérifiés.':'These are design scenarios, not verified deployments or measured case studies.'}</p>
-  <div class="atlas-grid atlas-grid-tools">{atlas.cases.map((c,i)=><article class="atlas-item atlas-tool">
-    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{L(c.sector,lang)}</span></div><h3>{L(c.title,lang)}</h3><p>{L(c.desc,lang)}</p><a href={'/'+lang+'/verifier/'} class="atlas-source-link">{fr?'Méthode de vérification':'Verification method'} ↗</a>
+  <p class="atlas-disclaimer">{fr?'Dix scénarios détaillés, avec méthodes, risques, résultats attendus, références et dossiers associés. Ils ne constituent pas des études de déploiements vérifiés.':'Ten detailed scenarios with workflows, risks, expected outcomes, references and related dossiers. They are design examples, not verified deployments.'}</p>
+  <div class="atlas-grid atlas-grid-tools">{atlas.cases.map((c,i)=><article class="atlas-item atlas-tool atlas-sector-playbook">
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{L(c.sector,lang)}</span></div>
+    <h3>{L(c.title,lang)}</h3>
+    <p>{L(c.desc,lang)}</p>
+    <div class="atlas-tool-scenario"><strong>{fr?'Situation à étudier':'Scenario to examine'}</strong><p>{L(sectorPlaybooks[i].scenario,lang)}</p></div>
+    <details class="atlas-tool-references atlas-sector-method">
+      <summary>{fr?'Ouvrir la méthode en 5 étapes':'Open the 5-step workflow'}</summary>
+      <ol>{sectorPlaybooks[i].steps.map(step=><li>{L(step,lang)}</li>)}</ol>
+      <strong>{fr?'Risques et limites':'Risks and limits'}</strong><p>{L(sectorPlaybooks[i].risks,lang)}</p>
+      <strong>{fr?'Résultat attendu':'Expected outcome'}</strong><p>{L(sectorPlaybooks[i].outcome,lang)}</p>
+      <div class="atlas-sector-sources">{sectorPlaybooks[i].refs.map(ref=><a href={ref.url} target="_blank" rel="noopener noreferrer">{L(ref.name,lang)} ↗</a>)}</div>
+    </details>
+    <div class="atlas-sector-related">{sectorPlaybooks[i].topics.map(slug=>{const topic=atlas.topics.find(t=>t.slug===slug);return topic?<a href={'/'+lang+'/encyclopedie/'+slug+'/'}>{L(topic.title,lang)} ↗</a>:null})}</div>
   </article>)}</div>
 </>}
 {type==='publications' && <>
