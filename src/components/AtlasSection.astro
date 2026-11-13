@@ -59,10 +59,26 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
     </div>
   </div>}
 {type==='outils' && <>
-  <p class="atlas-disclaimer">{fr?'Annuaire informatif fondé sur les documentations des éditeurs. Les prix, licences et fonctionnalités évoluent : vérifiez-les sur les sites officiels. Les outils n’ont pas tous été testés par WebAI.':'Informational directory based on vendor documentation. Pricing, licensing and features change: check official websites. Not every tool has been tested by WebAI.'}</p>
-  <div class="atlas-grid atlas-grid-tools" data-atlas-list>{atlas.catalog.map((tool,i)=><article class="atlas-item atlas-tool" data-atlas-card data-category={tool.category} data-audience={tool.audience} data-search={(tool.name+' '+L(tool.desc,lang)+' '+tool.category).toLowerCase()}>
+  <p class="atlas-disclaimer">{fr?'51 fiches d’étude avec rôle, scénarios, limites et références supplémentaires. Les outils ne sont pas tous testés par WebAI ; vérifiez leur disponibilité, leur licence et leur prix auprès des auteurs.':'51 tool profiles with roles, use cases, limitations and additional references. Not all tools have been tested by WebAI; verify availability, licensing and pricing with their maintainers.'}</p>
+  <div class="atlas-grid atlas-grid-tools" data-atlas-list>{atlas.catalog.map((tool,i)=><article class="atlas-item atlas-tool atlas-tool-enriched" data-atlas-card data-category={tool.category} data-audience={tool.audience} data-search={(tool.name+' '+L(tool.desc,lang)+' '+L(tool.profile?.explain,lang)+' '+L(tool.profile?.use,lang)+' '+tool.category).toLowerCase()}>
     <div class="atlas-item-top"><span class="atlas-item-monogram">{tool.name.slice(0,2).toUpperCase()}</span><span class="atlas-item-kind">{catLabels[tool.category]??tool.category}</span></div>
-    <h3>{tool.name}</h3><p>{L(tool.desc,lang)}</p><div class="atlas-item-bottom"><span class="atlas-kind">{kindLabel[tool.kind]??tool.kind}</span><a href={tool.url} target="_blank" rel="noopener noreferrer" aria-label={(fr?'Site officiel de ':'Official website for ')+tool.name}>{fr?'Site officiel':'Official site'} ↗</a></div>
+    <h3>{tool.name}</h3>
+    <p class="atlas-tool-summary">{L(tool.profile?.explain??tool.desc,lang)}</p>
+    <div class="atlas-tool-scenario">
+      <strong>{fr?'Exemple d’utilisation':'Typical use case'}</strong>
+      <p>{L(tool.profile?.use,lang)}</p>
+    </div>
+    <details class="atlas-tool-references">
+      <summary>{fr?'Limites et trois références complémentaires':'Limitations and three extra references'}</summary>
+      <p>{L(tool.profile?.limit,lang)}</p>
+      <ul>{tool.profile?.references.map(reference=><li><a href={reference.url} target="_blank" rel="noopener noreferrer">{L(reference.label,lang)} ↗</a></li>)}</ul>
+    </details>
+    <div class="atlas-item-bottom"><span class="atlas-kind">{kindLabel[tool.kind]??tool.kind}</span>
+      <div class="atlas-tool-actions">
+        <a href={'/'+lang+'/outils/'+tool.slug+'/'} aria-label={(fr?'Fiche détaillée et sources : ':'Detailed profile and sources: ')+tool.name}>{fr?'Fiche détaillée':'Detailed profile'} ↗</a>
+        <a href={tool.url} target="_blank" rel="noopener noreferrer" aria-label={(fr?'Site officiel de ':'Official website for ')+tool.name}>{fr?'Site officiel':'Official site'} ↗</a>
+      </div>
+    </div>
   </article>)}</div>
 </>}
 {type==='ressources' && <>
