@@ -80,10 +80,10 @@ for(const [locale,html] of [['fr',labFr],['en',labEn]]){
  assert(html.includes('id="lab-navigator"'),'Missing Studio navigation in '+locale);
  assert(html.includes('id="lab-search"'),'Missing Studio search in '+locale);
  assert(html.includes('id="labx-evidence-run"'),'Evidence form not generated in '+locale);
- assert((html.match(/class="studio-card(?:\\s|")/g)||[]).length>=15,'Fewer than 15 tool cards in '+locale);
- const markup=html.replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi,'');
+ assert((html.match(/class="studio-card(?:\s|")/g)||[]).length>=15,'Fewer than 15 tool cards in '+locale);
+ const markup=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
  assert(!markup.includes('{fr?')&&!markup.includes("{fr ?")&&!markup.includes("{'"),'Raw Astro interpolation visible in '+locale+' laboratory');
- assert(!/<textarea[^>]*id="labx-evidence-claim"[^>]*>\\s*\\}<\\/textarea>/i.test(markup),'Unexpected closing brace in '+locale+' citation field');
+ assert(!/<textarea[^>]*id="labx-evidence-claim"[^>]*>\s*\}<\/textarea>/i.test(markup),'Unexpected closing brace in '+locale+' citation field');
 }
 assert(labFr.includes('Fiche de vérification de citation'),'Missing properly translated French citation heading');
 assert(labEn.includes('Citation review worksheet'),'Missing properly translated English citation heading');
