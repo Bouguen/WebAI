@@ -5,6 +5,7 @@ import StudioTools from './StudioTools.astro';
 import LabExpansion from './LabExpansion.astro';
 import {sectorPlaybooks} from '../data/sectorPlaybooks.js';
 import {learningPathDetails} from '../data/learningPathDetails.js';
+import {resourceReading} from '../data/resourceReading.js';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
 const config={
@@ -84,10 +85,18 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}</div>
 </>}
 {type==='ressources' && <>
-  <p class="atlas-disclaimer">{fr?'Sélection de liens vers des sources primaires. La présence d’un document ne signifie pas qu’il a été approuvé comme norme ni évalué par les pairs.':'Curated links to primary sources. Inclusion does not imply standard status or peer review.'}</p>
-  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{atlas.sources.map((s,i)=><article class="atlas-item atlas-source" data-atlas-card data-category={s.category} data-search={(s.name+' '+L(s.desc,lang)+' '+s.category).toLowerCase()}>
+  <p class="atlas-disclaimer">{fr?'Bibliothèque de textes originaux, avec des guides de lecture : statut de la source, méthode de consultation et points de vigilance. La présence d’un document ne constitue pas une approbation de ses conclusions.':'Original publications with reading guides: source status, consultation methods and caveats. Inclusion does not endorse every claim.'}</p>
+  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{atlas.sources.map((s,i)=><article class="atlas-item atlas-source atlas-source-enriched" data-atlas-card data-category={s.category} data-search={(s.name+' '+L(s.desc,lang)+' '+L(resourceReading[s.category]?.purpose,lang)+' '+s.category).toLowerCase()}>
     <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{catLabels[s.category]??s.category}</span></div>
-    <h3>{s.name}</h3><p>{L(s.desc,lang)}</p><a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Lire le document':'Open reference'} ↗</a>
+    <h3>{s.name}</h3>
+    <p>{L(s.desc,lang)}</p>
+    {resourceReading[s.category]&&<details class="atlas-tool-references atlas-resource-guide">
+      <summary>{fr?'Comment lire et vérifier cette source':'How to read and evaluate this source'}</summary>
+      <p>{L(resourceReading[s.category].purpose,lang)}</p>
+      <ol>{resourceReading[s.category].steps.map(step=><li>{L(step,lang)}</li>)}</ol>
+      <p><strong>{fr?'Attention':'Caution'} :</strong> {L(resourceReading[s.category].caution,lang)}</p>
+    </details>}
+    <a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Consulter le texte original':'Read the original document'} ↗</a>
   </article>)}</div>
 </>}
 {type==='glossaire' && <>
