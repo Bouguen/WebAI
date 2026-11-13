@@ -1,0 +1,60 @@
+---
+import {researchRows} from '../data/researchExpansion.js';
+const {lang='fr',section='decouvrir'}=Astro.props;
+const fr=lang==='fr';
+const picks={
+ decouvrir:['ai-search-visibility','agent-ready-html','browser-ai-models','structured-data-agents','ai-risk-management'],
+ comprendre:['rag-quality-evaluation','structured-data-agents','webnn-inference','webgpu-ai','ai-model-efficiency'],
+ explorer:['protocol-versions','agent-card-discovery','webmcp-imperative','agent-ready-html','browser-ai-models'],
+ experimenter:['rag-quality-evaluation','webmcp-imperative','webgpu-ai','browser-ai-models','structured-data-agents'],
+ apprendre:['education-ai-literacy','accessible-ai-web','ai-model-efficiency','ai-search-visibility','prompt-injection-indirect'],
+ suivre:['ai-search-visibility','crawler-governance','llms-txt-status','protocol-versions','ai-transparency-eu'],
+ verifier:['prompt-injection-indirect','provenance-evidence','ai-transparency-eu','human-agent-oversight','ai-risk-management']
+};
+const featured=(picks[section]??picks.decouvrir).map(slug=>researchRows.find(row=>row.slug===slug)).filter(Boolean);
+const L=(value)=>typeof value==='string'?value:value?.[lang]??value?.fr??'';
+const actionLabel=fr?'Explorer les explications, étapes et sources':'Explore explanations, steps and primary sources';
+const sourceLabel=fr?'Lire la source originale':'Read the primary source';
+---
+<section class="research-hub section" aria-labelledby="research-hub-title">
+  <div class="wrap">
+    <div class="research-hub-intro">
+      <div>
+        <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'APPROFONDIR · DOSSIERS DOCUMENTÉS':'DEEPEN YOUR KNOWLEDGE · RESEARCH DOSSIERS'}</span>
+        <h2 id="research-hub-title">{fr?'Des réponses détaillées, des cas concrets et leurs sources':'In-depth explanations, concrete cases and their evidence'}</h2>
+        <p>{fr?'Chaque dossier relie fonctionnement, exemples, limites et documents primaires. La relecture scientifique reste à compléter : les sources sont disponibles pour vérifier chaque affirmation.':'Every dossier connects mechanisms, cases, limitations and original documents. Independent scientific review remains pending; original sources are provided for verification.'}</p>
+      </div>
+      <div class="research-hub-overview">
+        <strong>{featured.length}</strong><span>{fr?'études à explorer':'studies to explore'}</span>
+      </div>
+    </div>
+    <div class="research-hub-grid">
+      {featured.map((record,index)=><article class="research-hub-card">
+        <div class="research-hub-card-head">
+          <span class="research-hub-number">{String(index+1).padStart(2,'0')}</span>
+          <span class="research-hub-category">{record.category}</span>
+        </div>
+        <h3>{L(record.title)}</h3>
+        <p class="research-hub-summary">{L(record.summary)}</p>
+        <div class="research-hub-facts">
+          {record.sections.slice(0,2).map((item)=><div>
+            <h4>{L(item.title)}</h4>
+            <p>{L(item.body)}</p>
+          </div>)}
+        </div>
+        <details class="research-hub-steps">
+          <summary>{fr?'Voir le parcours de vérification':'View the verification workflow'}</summary>
+          <ol>{record.steps.map(item=><li>{L(item)}</li>)}</ol>
+        </details>
+        <div class="research-hub-actions">
+          <a class="research-hub-link" href={'/'+lang+'/encyclopedie/'+record.slug+'/'}>{actionLabel}<span aria-hidden="true">↗</span></a>
+          <a class="research-hub-source" href={record.source} target="_blank" rel="noopener noreferrer">{sourceLabel}<span aria-hidden="true">↗</span></a>
+        </div>
+      </article>)}
+    </div>
+    <div class="research-hub-footer">
+      <p>{fr?'Les propositions expérimentales, standards publiés et interprétations pédagogiques sont explicitement différenciés dans les dossiers. Date de recherche : 13 novembre 2026.':'Experimental proposals, published standards and educational interpretations are distinguished in the dossiers. Research snapshot: 13 November 2026.'}</p>
+      <a href={'/'+lang+'/encyclopedie/'}>{fr?'Consulter toute l’encyclopédie':'Explore the full encyclopedia'} ↗</a>
+    </div>
+  </div>
+</section>
