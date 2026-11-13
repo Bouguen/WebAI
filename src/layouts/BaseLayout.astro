@@ -7,6 +7,7 @@ import '../styles/research-hub.css';
 import '../styles/tool-profiles.css';
 import '../styles/extra-sections.css';
 import '../styles/reference.css';
+import '../styles/visual-refresh.css';
 import {copy} from '../data/site.js';
 import {referenceNav} from '../data/referenceContent.js';
 const { lang = 'fr', title, description, active = '' } = Astro.props;
@@ -28,7 +29,7 @@ const navigation = referenceNav.map(item=>({...item,title:item.title[lang],url:'
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description ?? t.metaDescription} />
     <meta name="robots" content="noindex,nofollow" />
-    <meta name="theme-color" content="#101a30" />
+    <meta name="theme-color" content="#234052" />
     <title>{title ? title + ' · WebAI' : t.metaTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" hreflang="fr" href={localizedAbsolutePath('fr')} />
