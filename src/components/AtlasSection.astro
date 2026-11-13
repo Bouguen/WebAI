@@ -141,9 +141,16 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}</div>
 </>}
 {type==='publications' && <>
-  <p class="atlas-disclaimer">{fr?'Bibliographie initiale. Les liens vers arXiv désignent des prépublications ou versions déposées : vérifiez séparément l’évaluation par les pairs.':'Initial bibliography. arXiv links point to posted manuscripts or versions: independently verify peer-review status.'}</p>
-  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{research.map((s,i)=><article class="atlas-item atlas-source" data-atlas-card data-category="recherche" data-search={(s.name+' '+L(s.desc,lang)).toLowerCase()}>
-    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{fr?'Document de recherche':'Research document'}</span></div><h3>{s.name}</h3><p>{L(s.desc,lang)}</p><a href={s.url} target="_blank" rel="noopener noreferrer" class="atlas-source-link">{fr?'Consulter l’original':'Open original'} ↗</a>
+  <p class="atlas-disclaimer">{fr?'Bibliographie commentée : distinguez prépublication, publication évaluée et projet expérimental. Les résultats mesurent des configurations données et ne décrivent pas forcément les capacités actuelles des outils.':'Annotated bibliography: distinguish preprints, reviewed publications and experimental projects. Results describe specific setups, not necessarily current tool capabilities.'}</p>
+  <div class="atlas-grid atlas-grid-resources" data-atlas-list>{research.map((s,i)=><article class="atlas-item atlas-source atlas-science-card" data-atlas-card data-category="recherche" data-search={(s.name+' '+L(s.desc,lang)+' '+(s.field??'')).toLowerCase()}>
+    <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{s.paper_status==='published'?(fr?'Publication scientifique':'Research publication'):s.paper_status==='preprint'?(fr?'Manuscrit déposé':'Preprint'):(fr?'Ressource scientifique':'Research resource')}</span></div>
+    <h3>{s.name}</h3><p>{L(s.desc,lang)}</p>
+    {s.method&&<details class="atlas-tool-references atlas-science-method">
+      <summary>{fr?'Méthode et limites de l’étude':'Method and study limitations'}</summary>
+      <p><strong>{fr?'Méthode à examiner':'Method to examine'} :</strong> {L(s.method,lang)}</p>
+      <p><strong>{fr?'Attention':'Caution'} :</strong> {L(s.limits,lang)}</p>
+    </details>}
+    <a href={s.url} target="_blank" rel="noopener noreferrer" class="atlas-source-link">{fr?'Consulter l’original':'Read original'} ↗</a>
   </article>)}</div>
 </>}
 {type==='laboratoire' && <><StudioTools lang={lang}/><LabExpansion lang={lang}/></>}
