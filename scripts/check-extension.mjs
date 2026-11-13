@@ -6,6 +6,7 @@ import {guides} from '../src/data/guides.js';
 import {sectorPlaybooks} from '../src/data/sectorPlaybooks.js';
 import {learningPathDetails} from '../src/data/learningPathDetails.js';
 import {scienceSources} from '../src/data/scienceSources.js';
+import {referenceNav,referencePillars,technologyGroups,standardsRegister,ecosystemActors,referenceTimeline,referenceFaq,referenceResearchers} from '../src/data/referenceContent.js';
 const failed=[];
 const check=(ok,msg)=>{if(!ok)failed.push(msg);};
 const validHttps=value=>{try{return new URL(value).protocol==='https:';}catch{return false;}};
@@ -57,5 +58,41 @@ for(const name of ['robots','ld','chunk','sitemap','html','url','mcp','diff','ev
  check(lab.includes('id="labx-'+name+'-run"')||lab.includes('id="labx-'+name+'-build"'),'Missing interactive lab module: '+name);
 }
 check((lab.match(/class="studio-card"/g)||[]).length===10,'Lab extension should contain ten modules');
+check(referenceNav.length===8,'Main reference navigation must offer eight meaningful categories');
+check(new Set(referenceNav.map(x=>x.id)).size===referenceNav.length,'Reference navigation contains duplicates');
+for(const item of referenceNav)check(translated(item.title),'Missing translated reference navigation: '+item.id);
+check(referencePillars.length===4,'Reference overview requires four distinct dimensions');
+check(technologyGroups.length===7,'Technology atlas requires seven documented families');
+check(standardsRegister.length>=10,'Standard register should contain ten or more specifications');
+check(ecosystemActors.length>=10,'Reference directory should include ten or more organizations');
+check(referenceResearchers.length>=5,'Include a sourced historical researchers section');
+check(referenceTimeline.length>=10,'Historical timeline requires ten sourced milestones');
+check(referenceFaq.length>=12,'Reference FAQ should contain 12 sourced questions');
+for(const group of technologyGroups){
+ check(translated(group.title)&&translated(group.description),'Untranslated technology family: '+group.id);
+ for(const slug of group.topics)check(atlas.topics.some(x=>x.slug===slug),'Broken technology topic reference: '+slug);
+ for(const slug of group.tools)check(atlas.catalog.some(x=>x.slug===slug),'Broken technology tool reference: '+slug);
+}
+for(const item of standardsRegister){
+ check(validHttps(item.url),'Standard missing source: '+item.name);
+ check(translated(item.status)&&translated(item.scope),'Untranslated standard: '+item.name);
+ for(const slug of item.topics)check(atlas.topics.some(x=>x.slug===slug),'Broken standard related article: '+slug);
+}
+for(const item of ecosystemActors){
+ check(validHttps(item.url)&&translated(item.scope),'Invalid organization record: '+item.name);
+ check(atlas.topics.some(x=>x.slug===item.topic),'Unknown organization topic: '+item.name);
+}
+for(const item of referenceResearchers){
+ check(validHttps(item.source)&&translated(item.work),'Invalid researcher source or description: '+item.name);
+ for(const slug of item.topics)check(atlas.topics.some(x=>x.slug===slug),'Broken researcher related article: '+slug);
+}
+for(const item of referenceTimeline)check(validHttps(item.url)&&translated(item.title)&&translated(item.text),'Invalid timeline milestone: '+item.year);
+for(const item of referenceFaq)check(validHttps(item.source)&&translated(item.question)&&translated(item.answer),'Invalid reference FAQ: '+item.question?.fr);
+const page=readFileSync(new URL('../src/pages/[lang]/index.astro',import.meta.url),'utf8');
+const layout=readFileSync(new URL('../src/layouts/BaseLayout.astro',import.meta.url),'utf8');
+check(page.includes('referenceNav.map'),'Homepage must show main reference categories');
+check(layout.includes('referenceNav.map'),'Header must show main reference categories');
+check(layout.includes('noindex,nofollow'),'Preview indexing protection must stay active');
+
 if(failed.length){console.error('WebAI content extension checks failed:\n'+failed.join('\n'));process.exitCode=1;}
 else console.log('Extended research, 36 dossiers, 51 tool profiles, 10 labs, 10 sectors, 6 pathways and bibliography: structural and JavaScript syntax checks passed.');
