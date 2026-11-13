@@ -1,0 +1,46 @@
+---
+const {lang='fr'}=Astro.props;
+const fr=lang==='fr',L=x=>typeof x==='string'?x:x?.[lang]??x?.fr??'';
+const snapshots=[
+ {name:'Model Context Protocol',kind:{fr:'Spécification publiée','en':'Published specification'},date:'2026-07-28',url:'https://modelcontextprotocol.io/specification/2026-07-28',
+ what:{fr:'Le document décrit notamment un cœur sans état et des mécanismes de négociation de capacités. Les fonctions disponibles dans un produit doivent être vérifiées selon le client et le serveur réellement utilisés.',en:'The dated specification describes a stateless core and capability negotiation. Support must be checked against the actual client and server.'},
+ method:{fr:'Comparer la spécification datée, les notes de version et les capacités annoncées lors de la connexion ; conserver la configuration utilisée pour les essais.',en:'Compare the dated specification, release notes and negotiated capabilities; record test configurations.'}},
+ {name:'Agent2Agent (A2A)',kind:{fr:'Spécification de protocole','en':'Protocol specification'},date:'2026-11-13',url:'https://a2a-protocol.org/latest/specification/',
+ what:{fr:'La documentation du protocole décrit les cartes d’agents, les échanges et la gestion de tâches. La date présentée ici est celle de la consultation documentaire, non une annonce de version.',en:'Protocol documentation covers agent cards, exchanges and tasks. The date shown here is the research access date, not a claimed release announcement.'},
+ method:{fr:'Lire le numéro de version courant sur la page officielle, comparer avec les SDK et essayer une tâche non sensible.',en:'Read the current version on the official page, compare SDK compatibility and test a non-sensitive task.'}},
+ {name:'WebMCP',kind:{fr:'Brouillon communautaire non normatif','en':'Non-normative community draft'},date:'2026-11-11',url:'https://webmachinelearning.github.io/webmcp/',
+ what:{fr:'Le brouillon décrit une API JavaScript pour exposer des fonctions de page aux agents. Il n’a pas le statut de recommandation W3C et son support navigateur doit être testé.',en:'The draft describes a JavaScript API for exposing page functions to agents. It is not a W3C Recommendation; test actual browser support.'},
+ method:{fr:'Comparer l’en-tête du rapport, les sections impératives et les documents d’exploration déclarative sans annoncer leur adoption générale.',en:'Inspect the report header and distinguish imperative definitions from declarative explorations without claiming broad adoption.'}},
+ {name:'WebGPU',kind:{fr:'Spécification W3C en évolution','en':'Evolving W3C specification'},date:'2026-09-15',url:'https://www.w3.org/TR/webgpu/',
+ what:{fr:'Les publications W3C décrivent les capacités de rendu et calcul sur GPU. Un statut de recommandation candidate ne signifie pas que tous les appareils prennent en charge toutes les fonctions.',en:'W3C publications describe GPU rendering and compute. Candidate Recommendation status does not mean all devices support every feature.'},
+ method:{fr:'Examiner statut W3C, tableaux de compatibilité et mesures sur plusieurs appareils avec une solution de repli.',en:'Inspect W3C status, compatibility data and measurements across devices with fallback paths.'}},
+ {name:'Chrome Built-in AI',kind:{fr:'APIs aux disponibilités variables','en':'APIs with varying availability'},date:'2026-11-13',url:'https://developer.chrome.com/docs/ai/built-in-apis',
+ what:{fr:'Les APIs de résumé, traduction, langue et génération peuvent avoir des statuts de disponibilité différents selon les versions et les appareils. Certaines fonctionnent en version stable et d’autres en phase expérimentale.',en:'Summarization, translation, language and generation APIs vary by browser version and device. Some features ship in stable releases while others remain experimental.'},
+ method:{fr:'Consulter les statuts par API, détecter les fonctions dans le navigateur cible et documenter les contraintes de téléchargement et matériel.',en:'Read per-API availability, detect support in target browsers and document download and device requirements.'}},
+ {name:'Content Credentials / C2PA',kind:{fr:'Spécification technique de provenance','en':'Technical provenance specification'},date:'2025-12-01',url:'https://spec.c2pa.org/',
+ what:{fr:'Les spécifications C2PA décrivent la liaison d’assertions signées aux médias. Le numéro de version et les mécanismes pris en charge peuvent évoluer, sans transformer une signature en preuve de vérité.',en:'C2PA specifications bind signed assertions to media. Versions and mechanisms evolve, but signatures do not establish factual truth.'},
+ method:{fr:'Lire le numéro de version du document, examiner le manifeste et confronter les assertions à des preuves indépendantes.',en:'Check the current document version, inspect manifests and compare assertions with independent evidence.'}}
+];
+---
+<section class="watch-depth" aria-labelledby="watch-depth-title">
+ <header class="watch-depth-header">
+   <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'VEILLE DOCUMENTÉE · INSTANTANÉ':'EVIDENCE-LED MONITORING · SNAPSHOT'}</span>
+   <h2 id="watch-depth-title">{fr?'Comprendre les évolutions avant de les annoncer':'Interpret changes before announcing them'}</h2>
+   <p>{fr?'Ces six repères décrivent des sources à contrôler. Ils ne constituent pas un fil d’actualités en temps réel : les dates correspondent selon le cas à une publication identifiée ou à la date de consultation du 13 novembre 2026.':'These six records identify sources to review. They are not a live news feed: dates indicate either an identified publication or the research access date of 13 November 2026.'}</p>
+ </header>
+ <div class="watch-depth-grid">{snapshots.map((item,index)=><article class="watch-depth-card">
+   <div class="watch-depth-meta"><span>{String(index+1).padStart(2,'0')}</span><time datetime={item.date}>{item.date}</time></div>
+   <h3>{item.name}</h3>
+   <p class="watch-depth-kind">{L(item.kind)}</p>
+   <p>{L(item.what)}</p>
+   <details><summary>{fr?'Que vérifier lors de la prochaine revue ?':'What to verify next?'}</summary><p>{L(item.method)}</p></details>
+   <a href={item.url} target="_blank" rel="noopener noreferrer">{fr?'Ouvrir le document d’origine':'Read original document'} ↗</a>
+ </article>)}</div>
+ <div class="watch-depth-method">
+   <h3>{fr?'Avant d’intégrer une actualité dans WebAI':'Before turning a change into WebAI news'}</h3>
+   <ol>
+     {(fr?['Retrouver la publication originale et sa date effective.','Lire le statut du document et vérifier les versions.','Comparer les fonctionnalités annoncées aux implémentations réelles.','Distinguer ce qui est vérifié, expérimental, contesté ou inconnu.','Obtenir une validation éditoriale et dater la mise à jour.']:['Locate the original publication and actual event date.','Read document status and inspect versions.','Compare announced features with real implementations.','Separate verified, experimental, contested and unknown facts.','Obtain editorial approval and date the update.']).map(step=><li>{step}</li>)}
+   </ol>
+   <p>{fr?'Les vérifications automatiques et flux RSS peuvent aider à identifier les changements, mais ils ne publient pas de conclusions sans relecture.':'Automated checks and RSS feeds may surface changes, but should not publish conclusions without review.'}</p>
+ </div>
+</section>
