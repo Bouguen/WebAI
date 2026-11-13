@@ -1,4 +1,5 @@
 // WebAI editorial starter collection. All entries are descriptive and must be reviewed for publication.
+import {researchTopics} from './researchExpansion.js';
 export const atlas = {
   "catalog": [
     {
@@ -1778,4 +1779,5 @@ export const atlas = {
     }
   ]
 };
+atlas.topics.push(...researchTopics);
 export const localized = (value, lang) => typeof value === 'string' ? value : value?.[lang] ?? value?.fr ?? '';
