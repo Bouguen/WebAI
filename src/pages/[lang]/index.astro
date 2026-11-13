@@ -16,12 +16,22 @@ const refSummaries={
 ---
 <BaseLayout lang={lang}>
   <section class="hero">
+    <div class="hero-ambient" aria-hidden="true">
+      <span class="ambient-halo ambient-halo-a"></span>
+      <span class="ambient-halo ambient-halo-b"></span>
+      <span class="ambient-stream ambient-stream-a"></span>
+      <span class="ambient-stream ambient-stream-b"></span>
+      <span class="ambient-stream ambient-stream-c"></span>
+      <span class="ambient-spark ambient-spark-a"></span>
+      <span class="ambient-spark ambient-spark-b"></span>
+      <span class="ambient-spark ambient-spark-c"></span>
+    </div>
     <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
     <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <span class="eyebrow hero-eyebrow"><span class="eyebrow-dot"></span>{t.overview}</span>
-        <h1>{t.headline}<br /><span class="gradient-text">{t.headlineAccent}</span></h1>
+        <h1 class="webai-signal-title"><span class="signal-title-base">{t.headline}</span><span class="signal-title-accent gradient-text">{t.headlineAccent}</span><span class="signal-title-beacon" aria-hidden="true">✧</span></h1>
         <p class="hero-lede">{t.lede}</p>
         <div class="hero-actions">
           <a class="button button-primary" href={'/' + lang + '/technologies/'}>{t.primary}<span aria-hidden="true">↗</span></a>
