@@ -1,6 +1,7 @@
 import {atlas} from '../src/data/atlas.js';
 import {guides} from '../src/data/guides.js';
 import {dossiers} from '../src/data/dossiers.js';
+import {researchRows} from '../src/data/researchExpansion.js';
 
 const failures=[];
 const check=(condition,message)=>{if(!condition)failures.push(message);};
@@ -51,5 +52,27 @@ for(const [slug,d] of Object.entries(dossiers)){
  for(const s of d.relations)check(topicSlugs.has(s),'Broken dossier related topic '+s+' in '+slug);
 }
 check(Object.keys(dossiers).length>=10,'Expected at least 10 deep dossiers');
+check(researchRows.length===20,'Research expansion must contain 20 curated topics');
+check(atlas.topics.length>=36,'At least 36 encyclopedia entries expected');
+check(atlas.catalog.length>=51,'At least 51 tool and resource entries expected');
+check(atlas.sources.length>=49,'At least 49 source references expected');
+check(atlas.glossary.length>=77,'At least 77 bilingual glossary entries expected');
+check(guides.length>=20,'At least 20 practical guides expected');
+check(Object.keys(dossiers).length>=30,'At least 30 extended dossiers expected');
+for(const r of researchRows){
+ check(typeof r.slug==='string' && topicSlugs.has(r.slug),'Unlinked research topic: '+r.slug);
+ check(typeof r.source==='string' && isHttps(r.source),'Unusable primary source: '+r.slug);
+ check(translated(r.title)&&translated(r.summary),'Untranslated research metadata: '+r.slug);
+ check(Array.isArray(r.sections)&&r.sections.length===4,'Research dossier needs four sections: '+r.slug);
+ check(Array.isArray(r.steps)&&r.steps.length===4,'Research dossier needs four steps: '+r.slug);
+ check(Array.isArray(r.checks)&&r.checks.length===3,'Research dossier needs three review questions: '+r.slug);
+ for(const section of r.sections??[]){
+   check(translated(section.title)&&translated(section.body),'Untranslated research section: '+r.slug);
+   check((section.body.fr?.length??0)>=90&&(section.body.en?.length??0)>=90,'Research body too short: '+r.slug);
+ }
+ for(const item of dossiers[r.slug]?.steps??[])check(translated(item),'Untranslated applied workflow: '+r.slug);
+ for(const item of dossiers[r.slug]?.checks??[])check(translated(item),'Untranslated critical question: '+r.slug);
+}
+
 if(failures.length){console.error('Data integrity errors (not factual validation):\n'+failures.join('\n'));process.exitCode=1;}
 else console.log('Structural integrity passed for '+atlas.catalog.length+' tools, '+atlas.sources.length+' sources, '+atlas.glossary.length+' glossary terms, '+atlas.topics.length+' topics, '+guides.length+' guides and '+Object.keys(dossiers).length+' deep dossiers. This does not validate scientific accuracy or licensing.');
