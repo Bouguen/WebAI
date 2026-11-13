@@ -110,7 +110,7 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
     <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{catLabels[s.category]??s.category}</span></div>
     <h3>{s.name}</h3>
     <p>{L(s.desc,lang)}</p>
-    <div class="atlas-resource-origin"><span>{fr?'Site de la source':'Source website'}</span><span>{new URL(s.url).hostname.replace(/^www\\./,'')}</span></div>
+    <div class="atlas-resource-origin"><span>{fr?'Site de la source':'Source website'}</span><span>{new URL(s.url).hostname}</span></div>
     <a class="atlas-source-link" href={s.url} rel="noopener noreferrer" target="_blank">{fr?'Consulter le document original':'Open original document'} ↗</a>
   </article>)}</div>
 </>}
