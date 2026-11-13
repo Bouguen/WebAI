@@ -1,5 +1,6 @@
 ---
 import {researchRows} from '../data/researchExpansion.js';
+import {researchStepTranslations} from '../data/researchLocales.js';
 const {lang='fr',section='decouvrir'}=Astro.props;
 const fr=lang==='fr';
 const picks={
@@ -44,7 +45,7 @@ const sourceLabel=fr?'Lire la source originale':'Read the primary source';
         </div>
         <details class="research-hub-steps">
           <summary>{fr?'Voir le parcours de vérification':'View the verification workflow'}</summary>
-          <ol>{record.steps.map(item=><li>{L(item)}</li>)}</ol>
+          <ol>{record.steps.map((item,index)=><li>{fr ? item.fr : (researchStepTranslations[record.slug]?.[index]??item.en)}</li>)}</ol>
         </details>
         <div class="research-hub-actions">
           <a class="research-hub-link" href={'/'+lang+'/encyclopedie/'+record.slug+'/'}>{actionLabel}<span aria-hidden="true">↗</span></a>
