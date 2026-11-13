@@ -1,0 +1,156 @@
+---
+import {agentDirectory,agentKinds,agentCategories,agentGuides,agentFaq,agentSources} from '../data/agents.js';
+const {lang='fr'}=Astro.props;
+const fr=lang==='fr',L=x=>x?.[lang]??x?.fr??'';
+const productCount=agentDirectory.filter(x=>x.kind==='pret').length;
+const builderCount=agentDirectory.filter(x=>x.kind==='creation').length;
+const controlCategories=['general','browser','coding','orchestration','framework','workflow'];
+---
+<section class="agents-hero">
+ <div class="wrap">
+  <div class="agents-breadcrumb"><a href={'/'+lang+'/'}>WebAI</a><span>/</span><span>{fr?'Agents IA':'AI Agents'}</span></div>
+  <div class="agents-hero-layout">
+   <div>
+    <span class="eyebrow"><span class="atlas-beacon"></span>{fr?'RÉPERTOIRE TECHNOLOGIQUE · WEBAI':'TECHNOLOGY DIRECTORY · WEBAI'}</span>
+    <h1>{fr?'Agents IA':'AI Agents'}<span class="agents-hero-emphasis">{fr?'Systèmes, outils et usages':'Systems, tools and uses'}</span></h1>
+    <p>{fr?'Explorer les agents capables d’utiliser des outils, rechercher, programmer ou accomplir des tâches Web — et distinguer ces produits des plateformes servant à construire ses propres agents. Fiches d’usage, cas concrets, limites et documentations originales':'Explore agents that use tools, research, code or perform Web tasks — and distinguish these products from platforms used to build custom agents. Usage profiles, practical examples, caveats and original documentation'}</p>
+    <div class="agents-hero-actions"><a class="button button-primary" href="#repertoire">{fr?'Explorer le répertoire':'Browse the directory'} ↘</a><a class="button button-secondary" href="#choisir">{fr?'Comment choisir un agent':'How to choose an agent'} ↘</a></div>
+   </div>
+   <div class="agents-hero-visual" aria-hidden="true">
+    <div class="agents-visual-orbit agents-orbit-a"></div><div class="agents-visual-orbit agents-orbit-b"></div>
+    <div class="agents-visual-core">A<span>↗</span></div>
+    <span class="agents-visual-node node-1">01</span><span class="agents-visual-node node-2">02</span><span class="agents-visual-node node-3">03</span><span class="agents-visual-node node-4">04</span>
+   </div>
+  </div>
+  <div class="agents-hero-stats">
+   <div><strong>{agentDirectory.length}</strong><span>{fr?'Fiches documentées':'Documented profiles'}</span></div>
+   <div><strong>{productCount}</strong><span>{fr?'Agents prêts à l’emploi':'Ready-to-use agents'}</span></div>
+   <div><strong>{builderCount}</strong><span>{fr?'Frameworks et plateformes':'Frameworks and platforms'}</span></div>
+   <div><strong>FR / EN</strong><span>{fr?'Édition bilingue':'Bilingual edition'}</span></div>
+  </div>
+ </div>
+</section>
+<section class="agents-distinctions section">
+ <div class="wrap">
+  <div class="agents-section-intro"><span class="eyebrow">{fr?'DÉFINITIONS':'DEFINITIONS'}</span><h2>{fr?'Tous les assistants ne sont pas des agents':'Not every assistant is an agent'}</h2>
+   <p>{fr?'Une réponse conversationnelle, une automatisation préprogrammée et un agent capable de choisir des outils sont trois mécanismes différents. On examine un agent sur ses actions autorisées, son environnement, ses résultats vérifiables et la supervision humaine':'A conversational reply, a fixed automation and an agent choosing tools are different mechanisms. Examine agents by their permitted actions, runtime, verifiable outcomes and human oversight'}</p>
+  </div>
+  <div class="agents-distinction-grid">
+   <article class="agent-explainer"><span>01 / CHAT</span><h3>{fr?'Assistant conversationnel':'Conversational assistant'}</h3><p>{fr?'Répond à des questions ou aide à réfléchir. La conversation seule ne prouve pas qu’il exécute une action externe':'Answers questions and helps reasoning. A conversation alone does not establish external action execution'}</p></article>
+   <article class="agent-explainer"><span>02 / AGENT</span><h3>{fr?'Agent capable d’agir':'Tool-using agent'}</h3><p>{fr?'Planifie et adapte des étapes, utilise des outils autorisés et doit contrôler les effets des actions demandées':'Plans and adjusts steps, uses authorized tools and must inspect action outcomes'}</p></article>
+   <article class="agent-explainer"><span>03 / BUILDER</span><h3>{fr?'Framework d’agents':'Agent framework'}</h3><p>{fr?'Briques de développement pour configurer des modèles, états, permissions, outils et parcours, mais pas toujours un agent utilisable immédiatement':'Developer components to configure models, state, permissions, tools and workflows — not necessarily an immediately usable agent'}</p></article>
+  </div>
+ </div>
+</section>
+<section class="agents-directory section" id="repertoire">
+ <div class="wrap" id="agent-directory-root"
+   data-empty={fr?'Aucun agent ne correspond à ces critères':'No agents match these filters'}
+   data-showing={fr?'fiches affichées sur':'profiles shown out of'}
+   data-compare-limit={fr?'Vous pouvez comparer jusqu’à trois fiches':'You can compare up to three profiles'}
+   data-compare-label={fr?'Comparaison':'Comparison'}
+   data-compare-kind={fr?'Type':'Type'}
+   data-compare-category={fr?'Domaine':'Domain'}
+   data-compare-runtime={fr?'Environnement':'Environment'}
+   data-compare-scenario={fr?'Cas d’usage':'Use case'}>
+  <div class="agents-section-intro"><span class="eyebrow">{fr?'ANNUAIRE SOURCÉ':'SOURCE-LINKED DIRECTORY'}</span><h2>{fr?'Trouver un agent selon son rôle':'Find an agent by its role'}</h2><p>{fr?'Fiches préparées à partir de documentations officielles. La présence dans WebAI ne constitue pas une recommandation commerciale ni une validation indépendante. Les disponibilités, fonctions et prix peuvent changer':'Profiles prepared from official documentation. Inclusion in WebAI is not a commercial recommendation or independent certification. Availability, features and prices can change'}</p></div>
+  <form class="agents-controls" role="search" onsubmit="return false">
+   <label class="agents-search-label" for="agent-query">{fr?'Rechercher un agent, une fonction ou un fournisseur':'Search agents, capabilities or providers'}
+    <input type="search" id="agent-query" placeholder={fr?'Ex. : navigateur, code, GitHub, workflows…':'e.g. browser, code, GitHub, workflows…'} autocomplete="off"/>
+   </label>
+   <label for="agent-kind">{fr?'Type de solution':'Solution type'}
+    <select id="agent-kind"><option value="all">{fr?'Tous les types':'All types'}</option><option value="pret">{fr?'Agents prêts à utiliser':'Ready-to-use agents'}</option><option value="creation">{fr?'Plateformes de création':'Agent-building platforms'}</option></select>
+   </label>
+   <label for="agent-category">{fr?'Domaine':'Domain'}
+    <select id="agent-category"><option value="all">{fr?'Tous les domaines':'All domains'}</option>{controlCategories.map(category=><option value={category}>{L(agentCategories[category])}</option>)}</select>
+   </label>
+   <button type="button" class="agents-reset" id="agents-reset">{fr?'Réinitialiser':'Reset filters'}</button>
+  </form>
+  <div class="agents-results-bar"><span id="agent-count" role="status" aria-live="polite">{agentDirectory.length} / {agentDirectory.length} {fr?'fiches':'profiles'}</span><span>{fr?'Édition documentaire du 13 novembre 2026':'Research edition of 13 November 2026'}</span></div>
+  <div class="agents-cards" id="agent-card-list">
+  {agentDirectory.map((agent,i)=><article class="agent-card" data-agent-card data-kind={agent.kind} data-category={agent.category} data-agent-slug={agent.slug} data-agent-name={agent.name} data-agent-provider={agent.provider} data-agent-runtime={agent.runtime} data-agent-scenario={L(agent.scenario)} data-agent-category-label={L(agentCategories[agent.category])} data-agent-kind-label={L(agentKinds[agent.kind])} data-search={(agent.name+' '+agent.provider+' '+L(agent.description)+' '+L(agent.scenario)+' '+L(agentCategories[agent.category])+' '+L(agentKinds[agent.kind])).toLocaleLowerCase()}>
+    <div class="agent-card-top"><span class="agent-card-index">{String(i+1).padStart(2,'0')}</span><span class:list={['agent-kind-tag',agent.kind==='creation'?'is-builder':'is-product']}>{L(agentKinds[agent.kind])}</span></div>
+    <h3>{agent.name}</h3><div class="agent-provider">{agent.provider} <span aria-hidden="true">·</span> {L(agentCategories[agent.category])}</div>
+    <p class="agent-card-description">{L(agent.description)}</p>
+    <div class="agent-card-use"><strong>{fr?'Cas d’utilisation':'Example use'}</strong><p>{L(agent.scenario)}</p></div>
+    <div class="agent-card-bottom"><div class="agent-card-links"><a href={'/'+lang+'/agents/'+agent.slug+'/'}>{fr?'Fiche complète et mode d’emploi':'Full profile and usage guide'} ↗</a><a href={agent.docs} target="_blank" rel="noopener noreferrer">{fr?'Documentation officielle':'Official documentation'} ↗</a></div>
+      <label class="agent-compare-label"><input type="checkbox" data-agent-compare value={agent.slug}/>{fr?'Comparer':'Compare'}</label>
+    </div>
+   </article>)}
+  </div>
+  <div class="agents-none" id="agents-no-result" hidden>{fr?'Aucune fiche ne correspond à ces filtres. Modifiez votre recherche ou réinitialisez les critères':'No profiles match these filters. Change your search or reset the criteria'}</div>
+  <aside class="agents-compare-panel" id="agents-compare-panel" hidden aria-live="polite">
+   <div class="agents-compare-header"><h3>{fr?'Comparaison des fiches sélectionnées':'Selected profile comparison'}</h3><button type="button" id="agents-compare-clear">{fr?'Effacer la sélection':'Clear selection'}</button></div>
+   <p class="agents-compare-message" id="agents-compare-message"></p>
+   <div id="agents-compare-content"></div>
+  </aside>
+ </div>
+</section>
+<section class="agents-method section" id="choisir"><div class="wrap">
+ <div class="agents-section-intro"><span class="eyebrow">{fr?'MODE D’EMPLOI':'PRACTICAL METHOD'}</span><h2>{fr?'Comment utiliser ou construire un agent':'How to use or build an agent'}</h2><p>{fr?'La méthode dépend de l’environnement et des permissions : un assistant Web, un agent de code et un SDK ne s’installent ni ne s’évaluent de la même façon':'Method depends on environment and permissions: a Web assistant, a coding agent and a developer SDK are set up and evaluated differently'}</p></div>
+ <div class="agents-guides">{agentGuides.map((guide,i)=><article class="agents-guide">
+  <div class="agents-guide-meta"><span>0{i+1}</span><span>{L(guide.audience)}</span></div>
+  <h3>{L(guide.title)}</h3><p>{L(guide.intro)}</p>
+  <ol>{guide.steps.map(step=><li>{L(step)}</li>)}</ol>
+  <a href={guide.source} target="_blank" rel="noopener noreferrer">{fr?'Référence méthodologique':'Methodology reference'} ↗</a>
+ </article>)}</div>
+</div></section>
+<section class="agents-risk section"><div class="wrap agents-risk-layout">
+ <div><span class="eyebrow">{fr?'SÉCURITÉ ET FIABILITÉ':'SAFETY AND RELIABILITY'}</span><h2>{fr?'Déléguer une tâche ne délègue pas la responsabilité':'Delegating a task does not delegate responsibility'}</h2><p>{fr?'Les pages Web, les fichiers et les réponses d’outils restent des données potentiellement non fiables. Les identifiants, commandes, messages envoyés, paiements et suppressions exigent un contrôle adapté. Les tests sur un scénario ne certifient pas la fiabilité générale':'Web pages, files and tool outputs remain potentially untrusted data. Credentials, commands, sent messages, payments and deletions need appropriate oversight. Success on one scenario does not certify general reliability'}</p></div>
+ <div class="agents-risk-checks">
+  <p><strong>01</strong>{fr?'Limiter les accès et isoler l’environnement':'Limit access and isolate the runtime'}</p>
+  <p><strong>02</strong>{fr?'Demander confirmation avant toute action engageante':'Require approval before consequential actions'}</p>
+  <p><strong>03</strong>{fr?'Consigner les sources, les opérations et les erreurs':'Record sources, operations and failures'}</p>
+  <p><strong>04</strong>{fr?'Vérifier l’état final plutôt que croire un message de succès':'Check the final state rather than trusting a success message'}</p>
+ </div>
+</div></section>
+<section class="agents-faq section"><div class="wrap">
+ <div class="agents-section-intro"><span class="eyebrow">FAQ</span><h2>{fr?'Questions fréquentes sur les agents IA':'Common questions about AI agents'}</h2></div>
+ <div class="agents-faq-list">{agentFaq.map((item,i)=><details open={i===0}>
+  <summary><span>{String(i+1).padStart(2,'0')}</span>{L(item.q)}</summary>
+  <div><p>{L(item.a)}</p><a href={item.source} target="_blank" rel="noopener noreferrer">{fr?'Lire la source':'Read the source'} ↗</a></div>
+ </details>)}</div>
+</div></section>
+<section class="agents-resources section"><div class="wrap">
+ <div class="agents-section-intro"><span class="eyebrow">{fr?'DOCUMENTATION FONDATRICE':'FOUNDATIONAL DOCUMENTATION'}</span><h2>{fr?'Sources pour approfondir et vérifier':'Original sources for independent verification'}</h2><p>{fr?'Ces références expliquent les mécanismes des agents, leurs outils et leurs risques. Elles ne constituent ni une validation des 22 solutions ni un classement sponsorisé':'These references explain agents, tools and risks. They do not endorse the 22 listings or constitute sponsored rankings'}</p></div>
+ <div class="agents-sources-grid">{agentSources.map(source=><a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}<span aria-hidden="true">↗</span></a>)}</div>
+ <p class="agents-review-note">{fr?'État éditorial : à vérifier. Les fiches s’appuient sur des documentations officielles et doivent faire l’objet d’une revue périodique. Aucun agent n’est connecté directement à ce portail':'Editorial status: pending independent review. Profiles draw on official documentation and need periodic updates. No agent is directly connected to this portal'}</p>
+</div></section>
+<script is:inline>
+(()=>{
+ const root=document.querySelector('#agent-directory-root');
+ if(!root)return;
+ const cards=[...root.querySelectorAll('[data-agent-card]')];
+ const search=root.querySelector('#agent-query'),kind=root.querySelector('#agent-kind'),category=root.querySelector('#agent-category');
+ const count=root.querySelector('#agent-count'),empty=root.querySelector('#agents-no-result');
+ const panel=root.querySelector('#agents-compare-panel'),target=root.querySelector('#agents-compare-content'),message=root.querySelector('#agents-compare-message');
+ const checkboxes=[...root.querySelectorAll('[data-agent-compare]')];
+ function filter(){
+  const term=search.value.trim().toLocaleLowerCase(),k=kind.value,c=category.value;
+  let total=0;for(const card of cards){const ok=(!term||card.dataset.search.includes(term))&&(k==='all'||card.dataset.kind===k)&&(c==='all'||card.dataset.category===c);card.hidden=!ok;if(ok)total++;}
+  count.textContent=total+' / '+cards.length+' '+root.dataset.showing;empty.hidden=total>0;
+ }
+ function cell(label,value){const d=document.createElement('div');const b=document.createElement('strong');b.textContent=label;const p=document.createElement('p');p.textContent=value;d.append(b,p);return d;}
+ function compare(){
+  const checked=checkboxes.filter(x=>x.checked);panel.hidden=checked.length===0;target.replaceChildren();
+  message.textContent=checked.length===3?root.dataset.compareLimit:'';
+  for(const input of checked){
+   const card=input.closest('[data-agent-card]');
+   const article=document.createElement('article');article.className='agents-compare-item';
+   const h=document.createElement('h4');h.textContent=card.dataset.agentName;article.append(h);
+   article.append(cell(root.dataset.compareKind,card.dataset.agentKindLabel));
+   article.append(cell(root.dataset.compareCategory,card.dataset.agentCategoryLabel));
+   article.append(cell(root.dataset.compareRuntime,card.dataset.agentRuntime));
+   article.append(cell(root.dataset.compareScenario,card.dataset.agentScenario));
+   target.append(article);
+  }
+ }
+ search.addEventListener('input',filter);kind.addEventListener('change',filter);category.addEventListener('change',filter);
+ root.querySelector('#agents-reset').addEventListener('click',()=>{search.value='';kind.value='all';category.value='all';filter();search.focus();});
+ checkboxes.forEach(input=>input.addEventListener('change',()=>{
+  if(input.checked&&checkboxes.filter(x=>x.checked).length>3){input.checked=false;message.textContent=root.dataset.compareLimit;panel.hidden=false;return;}
+  compare();
+ }));
+ root.querySelector('#agents-compare-clear').addEventListener('click',()=>{checkboxes.forEach(x=>x.checked=false);compare();});
+ filter();
+})();
+</script>
