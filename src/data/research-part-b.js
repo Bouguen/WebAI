@@ -679,35 +679,10 @@ export const researchRowsB = [
     },
     "summary": {
       "fr": "Appliquer WCAG à des contenus et interactions dynamiques.",
-      "en": "comprendre"
+      "en": "Apply WCAG to dynamic content and AI interactions."
     },
-    "group": "https://www.w3.org/TR/WCAG22/",
-    "source": [
-      [
-        "Les exigences de base restent valables",
-        "The fundamentals still apply",
-        "Une interface IA reste une interface Web. Les textes alternatifs, contrastes, formulaires correctement étiquetés, focus visible et navigation clavier demeurent importants, qu’une réponse soit générée ou non.",
-        "An AI interface is still a Web interface. Alternative text, contrast, correctly labeled forms, visible focus and keyboard navigation matter whether a response is generated or not."
-      ],
-      [
-        "Annoncer les contenus dynamiques",
-        "Announce dynamic content",
-        "Les nouvelles réponses doivent être identifiables sans déclencher de mouvements de focus inattendus. Les messages de chargement, d’erreur et de fin de tâche peuvent utiliser des régions de statut accessibles adaptées au contexte.",
-        "New replies should be discoverable without unexpected focus jumps. Loading, error and completion messages can use accessible status regions appropriate to the context."
-      ],
-      [
-        "Gérer l’incertitude",
-        "Communicate uncertainty",
-        "Une affirmation générée doit présenter clairement ses limites et les moyens de consulter les sources. L’accessibilité cognitive implique un langage structuré, la possibilité de revenir en arrière et des erreurs non culpabilisantes.",
-        "Generated claims should clearly state limitations and ways to inspect evidence. Cognitive accessibility benefits from structured language, undo paths and non-blaming error messages."
-      ],
-      [
-        "Tester avec des personnes",
-        "Test with people",
-        "Les vérifications automatiques ne détectent pas toutes les difficultés. Associez tests WCAG, parcours clavier, lecteurs d’écran et retours de personnes concernées, puis publiez les limites connues.",
-        "Automated checks miss some barriers. Combine WCAG tests, keyboard paths, screen readers and feedback from affected users, then publish known limitations."
-      ]
-    ],
+    "group": "comprendre",
+    "source": "https://www.w3.org/TR/WCAG22/",
     "audience": {
       "fr": "Enseignants, chercheurs, développeurs et public curieux",
       "en": "Educators, researchers, developers and curious readers"
@@ -715,46 +690,64 @@ export const researchRowsB = [
     "sections": [
       {
         "title": {
-          "fr": "L",
-          "en": "i"
+          "fr": "Les exigences de base restent valables",
+          "en": "The fundamentals still apply"
         },
         "body": {
-          "fr": "s",
-          "en": "t"
+          "fr": "Une interface IA reste une interface Web. Les textes alternatifs, contrastes, formulaires correctement étiquetés, focus visible et navigation clavier demeurent importants, qu’une réponse soit générée ou non.",
+          "en": "An AI interface is still a Web interface. Alternative text, contrast, correctly labeled forms, visible focus and keyboard navigation matter whether a response is generated or not."
         }
       },
       {
         "title": {
-          "fr": "T",
-          "en": "e"
+          "fr": "Annoncer les contenus dynamiques",
+          "en": "Announce dynamic content"
         },
         "body": {
-          "fr": "s",
-          "en": "t"
+          "fr": "Les nouvelles réponses doivent être identifiables sans déclencher de mouvements de focus inattendus. Les messages de chargement, d’erreur et de fin de tâche peuvent utiliser des régions de statut accessibles adaptées au contexte.",
+          "en": "New replies should be discoverable without unexpected focus jumps. Loading, error and completion messages can use accessible status regions appropriate to the context."
         }
       },
       {
         "title": {
-          "fr": "V",
-          "en": "é"
+          "fr": "Gérer l’incertitude",
+          "en": "Communicate uncertainty"
         },
         "body": {
-          "fr": "r",
-          "en": "i"
+          "fr": "Une affirmation générée doit présenter clairement ses limites et les moyens de consulter les sources. L’accessibilité cognitive implique un langage structuré, la possibilité de revenir en arrière et des erreurs non culpabilisantes.",
+          "en": "Generated claims should clearly state limitations and ways to inspect evidence. Cognitive accessibility benefits from structured language, undo paths and non-blaming error messages."
         }
       },
       {
         "title": {
-          "fr": "É",
-          "en": "v"
+          "fr": "Tester avec des personnes",
+          "en": "Test with people"
         },
         "body": {
-          "fr": "a",
-          "en": "l"
+          "fr": "Les vérifications automatiques ne détectent pas toutes les difficultés. Associez tests WCAG, parcours clavier, lecteurs d’écran et retours de personnes concernées, puis publiez les limites connues.",
+          "en": "Automated checks miss some barriers. Combine WCAG tests, keyboard paths, screen readers and feedback from affected users, then publish known limitations."
         }
       }
     ],
     "steps": [
+      {
+        "fr": "Lister les parcours",
+        "en": "Lister les parcours"
+      },
+      {
+        "fr": "Tester au clavier",
+        "en": "Tester au clavier"
+      },
+      {
+        "fr": "Vérifier les statuts",
+        "en": "Vérifier les statuts"
+      },
+      {
+        "fr": "Évaluer la compréhension",
+        "en": "Évaluer la compréhension"
+      }
+    ],
+    "checks": [
       {
         "fr": "Can users navigate by keyboard?",
         "en": "Can users navigate by keyboard?"
@@ -768,15 +761,9 @@ export const researchRowsB = [
         "en": "Can people inspect evidence and undo actions?"
       }
     ],
-    "checks": [
-      {
-        "fr": "axe-core",
-        "en": "axe-core"
-      },
-      {
-        "fr": "playwright",
-        "en": "playwright"
-      }
+    "tools": [
+      "axe-core",
+      "playwright"
     ]
   },
   {
@@ -884,35 +871,10 @@ export const researchRowsB = [
     },
     "summary": {
       "fr": "Passer de la consommation passive d’une réponse à l’enquête documentée.",
-      "en": "apprendre"
+      "en": "Move from passive acceptance of answers to evidence-led inquiry."
     },
-    "group": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
-    "source": [
-      [
-        "Enseigner les distinctions fondamentales",
-        "Teach foundational distinctions",
-        "Une leçon doit distinguer un texte sourcé, une synthèse générée, une simulation et un agent qui accomplit une action. L’outil ne doit pas être présenté comme une autorité : les élèves doivent retrouver les documents originaux.",
-        "A lesson should distinguish sourced text, generated synthesis, simulation and an agent taking an action. The tool must not be presented as an authority: learners should find the original documents."
-      ],
-      [
-        "Comparer des affirmations et leurs preuves",
-        "Compare claims and evidence",
-        "Proposez deux réponses contradictoires sur un thème de cours, puis faites identifier leur origine, leurs dates et les passages pertinents. Une réponse fluide peut être fausse, tout comme une réponse maladroite peut contenir une information exacte.",
-        "Present two conflicting answers on a course topic, then identify origins, dates and relevant passages. Fluent writing may be false, while awkward writing may contain accurate facts."
-      ],
-      [
-        "Cultiver l’autonomie",
-        "Support learner autonomy",
-        "L’apprenant doit pouvoir expliquer les limites d’un outil, garder un historique de ses décisions et choisir quand utiliser ou non l’IA. La correction humaine demeure essentielle pour les travaux évalués et les décisions sensibles.",
-        "Learners should explain tool limitations, keep a record of decisions and decide when not to use AI. Human review remains central for assessed work and sensitive decisions."
-      ],
-      [
-        "Évaluer les compétences, pas l’effet spectacle",
-        "Assess skills, not spectacle",
-        "Évaluez la qualité des questions, la vérification des sources, le traitement des désaccords et la justification des conclusions. Les productions démonstratives doivent être distinguées des connaissances effectivement acquises.",
-        "Assess question quality, source checks, handling of disagreement and justification of conclusions. Showy demonstrations must be distinguished from genuinely acquired knowledge."
-      ]
-    ],
+    "group": "apprendre",
+    "source": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
     "audience": {
       "fr": "Enseignants, chercheurs, développeurs et public curieux",
       "en": "Educators, researchers, developers and curious readers"
@@ -920,46 +882,64 @@ export const researchRowsB = [
     "sections": [
       {
         "title": {
-          "fr": "C",
-          "en": "h"
+          "fr": "Enseigner les distinctions fondamentales",
+          "en": "Teach foundational distinctions"
         },
         "body": {
-          "fr": "o",
-          "en": "i"
+          "fr": "Une leçon doit distinguer un texte sourcé, une synthèse générée, une simulation et un agent qui accomplit une action. L’outil ne doit pas être présenté comme une autorité : les élèves doivent retrouver les documents originaux.",
+          "en": "A lesson should distinguish sourced text, generated synthesis, simulation and an agent taking an action. The tool must not be presented as an authority: learners should find the original documents."
         }
       },
       {
         "title": {
-          "fr": "C",
-          "en": "o"
+          "fr": "Comparer des affirmations et leurs preuves",
+          "en": "Compare claims and evidence"
         },
         "body": {
-          "fr": "m",
-          "en": "p"
+          "fr": "Proposez deux réponses contradictoires sur un thème de cours, puis faites identifier leur origine, leurs dates et les passages pertinents. Une réponse fluide peut être fausse, tout comme une réponse maladroite peut contenir une information exacte.",
+          "en": "Present two conflicting answers on a course topic, then identify origins, dates and relevant passages. Fluent writing may be false, while awkward writing may contain accurate facts."
         }
       },
       {
         "title": {
-          "fr": "C",
-          "en": "o"
+          "fr": "Cultiver l’autonomie",
+          "en": "Support learner autonomy"
         },
         "body": {
-          "fr": "n",
-          "en": "s"
+          "fr": "L’apprenant doit pouvoir expliquer les limites d’un outil, garder un historique de ses décisions et choisir quand utiliser ou non l’IA. La correction humaine demeure essentielle pour les travaux évalués et les décisions sensibles.",
+          "en": "Learners should explain tool limitations, keep a record of decisions and decide when not to use AI. Human review remains central for assessed work and sensitive decisions."
         }
       },
       {
         "title": {
-          "fr": "J",
-          "en": "u"
+          "fr": "Évaluer les compétences, pas l’effet spectacle",
+          "en": "Assess skills, not spectacle"
         },
         "body": {
-          "fr": "s",
-          "en": "t"
+          "fr": "Évaluez la qualité des questions, la vérification des sources, le traitement des désaccords et la justification des conclusions. Les productions démonstratives doivent être distinguées des connaissances effectivement acquises.",
+          "en": "Assess question quality, source checks, handling of disagreement and justification of conclusions. Showy demonstrations must be distinguished from genuinely acquired knowledge."
         }
       }
     ],
     "steps": [
+      {
+        "fr": "Choisir un fait vérifiable",
+        "en": "Choisir un fait vérifiable"
+      },
+      {
+        "fr": "Comparer deux réponses",
+        "en": "Comparer deux réponses"
+      },
+      {
+        "fr": "Consulter la source originale",
+        "en": "Consulter la source originale"
+      },
+      {
+        "fr": "Justifier la conclusion",
+        "en": "Justifier la conclusion"
+      }
+    ],
+    "checks": [
       {
         "fr": "Can a fluent answer be wrong?",
         "en": "Can a fluent answer be wrong?"
@@ -973,15 +953,9 @@ export const researchRowsB = [
         "en": "Can the learner explain an uncertainty?"
       }
     ],
-    "checks": [
-      {
-        "fr": "pagefind",
-        "en": "pagefind"
-      },
-      {
-        "fr": "arxiv",
-        "en": "arxiv"
-      }
+    "tools": [
+      "pagefind",
+      "arxiv"
     ]
   }
 ];
