@@ -40,7 +40,7 @@ const links=[
   <div class="kb-meta"><span>{tool.category}</span><span>{tool.kind}</span><span>{fr?'Édition : 13 novembre 2026':'Edition: 13 November 2026'}</span><span class="kb-review-tag">{fr?'Description à vérifier indépendamment':'Independent review pending'}</span></div>
  </div></header>
  <div class="wrap tool-profile-layout">
- <main class="tool-profile-article">
+ <div class="tool-profile-article">
   <div class="kb-editorial-note"><strong>{fr?'Précision éditoriale':'Editorial note'}</strong>
    <p>{fr?'Cette fiche est un guide documentaire, pas une certification ni un partenariat. La disponibilité, les fonctions, les licences et les prix peuvent évoluer. Les sources thématiques expliquent un contexte technique : elles ne constituent pas une approbation de cet outil par leurs auteurs.':'This is an educational review, not a certification or endorsement. Availability, features, licenses and prices may change. Thematic references explain technical context; their authors do not endorse this tool.'}</p>
   </div>
@@ -99,7 +99,7 @@ const links=[
     </a>)}</div>
   </section>
   <div class="kb-end"><a href={'/'+lang+'/outils/'}>← {fr?'Retour à l’annuaire AI Tools':'Back to AI Tools'}</a><a href={'/'+lang+'/comparateur/'}>{fr?'Comparer les solutions':'Compare solutions'} ↗</a></div>
- </main>
+ </div>
  <aside class="tool-profile-aside" aria-label={fr?'Lectures connexes':'Related reading'}>
    <div class="kb-side-box">
      <span class="eyebrow">{fr?'OUTILS DU MÊME DOMAINE':'TOOLS IN THIS CATEGORY'}</span>
