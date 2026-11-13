@@ -50,3 +50,63 @@
 .watch-depth-method p{margin-top:16px;font-size:.8rem}
 @media(max-width:800px){.watch-depth-grid{grid-template-columns:1fr}.watch-depth{padding:52px 0 0}}
 @media(max-width:600px){.watch-depth-card{padding:18px}.watch-depth-method{padding:19px}.atlas-sector-playbook{padding:19px}}
+
+/* Source library: explain shared review methodology once, then show individual document facts. */
+.atlas-source-methodology{
+  margin:0 0 25px;
+  overflow:hidden;
+  background:linear-gradient(110deg,color-mix(in srgb,var(--gold) 7%,var(--surface)),var(--surface));
+  border:1px solid color-mix(in srgb,var(--gold) 52%,var(--line));
+  border-radius:17px;
+  box-shadow:inset 0 3px 0 color-mix(in srgb,var(--gold) 80%,transparent),var(--shadow);
+}
+.atlas-source-methodology>summary{
+  display:flex;gap:18px;align-items:center;justify-content:space-between;
+  cursor:pointer;list-style:none;padding:18px 22px;color:var(--text);
+}
+.atlas-source-methodology>summary::-webkit-details-marker,.atlas-source-methodology-category>summary::-webkit-details-marker{display:none}
+.atlas-source-methodology>summary:focus-visible,.atlas-source-methodology-category>summary:focus-visible{
+  outline:3px solid var(--primary);outline-offset:-3px;border-radius:12px;
+}
+.atlas-source-methodology-heading{display:flex;gap:15px;align-items:center;min-width:0}
+.atlas-source-methodology-icon{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;
+  border-radius:11px;background:color-mix(in srgb,var(--gold) 17%,var(--surface));
+  border:1px solid color-mix(in srgb,var(--gold) 48%,var(--line));color:var(--gold);font-size:1.25rem}
+.atlas-source-methodology-heading strong{display:block;font-size:1rem;line-height:1.4}
+.atlas-source-methodology-heading small{display:block;color:var(--muted);font-size:.77rem;font-weight:550;margin-top:5px}
+.atlas-source-methodology-hint{font-size:.74rem;color:var(--primary);font-weight:800;white-space:nowrap}
+.atlas-source-methodology-hint:after{content:" ▾";display:inline-block;transition:transform .18s ease}
+.atlas-source-methodology[open] .atlas-source-methodology-hint:after{transform:rotate(180deg)}
+.atlas-source-methodology-body{padding:2px 22px 23px;border-top:1px solid color-mix(in srgb,var(--gold) 33%,var(--line))}
+.atlas-source-methodology-body>p{font-size:.86rem;line-height:1.8;max-width:980px;margin:15px 0 18px}
+.atlas-source-methodology-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.atlas-source-methodology-category{min-width:0;align-self:start;border:1px solid color-mix(in srgb,var(--mint) 31%,var(--line));
+  border-radius:11px;background:var(--bg2);overflow:hidden}
+.atlas-source-methodology-category:nth-child(3n+2){border-color:color-mix(in srgb,var(--gold) 37%,var(--line))}
+.atlas-source-methodology-category:nth-child(3n){border-color:color-mix(in srgb,var(--coral) 31%,var(--line))}
+.atlas-source-methodology-category>summary{padding:14px 17px;font-size:.86rem;font-weight:800;cursor:pointer;color:var(--primary)}
+.atlas-source-methodology-category>summary:before{content:"＋";margin-right:10px;color:var(--mint);font-size:1rem}
+.atlas-source-methodology-category[open]>summary:before{content:"−"}
+.atlas-source-methodology-category[open]>summary{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--mint) 7%,var(--surface))}
+.atlas-source-methodology-category-body{padding:15px 18px}
+.atlas-source-methodology-category-body>p{font-size:.83rem;line-height:1.74;margin:0 0 13px}
+.atlas-source-methodology-category-body ol{padding-left:19px;margin:12px 0 15px}
+.atlas-source-methodology-category-body li{font-size:.8rem;line-height:1.7;margin-bottom:7px;padding-left:4px}
+.atlas-source-methodology-category-body .atlas-source-methodology-caution{padding:12px;background:color-mix(in srgb,var(--gold) 8%,var(--surface));border-radius:9px;margin:12px 0 0}
+.atlas-source-enriched{min-height:0}
+.atlas-source-enriched h3{line-height:1.3;overflow-wrap:anywhere}
+.atlas-source-enriched>p{margin:0!important;line-height:1.75}
+.atlas-resource-origin{display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--line);
+  font-size:.74rem;line-height:1.5}
+.atlas-resource-origin span:first-child{color:var(--muted)}
+.atlas-resource-origin span:last-child{color:var(--text);font-weight:760;overflow-wrap:anywhere}
+.atlas-source-enriched>.atlas-source-link{margin-top:5px!important;padding:0;border:0;display:inline-block;font-size:.81rem;font-weight:820}
+@media(max-width:800px){.atlas-source-methodology-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+ .atlas-source-methodology>summary{align-items:flex-start;padding:14px;gap:8px;flex-wrap:wrap}
+ .atlas-source-methodology-hint{margin-left:55px}
+ .atlas-source-methodology-body{padding:4px 14px 17px}
+ .atlas-source-methodology-category-body{padding:12px 14px}
+}
+@media(prefers-reduced-motion:reduce){.atlas-source-methodology-hint:after{transition:none}}
