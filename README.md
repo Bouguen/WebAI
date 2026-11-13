@@ -53,6 +53,33 @@ The scheduled monitoring workflow only activates after its file is merged onto t
 - La page d'accueil met en valeur les dossiers ; les collections filtrables identifient les sujets approfondis.
 - Tous les dossiers restent `a_verifier` avant relecture scientifique/éditoriale. La prévisualisation reste `noindex,nofollow` et `main` demeure inchangée.
 
+
+## Research Atlas — research expansion (13 November 2026)
+
+This release candidate enriches WebAI's **seven editorial hubs** and the bilingual
+encyclopedia without replacing the site's established conceptual boundaries.
+
+- **36 encyclopedia concepts** in French and English; **30 extended dossiers**
+  (10 previous + 20 new), each with four substantive explanation sections,
+  a four-step investigation workflow, three critical questions and source links.
+- **51 tools/platforms**, **49 primary-reference links**, **77 glossary entries**,
+  and **20 practical guides** (12 new, with six steps each).
+- New coverage: AI discovery and visibility, publisher crawler preferences,
+  llms.txt limitations, semantic HTML for agents, MCP and A2A interoperability,
+  WebMCP draft status, approval gates and prompt injection, local browser AI,
+  WebNN and WebGPU, RAG evaluation, JSON-LD, C2PA, EU AI Act transparency,
+  accessibility, environmental trade-offs and critical AI literacy.
+- All seven editorial hub pages now contain explanatory source-linked cards and
+  guided workflows; article pages have navigable outlines with anchored headings.
+- Dossier research date: **2026-11-13**, status: **`a_verifier`**.
+  Technical tests check data integrity, URLs syntax, localization and builds;
+  **they are not external scientific, legal or copyright review**.
+- Source catalogue and methodology: `docs/WEBAI_RESEARCH_2026-11-13.md`.
+- The original Phase III manuscript collection remains unpublished.
+  `noindex,nofollow` stays enabled, and publication to the default branch
+  requires explicit approval.
+
+
 ## English-language experience
 
 - The English edition starts at `/en/`; the French edition stays at `/fr/`.
