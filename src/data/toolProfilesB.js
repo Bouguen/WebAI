@@ -397,7 +397,7 @@ export const toolProfilesB=[
       "fr": "Ne pas promettre un support universel ou une conservation locale sans examiner l’API et le matériel réels.",
       "en": "Avoid claims of universal support or local processing without checking the actual API and device."
     },
-    "docs": "https://developer.chrome.com/docs/ai/built-in-apis"
+    "docs": "https://developer.chrome.com/docs/ai/get-started"
   },
   {
     "slug": "webnn-api",
