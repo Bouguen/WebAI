@@ -2,6 +2,7 @@
 import { atlas, localized as L } from '../data/atlas.js';
 import { dossiers } from '../data/dossiers.js';
 import StudioTools from './StudioTools.astro';
+import LabExpansion from './LabExpansion.astro';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
 const config={
@@ -23,7 +24,7 @@ const resourceCats=[...new Set(atlas.sources.map(x=>x.category))];
 const toolCats=[...new Set(atlas.catalog.map(x=>x.category))];
 const glossCats=[...new Set(atlas.glossary.map(x=>x.category))];
 const cards=type==='outils'?atlas.catalog:type==='ressources'?atlas.sources:type==='glossaire'?atlas.glossary:type==='encyclopedie'?atlas.topics:type==='publications'?research:[];
-const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.sources.length:type==='glossaire'?atlas.glossary.length:type==='encyclopedie'?atlas.topics.length:type==='parcours'?atlas.lessons.length:type==='secteurs'?atlas.cases.length:type==='publications'?research.length:type==='laboratoire'?5:4;
+const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.sources.length:type==='glossaire'?atlas.glossary.length:type==='encyclopedie'?atlas.topics.length:type==='parcours'?atlas.lessons.length:type==='secteurs'?atlas.cases.length:type==='publications'?research.length:type==='laboratoire'?15:4;
 ---
 <section class="atlas-hero">
   <div class="wrap">
@@ -104,7 +105,7 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
     <div class="atlas-item-top"><span class="atlas-item-number">{(i+1).toString().padStart(2,'0')}</span><span class="atlas-item-kind">{fr?'Document de recherche':'Research document'}</span></div><h3>{s.name}</h3><p>{L(s.desc,lang)}</p><a href={s.url} target="_blank" rel="noopener noreferrer" class="atlas-source-link">{fr?'Consulter l’original':'Open original'} ↗</a>
   </article>)}</div>
 </>}
-{type==='laboratoire' && <StudioTools lang={lang}/>}
+{type==='laboratoire' && <><StudioTools lang={lang}/><LabExpansion lang={lang}/></>}
 {type==='observatoire' && <div class="atlas-watch-layout">
   <div class="atlas-watch-copy"><span class="eyebrow">{fr?'COMMENT NOUS TRAVAILLONS':'HOW WE WORK'}</span>
     <h2>{fr?'Une veille qui ne publie pas seule':'Monitoring that never publishes itself'}</h2><p>{fr?'WebAI organise le suivi des protocoles, normes, recherches et logiciels. Une évolution détectée entre d’abord dans une file de qualification : source primaire, date, importance, contradiction éventuelle, contrôle éditorial.':'WebAI tracks protocols, standards, research and software. Every detected change first enters a review queue: original source, date, significance, potential contradictions, editorial approval.'}</p>
