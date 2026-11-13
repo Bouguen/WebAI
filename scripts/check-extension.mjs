@@ -55,6 +55,24 @@ check(!!block,'Local lab extension must contain browser JavaScript');
 if(block){
  try{new Script(block[1],{filename:'LabExpansion.astro inline script'});}catch(error){failed.push('Invalid lab browser script: '+error.message);}
 }
+// Check that every textarea example uses escaped Astro text rather than raw JSX in the child body.
+const editableSamples=[...lab.matchAll(/<textarea\b([^>]*)>([\s\S]*?)<\/textarea>/g)];
+for(const sample of editableSamples){
+ const text=sample[2].trim();
+ check(!/^\{(?:fr\s*\?|['"])/.test(text),'Literal Astro expression inside textarea: '+sample[1].slice(0,80));
+}
+for(const id of ['labx-chunk-text','labx-sitemap-input','labx-html-input','labx-diff-a','labx-diff-b','labx-md-input']){
+ const opening=lab.match(new RegExp('<textarea\\b[^>]*id="'+id+'"[^>]*>'));
+ check(!!opening&&opening[0].includes('set:text='),'Sample should use Astro set:text instead of textarea children: '+id);
+}
+const navigator=readFileSync(new URL('../src/components/StudioNavigator.astro',import.meta.url),'utf8');
+check(navigator.includes('id="lab-navigator"')&&navigator.includes('id="lab-search"'),'Studio workspace navigation missing');
+check((navigator.match(/data-lab-jump/g)||[]).length>=1,'Quick access navigation missing');
+check(navigator.includes('studio-card-body')&&navigator.includes('aria-expanded'),'Tool expand/collapse must remain accessible');
+const navScript=navigator.match(/<script is:inline>([\s\S]*?)<\/script>/);
+check(!!navScript,'Studio workspace must contain a client-side controller');
+if(navScript){try{new Script(navScript[1],{filename:'StudioNavigator.astro inline script'});}catch(e){failed.push('Invalid Studio navigation JavaScript: '+e.message);}}
+
 for(const name of ['robots','ld','chunk','sitemap','html','url','mcp','diff','evidence','md']){
  check(lab.includes('id="labx-'+name+'-run"')||lab.includes('id="labx-'+name+'-build"'),'Missing interactive lab module: '+name);
 }

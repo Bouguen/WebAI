@@ -74,6 +74,20 @@ const frAgents=fr.get('agents')||'';
 const enAgents=en.get('agents')||'';
 assert(frAgents.includes('id="agent-query"')&&enAgents.includes('id="agent-query"'),'Missing bilingual directory search controls');
 assert(frAgents.includes('data-agent-card')&&enAgents.includes('data-agent-card'),'Bilingual directory cards not rendered');
+// Regression: the screenshot showed raw {fr?...} labels and a stray '}' in the citation textarea.
+const labFr=fr.get('laboratoire')||'',labEn=en.get('laboratoire')||'';
+for(const [locale,html] of [['fr',labFr],['en',labEn]]){
+ assert(html.includes('id="lab-navigator"'),'Missing Studio navigation in '+locale);
+ assert(html.includes('id="lab-search"'),'Missing Studio search in '+locale);
+ assert(html.includes('id="labx-evidence-run"'),'Evidence form not generated in '+locale);
+ assert((html.match(/class="studio-card(?:\s|")/g)||[]).length>=15,'Fewer than 15 tool cards in '+locale);
+ const markup=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'');
+ assert(!markup.includes('{fr?')&&!markup.includes("{fr ?")&&!markup.includes("{'"),'Raw Astro interpolation visible in '+locale+' laboratory');
+ assert(!/<textarea[^>]*id="labx-evidence-claim"[^>]*>\s*\}<\/textarea>/i.test(markup),'Unexpected closing brace in '+locale+' citation field');
+}
+assert(labFr.includes('Fiche de vérification de citation'),'Missing properly translated French citation heading');
+assert(labEn.includes('Citation review worksheet'),'Missing properly translated English citation heading');
+
 if(failures.length){
   console.error('WebAI language parity failed:\n'+failures.join('\n'));
   process.exitCode=1;

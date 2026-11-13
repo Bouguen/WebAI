@@ -2,6 +2,7 @@
 import { atlas, localized as L } from '../data/atlas.js';
 import { dossiers } from '../data/dossiers.js';
 import StudioTools from './StudioTools.astro';
+import StudioNavigator from './StudioNavigator.astro';
 import LabExpansion from './LabExpansion.astro';
 import {sectorPlaybooks} from '../data/sectorPlaybooks.js';
 import {learningPathDetails} from '../data/learningPathDetails.js';
@@ -177,7 +178,7 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
     <a href={s.url} target="_blank" rel="noopener noreferrer" class="atlas-source-link">{fr?'Consulter l’original':'Read original'} ↗</a>
   </article>)}</div>
 </>}
-{type==='laboratoire' && <><StudioTools lang={lang}/><LabExpansion lang={lang}/></>}
+{type==='laboratoire' && <><StudioNavigator lang={lang}/><StudioTools lang={lang}/><LabExpansion lang={lang}/></>}
 {type==='observatoire' && <><div class="atlas-watch-layout">
   <div class="atlas-watch-copy"><span class="eyebrow">{fr?'COMMENT NOUS TRAVAILLONS':'HOW WE WORK'}</span>
     <h2>{fr?'Une veille qui ne publie pas seule':'Monitoring that never publishes itself'}</h2><p>{fr?'WebAI organise le suivi des protocoles, normes, recherches et logiciels. Une évolution détectée entre d’abord dans une file de qualification : source primaire, date, importance, contradiction éventuelle, contrôle éditorial.':'WebAI tracks protocols, standards, research and software. Every detected change first enters a review queue: original source, date, significance, potential contradictions, editorial approval.'}</p>

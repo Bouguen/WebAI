@@ -35,18 +35,18 @@ const modules=[
  <pre class="studio-result studio-code" id="labx-ld-result" role="status">—</pre>
 </section>
 <section class="studio-card"><span class="studio-number">08 / RAG</span><h2>{fr?'Simulateur de découpage RAG':'RAG chunking explorer'}</h2><p>{fr?'Visualisez un découpage déterministe par mots avec chevauchement. Aucun embedding ni index vectoriel.':'Visualize deterministic word chunks with overlap. No embeddings or vector index.'}</p>
- <label>{fr?'Texte du corpus':'Corpus text'}<textarea id="labx-chunk-text" rows="5">{fr?'Le Web génératif combine modèles de langage, sources documentaires et interfaces humaines. Un agent peut utiliser un outil mais doit respecter les autorisations. Les sources citées doivent réellement soutenir les affirmations.' :'The generative Web combines language models, documentary sources and human interfaces. An agent can use a tool but must respect permissions. Cited sources should support the claims.'}</textarea></label>
+ <label>{fr?'Texte du corpus':'Corpus text'}<textarea id="labx-chunk-text" rows="5" set:text={fr?'Le Web génératif combine modèles de langage, sources documentaires et interfaces humaines. Un agent peut utiliser un outil mais doit respecter les autorisations. Les sources citées doivent réellement soutenir les affirmations.' :'The generative Web combines language models, documentary sources and human interfaces. An agent can use a tool but must respect permissions. Cited sources should support the claims.'}></textarea></label>
  <div class="studio-inline"><label>{fr?'Mots par fragment':'Words per chunk'}<input id="labx-chunk-size" type="number" min="5" max="300" value="20"/></label><label>{fr?'Chevauchement':'Overlap'}<input id="labx-chunk-overlap" type="number" min="0" max="100" value="4"/></label></div>
  <button class="studio-action" type="button" id="labx-chunk-run">{fr?'Découper':'Split text'}</button>
  <div class="studio-result" id="labx-chunk-result" role="status">—</div>
 </section>
 <section class="studio-card"><span class="studio-number">09 / XML</span><h2>{fr?'Inspecteur de sitemap XML':'XML sitemap inspector'}</h2><p>{fr?'Analyse le XML et quelques éléments du protocole Sitemap, sans accès réseau ni contrôle d’indexation.':'Parses XML and some Sitemap protocol elements, without fetching URLs or checking indexing.'}</p>
- <label>{fr?'Contenu sitemap.xml':'sitemap.xml content'}<textarea id="labx-sitemap-input" rows="6" spellcheck="false">{'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.org/fr/</loc></url></urlset>'}</textarea></label>
+ <label>{fr?'Contenu sitemap.xml':'sitemap.xml content'}<textarea id="labx-sitemap-input" rows="6" spellcheck="false" set:text={'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.org/fr/</loc></url></urlset>'}></textarea></label>
  <button class="studio-action" type="button" id="labx-sitemap-run">{fr?'Vérifier le document':'Inspect document'}</button>
  <div class="studio-result" id="labx-sitemap-result" role="status">—</div>
 </section>
 <section class="studio-card"><span class="studio-number">10 / A11Y</span><h2>{fr?'Contrôle HTML indicatif':'Basic HTML checks'}</h2><p>{fr?'Repère les balises h1, main, images sans alt et champs sans noms accessibles. Cela ne remplace pas WCAG ou des tests humains.':'Checks h1, main, missing image alt attributes and unlabeled inputs. Not a replacement for WCAG or human testing.'}</p>
- <label>{fr?'Source HTML':'HTML source'}<textarea id="labx-html-input" rows="6" spellcheck="false">{'<html lang="fr"><main><h1>Le WebAI</h1><img src="image.png" alt="Schéma de concepts"><label for="q">Recherche</label><input id="q"></main></html>'}</textarea></label>
+ <label>{fr?'Source HTML':'HTML source'}<textarea id="labx-html-input" rows="6" spellcheck="false" set:text={'<html lang="fr"><main><h1>Le WebAI</h1><img src="image.png" alt="Schéma de concepts"><label for="q">Recherche</label><input id="q"></main></html>'}></textarea></label>
  <button class="studio-action" type="button" id="labx-html-run">{fr?'Lancer les contrôles':'Run checks'}</button>
  <div class="studio-result" id="labx-html-result" role="status">—</div>
 </section>
@@ -63,8 +63,8 @@ const modules=[
  <pre class="studio-result studio-code" id="labx-mcp-result" role="status">—</pre>
 </section>
 <section class="studio-card"><span class="studio-number">13 / JSON</span><h2>{fr?'Comparateur de documents JSON':'JSON document comparison'}</h2><p>{fr?'Compare les valeurs et chemins de deux structures JSON, sans appliquer de modifications.':'Compare paths and values in two JSON documents without changing either.'}</p>
- <label>JSON A<textarea id="labx-diff-a" rows="4" spellcheck="false">{'{"titre":"WebAI","version":1,"visible":true}'}</textarea></label>
- <label>JSON B<textarea id="labx-diff-b" rows="4" spellcheck="false">{'{"titre":"WebAI","version":2,"langue":"fr"}'}</textarea></label>
+ <label>JSON A<textarea id="labx-diff-a" rows="4" spellcheck="false" set:text={'{"titre":"WebAI","version":1,"visible":true}'}></textarea></label>
+ <label>JSON B<textarea id="labx-diff-b" rows="4" spellcheck="false" set:text={'{"titre":"WebAI","version":2,"langue":"fr"}'}></textarea></label>
  <button class="studio-action" type="button" id="labx-diff-run">{fr?'Comparer les différences':'Compare differences'}</button>
  <pre class="studio-result studio-code" id="labx-diff-result" role="status">—</pre>
 </section>
@@ -78,7 +78,7 @@ const modules=[
  <textarea id="labx-evidence-result" class="studio-report" rows="7" readonly aria-label={fr?'Fiche de vérification':'Review worksheet'}></textarea>
 </section>
 <section class="studio-card"><span class="studio-number">15 / MARKDOWN</span><h2>{fr?'Aperçu Markdown sans scripts':'Safe Markdown preview'}</h2><p>{fr?'Affiche des titres, paragraphes, listes et citations à partir de texte brut. Ce n’est pas un moteur CommonMark complet.':'Render headings, paragraphs, lists and quotes from plain text. This is not a complete CommonMark engine.'}</p>
- <label>Markdown<textarea id="labx-md-input" rows="7" spellcheck="false">{'# WebAI\n\n## Points essentiels\n- Sources primaires\n- Dossiers datés\n\n> Vérifier avant de publier'}</textarea></label>
+ <label>Markdown<textarea id="labx-md-input" rows="7" spellcheck="false" set:text={'# WebAI\n\n## Points essentiels\n- Sources primaires\n- Dossiers datés\n\n> Vérifier avant de publier'}></textarea></label>
  <button class="studio-action" type="button" id="labx-md-run">{fr?'Afficher le rendu':'Render preview'}</button>
  <div class="studio-result studio-md-preview" id="labx-md-result" role="status">—</div>
 </section>
