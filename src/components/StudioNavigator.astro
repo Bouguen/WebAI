@@ -1,0 +1,202 @@
+---
+const {lang='fr'}=Astro.props;
+const fr=lang==='fr';
+const groups=[
+ {id:'all',fr:'Tous',en:'All',number:15},
+ {id:'creation',fr:'Création',en:'Creation',number:2},
+ {id:'data',fr:'Données',en:'Data',number:3},
+ {id:'web',fr:'Web & SEO',en:'Web & SEO',number:3},
+ {id:'analysis',fr:'Analyse',en:'Analysis',number:2},
+ {id:'agents',fr:'Agents',en:'Agents',number:2},
+ {id:'audit',fr:'Vérification',en:'Verification',number:3}
+];
+const links=[
+ ['01',fr?'Constructeur de prompts':'Prompt builder'],
+ ['02',fr?'Formatage JSON':'JSON formatting'],
+ ['03',fr?'Longueur et tokens':'Length and tokens'],
+ ['04',fr?'Contraste WCAG':'WCAG contrast'],
+ ['05',fr?'Approbation agent':'Agent approval'],
+ ['06',fr?'Robots.txt':'Robots.txt'],
+ ['07',fr?'Données JSON-LD':'JSON-LD data'],
+ ['08',fr?'Découpage RAG':'RAG chunking'],
+ ['09',fr?'Sitemap XML':'XML sitemap'],
+ ['10',fr?'Audit HTML':'HTML checks'],
+ ['11',fr?'Inspection URL':'URL inspection'],
+ ['12',fr?'Schéma MCP':'MCP schema'],
+ ['13',fr?'Comparaison JSON':'JSON diff'],
+ ['14',fr?'Vérification des sources':'Evidence worksheet'],
+ ['15',fr?'Aperçu Markdown':'Markdown preview']
+];
+---
+<div class="lab-navigator" id="lab-navigator" data-lang={lang}>
+ <div class="lab-nav-intro">
+   <div><span class="eyebrow"><span class="atlas-beacon"></span>{fr?'WEBAI STUDIO & LAB · 15 MODULES':'WEBAI STUDIO & LAB · 15 MODULES'}</span>
+   <h2>{fr?'Un atelier organisé, des résultats vérifiables':'A clearer workspace with inspectable results'}</h2>
+   <p>{fr?'Sélectionnez une catégorie, recherchez un outil, ouvrez seulement les modules utiles et testez-les avec des exemples. Les calculs sont effectués localement et leurs limites sont clairement indiquées.':'Choose a category, find a tool and open only the modules you need. Try the examples and inspect results. Calculations run locally, with limitations clearly stated.'}</p></div>
+   <div class="lab-nav-legend" aria-label={fr?'Caractéristiques du laboratoire':'Lab characteristics'}>
+     <span><span aria-hidden="true">◉</span>{fr?'Local':'Local'}</span>
+     <span><span aria-hidden="true">✓</span>{fr?'Sans compte':'No account'}</span>
+     <span><span aria-hidden="true">↳</span>{fr?'Exemples et résultats':'Examples & results'}</span>
+   </div>
+ </div>
+ <div class="lab-nav-controls">
+  <label class="lab-nav-search" for="lab-search">{fr?'Rechercher un module':'Find a module'}<input id="lab-search" type="search" autocomplete="off" placeholder={fr?'JSON, citations, agents, sitemap…':'JSON, citations, agents, sitemap…'}/></label>
+  <div class="lab-nav-groups" role="group" aria-label={fr?'Filtrer par famille':'Filter by category'}>
+   {groups.map((item,i)=><button type="button" class:list={['lab-filter',i===0?'is-active':'']} data-lab-filter={item.id} aria-pressed={i===0?'true':'false'}>{fr?item.fr:item.en}<span>{item.number}</span></button>)}
+  </div>
+  <div class="lab-nav-footer">
+   <span id="lab-visible-count" role="status" aria-live="polite">{fr?'15 outils disponibles':'15 available tools'}</span>
+   <button type="button" id="lab-toggle-all">{fr?'Tout développer':'Expand all'}</button>
+  </div>
+ </div>
+ <details class="lab-quick-index">
+  <summary>{fr?'Accès direct aux 15 outils':'Direct access to all 15 tools'} <span aria-hidden="true">▾</span></summary>
+  <div class="lab-quick-links">{links.map(([id,label])=><a data-lab-jump href={'#lab-tool-'+id}><span>{id}</span>{label}</a>)}</div>
+ </details>
+ <p class="lab-nav-none" id="lab-no-matches" hidden>{fr?'Aucun outil ne correspond aux filtres : modifiez votre recherche ou choisissez « Tous »':'No tools match. Change your search or choose “All”'}</p>
+</div>
+<script is:inline>
+(() => {
+ const run=()=>{
+  const nav=document.getElementById('lab-navigator');
+  if(!nav||nav.dataset.ready)return;
+  nav.dataset.ready='true';
+  const fr=nav.dataset.lang==='fr';
+  const scope=nav.closest('.atlas-content');
+  const cards=[...scope.querySelectorAll('.studio-card')];
+  const categories=['creation','data','analysis','audit','agents','web','data','analysis','web','audit','web','agents','data','audit','creation'];
+  const controls=nav.querySelectorAll('[data-lab-filter]');
+  const counts=nav.querySelector('#lab-visible-count');
+  const search=nav.querySelector('#lab-search');
+  const root=document.documentElement;
+  const resultIdPrefix='lab-output-';
+  const normalize=s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+  const localized=(a,b)=>fr?a:b;
+  const presets={
+   '01':{'prompt-role':localized('Analyste documentaire','Research analyst'),'prompt-goal':localized('Comparer trois standards du Web de l’IA avec leurs références','Compare three AI Web standards with original citations'),'prompt-context':localized('Citer des textes officiels, distinguer norme et brouillon','Cite official sources, distinguish standards from drafts')},
+   '02':{'json-input':'{"webai":{"langue":"fr","standards":["HTML","JSON-LD"],"actif":true}}'},
+   '03':{'token-text':localized('Un agent peut utiliser des outils, mais les documents et résultats récupérés ne sont pas des instructions fiables.','An agent can call tools, but retrieved documents and results are not trusted instructions.')},
+   '04':{'contrast-fg':'#173d5b','contrast-bg':'#f3f8ff'},
+   '05':{},
+   '06':{'labx-robots-path':'/private/','labx-robots-bot':'GPTBot'},
+   '07':{'labx-ld-type':'Article','labx-ld-title':localized('WebAI — Répertoire des agents','WebAI — AI Agents directory'),'labx-ld-url':'https://web-ai.site/fr/agents/'},
+   '08':{'labx-chunk-text':localized('Les modèles génératifs créent des réponses à partir de contextes différents. La recherche augmentée par récupération ajoute des passages retrouvés. Un agent peut ensuite utiliser des outils, sous supervision humaine.','Generative models produce responses from context. Retrieval augmented generation adds retrieved passages. An agent may then use tools under human oversight.'),'labx-chunk-size':'9','labx-chunk-overlap':'2'},
+   '09':{'labx-sitemap-input':'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.org/fr/</loc></url><url><loc>https://example.org/en/</loc></url></urlset>'},
+   '10':{'labx-html-input':'<html lang="fr"><main><h1>WebAI</h1><img src="logo.png" alt="Logo WebAI"><label for="q">Recherche</label><input id="q"></main></html>'},
+   '11':{'labx-url-input':'https://example.org/recherche?q=agents&lang=fr#sources'},
+   '12':{'labx-mcp-name':'rechercher_dossier','labx-mcp-desc':localized('Rechercher une fiche dans le portail','Search a portal reference article'),'labx-mcp-param':'question'},
+   '13':{'labx-diff-a':'{"nom":"WebAI","version":1,"langue":"fr"}','labx-diff-b':'{"nom":"WebAI","version":2,"langue":"en","actif":true}'},
+   '14':{'labx-evidence-claim':localized('Exemple fictif : une fonctionnalité Web est largement disponible','Fictional example: a Web feature is widely available'),'labx-evidence-quote':localized('Extrait de démonstration non authentifié : prise en charge expérimentale sur certains appareils','Unverified example excerpt: experimental support on some devices'),'labx-evidence-url':'','labx-evidence-judgment':'à vérifier'},
+   '15':{'labx-md-input':'# WebAI\n\n## '+localized('Références utiles','Useful references')+'\n- HTML\n- JSON-LD\n\n> '+localized('Vérifier les faits','Verify claims')}
+  };
+  const triggers={'01':'prompt-build','02':'json-pretty','03':null,'04':null,'05':'agent-reset','06':'labx-robots-build','07':'labx-ld-build','08':'labx-chunk-run','09':'labx-sitemap-run','10':'labx-html-run','11':'labx-url-run','12':'labx-mcp-run','13':'labx-diff-run','14':'labx-evidence-run','15':'labx-md-run'};
+  const toolOutputs=card=>{
+   const el=card.querySelector('#prompt-output, .studio-report, .studio-result, .studio-metrics');
+   if(!el)return '';
+   if(el.matches('textarea,input'))return el.value.trim();
+   return (el.innerText||el.textContent||'').trim();
+  };
+  const notify=(node,value,ok=true)=>{node.textContent=value;node.dataset.status=ok?'good':'error';};
+  const setOpen=(card,open)=>{
+   const body=card.querySelector(':scope > .studio-card-body');
+   const button=card.querySelector(':scope > .studio-card-toolbar > .studio-card-toggle');
+   if(!body||!button)return;
+   body.hidden=!open;button.setAttribute('aria-expanded',String(open));
+   button.textContent=open?localized('Refermer','Close'):localized('Ouvrir l’outil','Open tool');
+   card.classList.toggle('studio-expanded',open);
+  };
+  cards.forEach((card,i)=>{
+   const id=String(i+1).padStart(2,'0');
+   card.id='lab-tool-'+id;card.dataset.labCategory=categories[i];
+   card.dataset.labSearch=normalize(card.textContent+' '+categories[i]);
+   const heading=card.querySelector('h2');
+   const info=heading?.nextElementSibling;
+   if(!heading||!info||!info.matches('p'))return;
+   const body=document.createElement('div');body.className='studio-card-body';body.id='lab-body-'+id;
+   let sibling=info.nextSibling;
+   while(sibling){const next=sibling.nextSibling;body.appendChild(sibling);sibling=next;}
+   const toolbar=document.createElement('div');toolbar.className='studio-card-toolbar';
+   const toggle=document.createElement('button');toggle.type='button';toggle.className='studio-card-toggle';
+   toggle.setAttribute('aria-controls',body.id);
+   toggle.addEventListener('click',()=>setOpen(card,body.hidden));
+   toolbar.append(toggle);card.append(toolbar,body);
+   const actions=document.createElement('div');actions.className='studio-helper-actions';
+   const make=(label,handler)=>{
+    const btn=document.createElement('button');btn.type='button';btn.textContent=label;btn.addEventListener('click',handler);actions.append(btn);return btn;
+   };
+   const status=document.createElement('span');status.className='studio-helper-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+   make(localized('Essayer un exemple','Try example'),()=>{
+    for(const [field,value] of Object.entries(presets[id]||{})){
+     const input=document.getElementById(field);if(input)input.value=value;
+     if(field==='token-text'||field==='contrast-fg'||field==='contrast-bg')input?.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    const trigger=triggers[id];if(trigger)document.getElementById(trigger)?.click();
+    notify(status,localized('Exemple chargé','Example loaded'));
+   });
+   make(localized('Copier le résultat','Copy result'),async()=>{
+    const value=toolOutputs(card);
+    if(!value){notify(status,localized('Produisez d’abord un résultat','Run the tool to create a result'),false);return;}
+    try{await navigator.clipboard.writeText(value);notify(status,localized('Résultat copié','Result copied'));}
+    catch{notify(status,localized('Copie indisponible : sélectionnez le résultat','Clipboard unavailable: select the result'),false);}
+   });
+   make(localized('Réinitialiser','Reset'),()=>{
+    for(const field of body.querySelectorAll('input,textarea,select')){
+     if(field.matches('[type="button"],[type="submit"],[readonly]'))continue;
+     if(field.tagName==='SELECT'){field.selectedIndex=0;continue;}
+     if(field.type==='color'){field.value=field.defaultValue;field.dispatchEvent(new Event('input',{bubbles:true}));continue;}
+     field.value=field.defaultValue;
+     if(field.id==='token-text')field.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+    const trigger=id==='05'?'agent-reset':null;if(trigger)document.getElementById(trigger)?.click();
+    const result=card.querySelector('.studio-result');if(result)result.textContent='—';
+    const report=card.querySelector('.studio-report');if(report)report.value='';
+    notify(status,localized('Valeurs réinitialisées','Inputs reset'));
+   });
+   body.append(actions,status);
+   setOpen(card,i===0);
+  });
+  let active='all';
+  const filters=()=>{const q=normalize(search.value.trim());let n=0;
+   for(const card of cards){
+    const visible=(active==='all'||active===card.dataset.labCategory)&&(!q||card.dataset.labSearch.includes(q));
+    card.hidden=!visible;if(visible)n++;
+   }
+   for(const grid of scope.querySelectorAll('.studio-grid')){
+    grid.hidden=![...grid.querySelectorAll('.studio-card')].some(x=>!x.hidden);
+   }
+   const extraHeader=scope.querySelector('.studio-expansion-header');
+   if(extraHeader){const advanced=scope.querySelector('.studio-grid.studio-expansion');extraHeader.hidden=advanced?.hidden??false;}
+   const noResults=nav.querySelector('#lab-no-matches');noResults.hidden=n!==0;
+   counts.textContent=n+' / '+cards.length+' '+localized('outils affichés','tools shown');
+   nav.querySelector('#lab-toggle-all').disabled=n===0;
+  };
+  const switchCategory=value=>{active=value;
+   controls.forEach(btn=>{const on=btn.dataset.labFilter===value;btn.classList.toggle('is-active',on);btn.setAttribute('aria-pressed',String(on));});
+   filters();
+  };
+  controls.forEach(btn=>btn.addEventListener('click',()=>switchCategory(btn.dataset.labFilter)));
+  search.addEventListener('input',filters);
+  const allButton=nav.querySelector('#lab-toggle-all');
+  allButton.addEventListener('click',()=>{
+   const visible=cards.filter(c=>!c.hidden);
+   const allOpen=visible.every(c=>c.classList.contains('studio-expanded'));
+   visible.forEach(c=>setOpen(c,!allOpen));
+   allButton.textContent=allOpen?localized('Tout développer','Expand all'):localized('Tout refermer','Collapse all');
+  });
+  nav.querySelectorAll('[data-lab-jump]').forEach(link=>link.addEventListener('click',event=>{
+   const target=scope.querySelector(link.getAttribute('href'));if(!target)return;
+   event.preventDefault();switchCategory('all');search.value='';filters();setOpen(target,true);
+   if(history.replaceState)history.replaceState(null,'',link.getAttribute('href'));
+   target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+   target.querySelector('.studio-card-toggle')?.focus({preventScroll:true});
+  }));
+  if(/^#lab-tool-\d\d$/.test(location.hash)){
+   const target=scope.querySelector(location.hash);
+   if(target){switchCategory('all');setOpen(target,true);}
+  }
+  filters();
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});
+ else run();
+})();
+</script>
