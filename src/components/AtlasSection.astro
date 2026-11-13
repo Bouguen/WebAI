@@ -4,6 +4,7 @@ import { dossiers } from '../data/dossiers.js';
 import StudioTools from './StudioTools.astro';
 import LabExpansion from './LabExpansion.astro';
 import {sectorPlaybooks} from '../data/sectorPlaybooks.js';
+import {learningPathDetails} from '../data/learningPathDetails.js';
 const {lang = 'fr', type} = Astro.props;
 const fr=lang==='fr';
 const config={
@@ -104,10 +105,22 @@ const cardCount=type==='outils'?atlas.catalog.length:type==='ressources'?atlas.s
   </article>)}</div>
 </>}
 {type==='parcours' && <div class="atlas-grid atlas-paths">
-  {atlas.lessons.map((lesson,i)=><article class="atlas-path-card"><div class="atlas-path-meta"><span class="atlas-item-number">0{i+1}</span><span>⏱ {lesson.duration}</span></div>
-    <h2>{L(lesson.title,lang)}</h2><p>{L(lesson.desc,lang)}</p>
+  {atlas.lessons.map((lesson,i)=><article class="atlas-path-card atlas-path-enriched">
+    <div class="atlas-path-meta"><span class="atlas-item-number">0{i+1}</span><span>⏱ {lesson.duration}</span></div>
+    <h2>{L(lesson.title,lang)}</h2>
+    <p>{L(lesson.desc,lang)}</p>
     <div class="atlas-path-audience">{fr?'Pour':'For'} : {L(lesson.audience,lang)}</div>
+    <p class="atlas-path-goal"><strong>{fr?'Objectif de maîtrise':'Learning objective'}</strong> {L(learningPathDetails[lesson.slug].goal,lang)}</p>
+    <h3>{fr?'Notions à explorer':'Topics to explore'}</h3>
     <ol class="atlas-steps">{lesson.topics.map(slug=>{const t=atlas.topics.find(z=>z.slug===slug);return t?<li><a href={'/'+lang+'/encyclopedie/'+slug+'/'}>{L(t.title,lang)} <span>↗</span></a></li>:null})}</ol>
+    <details class="atlas-path-workflow">
+      <summary>{fr?'Consulter les 5 activités de progression':'View five progressive activities'}</summary>
+      <ol>{learningPathDetails[lesson.slug].steps.map(s=><li>{L(s,lang)}</li>)}</ol>
+      <p><strong>{fr?'Production attendue':'Expected artifact'} :</strong> {L(learningPathDetails[lesson.slug].artifact,lang)}</p>
+      <p><strong>{fr?'Critère de réussite':'Success criterion'} :</strong> {L(learningPathDetails[lesson.slug].criteria,lang)}</p>
+      <a href={learningPathDetails[lesson.slug].source} target="_blank" rel="noopener noreferrer">{fr?'Référence du parcours':'Reference for this path'} ↗</a>
+    </details>
+    <a class="atlas-path-guide-link" href={'/'+lang+'/guides/'}>{fr?'Passer aux ateliers pratiques':'Continue to practical workshops'} ↗</a>
   </article>)}
 </div>}
 {type==='secteurs' && <>
