@@ -2,6 +2,7 @@
 import {researchTopics} from './researchExpansion.js';
 import {researchSources,researchCatalog,researchGlossary} from './researchDirectories.js';
 import {enrichTool} from './toolProfiles.js';
+import {scienceSources} from './scienceSources.js';
 export const atlas = {
   "catalog": [
     {
@@ -1782,7 +1783,7 @@ export const atlas = {
   ]
 };
 atlas.topics.push(...researchTopics);
-atlas.sources.push(...researchSources);
+atlas.sources.push(...researchSources,...scienceSources);
 atlas.catalog.push(...researchCatalog);
 atlas.catalog=atlas.catalog.map(enrichTool);
 atlas.glossary.push(...researchGlossary);
