@@ -80,6 +80,21 @@ encyclopedia without replacing the site's established conceptual boundaries.
   requires explicit approval.
 
 
+
+## Phase V.5 — Deep learning, tools and evidence expansion (13 November 2026)
+
+This open PR extends the earlier research snapshot into a bilingual knowledge portal:
+
+- **36 encyclopedia articles**, each with **six substantive sections** (72 FR/EN detail routes), critical questions, practical workflows and primary-source links. All six former short introductions now have complete dossiers.
+- **51 AI Tools profiles** with a detailed explanation, an application, limitations, critical questions and **three additional external references** besides the official site. Dedicated bilingual pages: **102 routes** at `/{fr|en}/outils/<slug>/`.
+- **15 local WebAI Lab tools** (ten new): robots.txt policy builder, JSON-LD generator, text chunking, XML sitemap inspector, indicative HTML accessibility checks, URL inspector, MCP input-schema generator, JSON comparator, manual evidence worksheet and safe Markdown preview.
+- **10 sector playbooks**, each with five bilingual steps, risks, expected outcome and source links.
+- **6 learner pathways**, each with five progressive activities, expected output and assessment criteria.
+- **59 source cards**, ten category-specific reading guides and ten additional annotated scientific references.
+- **20 practical guides**, **77 glossary terms** and an enriched Observatory with six dated documentary snapshots.
+
+All records remain **`a_verifier`** pending editorial/scientific review. Automated tests validate data integrity, basic JavaScript syntax and reference URL structure; they do not validate scientific accuracy, current product capabilities or legal compliance. `noindex,nofollow` remains enabled, and merging to production requires explicit user approval.
+
 ## English-language experience
 
 - The English edition starts at `/en/`; the French edition stays at `/fr/`.
