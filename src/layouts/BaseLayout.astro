@@ -114,7 +114,7 @@ const navigation = referenceNav.map(item=>({...item,title:item.title[lang],url:'
           >{choice.nativeName}</a>)}
         </nav>
       </div>
-      <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span></div>
+      <div class="wrap footer-bottom"><span>© {new Date().getFullYear()} WebAI · {t.independent}</span><span>{t.legal}</span><div class="nelm-credit"><span>WebAI · {lang === "fr" ? "Intelligence artificielle sur le Web" : "Artificial intelligence on the Web"} · 2026</span><img src="/signature-n-elm.svg" alt="Signature manuscrite N. ELM." width="112" height="38" loading="lazy" decoding="async" /></div></div>
     </footer>
     <script is:inline>
       const header = document.querySelector('.site-header');
