@@ -77,3 +77,8 @@
   .locale-option{min-width:30px;min-height:30px;padding:5px 4px;font-size:.69rem}
   .header-actions .icon-button{min-width:32px;width:32px;height:34px}
 }
+
+/* Unified author credit across WebAI languages and themes */
+.footer-bottom .nelm-credit{flex:1 0 100%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:5px;padding-top:14px;border-top:1px solid #35425a;color:#e0e9f7}
+.footer-bottom .nelm-credit img{width:112px;max-width:30vw;height:auto;object-fit:contain;flex-shrink:0}
+@media(max-width:520px){.footer-bottom .nelm-credit{gap:7px}.footer-bottom .nelm-credit img{width:94px;max-width:28vw}}
